@@ -30,3 +30,7 @@ Route::prefix('vue')->group(function () {
     Route::get('test/{id}', [TestController::class, 'vue_test']);
 });
     
+Route::prefix('bs')->group(function () {
+    Route::get('test', [TestController::class, 'bs_test']);
+    Route::get('test/{id}', [TestController::class, 'bs_test']);
+});

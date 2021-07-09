@@ -60,4 +60,9 @@ class TestController extends Controller
     {
         return view('vue_test' . $id);
     }
+
+    public function bs_test($id = '')
+    {
+        return view('bs_test' . $id);
+    }
 }
