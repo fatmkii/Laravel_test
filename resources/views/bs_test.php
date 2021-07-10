@@ -36,13 +36,13 @@
         </div>
 
         <table class="table table-striped table-bordered table-hover">
-            <thread>
+            <thead>
                 <tr>
                     <th>NO.</th>
                     <th>Name</th>
                     <th>Age</th>
                 </tr>
-            </thread>
+            </thead>
             <tr>
                 <th>0</th>
                 <th>Fat</th>
