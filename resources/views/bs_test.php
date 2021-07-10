@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Bootstrap test</title>
     <link href="https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -34,16 +35,23 @@
             </div>
         </div>
 
-        <table class="table table-striped table-bordered">
-            <tr>
-                <th>NO.</th>
-                <th>Name</th>
-                <th>Age</th>
-            </tr>
+        <table class="table table-striped table-bordered table-hover">
+            <thread>
+                <tr>
+                    <th>NO.</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                </tr>
+            </thread>
             <tr>
                 <th>0</th>
                 <th>Fat</th>
                 <th>32</th>
+            </tr>
+            <tr>
+                <th>1</th>
+                <th>blueberry</th>
+                <th>??</th>
             </tr>
         </table>
 
@@ -55,9 +63,11 @@
 
 <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://unpkg.com/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
 
 
+<script src="/js/app.js"></script>
 
 
 

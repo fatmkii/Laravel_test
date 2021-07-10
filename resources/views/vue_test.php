@@ -59,15 +59,10 @@
 
 
 </body>
-
-<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-
-
+<script src="/js/app.js"></script>
 
 <script>
-    var app2 = new Vue({
+        var app2 = new Vue({
         el: "#app2",
         data: {
             type: 'name',
@@ -78,8 +73,7 @@
             }
         }
 
-    })
-
+    })    
     var app = new Vue({
         el: '#app',
         data: {
@@ -133,5 +127,11 @@
         }
     })
 </script>
+
+
+
+
+
+
 
 </html>
