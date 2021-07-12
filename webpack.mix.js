@@ -13,6 +13,8 @@ const path = require('path');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .extract(['vue', 'bootstrap-vue', 'axios'])
+    .vue()
     .sourceMaps()
     .postCss('resources/css/app.css', 'public/css', [
         //
@@ -22,9 +24,4 @@ mix.alias({
     vue$: path.join(__dirname, 'node_modules/vue/dist/vue.js')
 });
 
-
-
-
-mix.options(
-    { uglify: {} }
-);
+mix.options({ uglify: {} });

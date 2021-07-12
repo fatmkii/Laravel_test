@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Bootstrap test</title>
-    <!-- <link href="/css/app.css" rel="stylesheet"> -->
 </head>
 
 <style>
@@ -61,12 +60,9 @@
 
 </body>
 
-<!-- <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://unpkg.com/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script> -->
 
-
+<script src="/js/manifest.js"></script>
+<script src="/js/vendor.js"></script>
 <script src="/js/app.js"></script>
 
 

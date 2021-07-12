@@ -59,10 +59,13 @@
 
 
 </body>
+
+<script src="/js/manifest.js"></script>
+<script src="/js/vendor.js"></script>
 <script src="/js/app.js"></script>
 
 <script>
-        var app2 = new Vue({
+    var app2 = new Vue({
         el: "#app2",
         data: {
             type: 'name',
@@ -73,7 +76,7 @@
             }
         }
 
-    })    
+    })
     var app = new Vue({
         el: '#app',
         data: {
