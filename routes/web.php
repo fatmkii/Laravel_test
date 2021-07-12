@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/testroute', function () {
+    return 'OK';
+});
+
 Route::get('/test', [TestController::class, 'test']);
 Route::get('/test/login', [TestController::class, 'login'])->name('login');
 Route::get('/test/request', [TestController::class, 'request']);
