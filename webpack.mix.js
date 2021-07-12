@@ -22,6 +22,9 @@ mix.alias({
     vue$: path.join(__dirname, 'node_modules/vue/dist/vue.js')
 });
 
+
+
+
 mix.options(
     { uglify: {} }
 );
