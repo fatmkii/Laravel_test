@@ -19,6 +19,8 @@ class TestController extends Controller
         return 'test ok';
     }
 
+
+
     public function login()
     {
         return 'login Page';
@@ -56,11 +58,16 @@ class TestController extends Controller
         return Reply::all();
     }
 
+    public function index()
+    {
+        return view('index');
+    }
+
     public function vue_test($id = '')
     {
         return view('vue_test' . $id);
     }
-    
+
     public function bs_test($id = '')
     {
         return view('bs_test' . $id);

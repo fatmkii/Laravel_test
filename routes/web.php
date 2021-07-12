@@ -24,6 +24,7 @@ Route::get('/test', [TestController::class, 'test']);
 Route::get('/test/login', [TestController::class, 'login'])->name('login');
 Route::get('/test/request', [TestController::class, 'request']);
 Route::get('/test/reply_queue', [TestController::class, 'reply_queue']);
+Route::get('/test/index', [TestController::class, 'index']);
 
 Route::prefix('vue')->group(function () {
     Route::get('test', [TestController::class, 'vue_test']);

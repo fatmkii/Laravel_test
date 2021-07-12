@@ -16,6 +16,7 @@ mix.js('resources/js/app.js', 'public/js')
     .extract(['vue', 'bootstrap-vue', 'axios'])
     .vue()
     .sourceMaps()
+    .version()
     .postCss('resources/css/app.css', 'public/css', [
         //
     ]);
