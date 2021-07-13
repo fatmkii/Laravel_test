@@ -15,9 +15,9 @@
 <body>
     <div id="app" v-cloak>
         <input type="text" @input="name_input" placeholder="名字">
-        <h1> Hello! {{ name }}</h1>
+        <h1> Hello! @{{ name }}</h1>
         <input type="text" v-model.number="name" placeholder="名字">
-        <h1> Hello! {{ name }}</h1>
+        <h1> Hello! @{{ name }}</h1>
 
         <label><input type="radio" v-model="picked" value="choice_1">选择1</label>
         <br>
@@ -27,14 +27,14 @@
         <br>
 
         <p v-if="show">测试文本</p>
-        <button v-on:click="handle">{{btn_text}}</button>
+        <button v-on:click="handle">@{{btn_text}}</button>
 
         <p>发送ajax：</p>
         <button v-on:click="check_DB">执行</button>
-        <p>1版名称： {{forum_name}}</p>
+        <p>1版名称： @{{forum_name}}</p>
 
         <input type="text" v-model="number" placeholder="计算数字^2">
-        <p>计算属性结果：{{result}}</p>
+        <p>计算属性结果：@{{result}}</p>
 
         <p :class="{my_class:class_select}">my_class</p>
 
@@ -60,9 +60,10 @@
 
 </body>
 
-<script src="/js/manifest.js"></script>
-<script src="/js/vendor.js"></script>
-<script src="/js/app.js"></script>
+<script src="{{ mix('js/manifest.js') }}"></script>
+<script src="{{ mix('js/vendor.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
+
 
 <script>
     var app2 = new Vue({
@@ -77,8 +78,8 @@
         }
 
     })
-    var app = new Vue({
-        el: '#app',
+    var app3 = new Vue({
+        el: '#app3',
         data: {
             name: '',
             show: true,
