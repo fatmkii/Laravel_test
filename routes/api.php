@@ -22,4 +22,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // Route::get('/Forums', [Forumcontroller::class, 'index']);
 
-Route::apiResource('forums', Forumcontroller::class);
+Route::apiResource('forums', ForumController::class);
