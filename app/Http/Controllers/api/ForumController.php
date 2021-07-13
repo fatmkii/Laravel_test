@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace app\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Forum;
