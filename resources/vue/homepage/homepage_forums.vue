@@ -1,7 +1,26 @@
 <template>
   <div>
-    <p>版列表</p>
-    <li v-for="forum in forums_data" :key="forum">{{ forum.name }}</li>
+    <b-card no-body class="mt-4">
+      <template v-slot:header>
+        <h4 class="mb-0">版面列表</h4>
+      </template>
+
+      <b-list-group
+        v-for="forum in forums_data"
+        :key="forum.id"
+        @click="forum_show(forum.id)"
+      >
+        <b-card-body>
+          <b-card-title>
+            {{ forum.name }}
+            <b-badge variant="secondary" pill="True" class="float-right">{{
+              forum.id
+            }}</b-badge>
+          </b-card-title>
+          <b-card-text>{{ forum.description }} </b-card-text>
+        </b-card-body>
+      </b-list-group>
+    </b-card>
   </div>
 </template>
 
@@ -16,7 +35,11 @@ export default {
       forums_data: "",
     };
   },
-  methods: {},
+  methods: {
+    forum_show: function (forum_id) {
+      window.location.href = "/forum/" + forum_id;
+    },
+  },
   mounted: function () {
     const config = {
       method: "get",
@@ -28,8 +51,15 @@ export default {
       if (response.data.code == 200) {
         this.forums_data = response.data.data;
       } else {
+        console.log("获取版面内容失败");
       }
     });
   },
 };
 </script>
+
+<style lang="sass" scoped>
+.card-body
+  cursor: pointer
+</style>>
+

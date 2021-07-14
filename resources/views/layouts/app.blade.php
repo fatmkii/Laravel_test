@@ -10,10 +10,12 @@
 <body>
     <div id='app'>
         <navigation></navigation>
-        @section('content')
-        @show
-        @section('footer')
-        @show
+    <div class='container'>
+    @section('content')
+    @show
+    </div>
+    @section('footer')
+    @show
     </div>
 
 </body>
