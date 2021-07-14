@@ -5,6 +5,5 @@
 @stop
 
 @section('content')
-<axios_test></axios_test>
-<p>...这是content...</p>
+<homepage_forums></homepage_forums>
 @stop

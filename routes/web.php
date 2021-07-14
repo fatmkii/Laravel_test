@@ -16,12 +16,8 @@ use PHPUnit\Framework\Test;
 |
 */
 
-Route::get('testroute', function () {
-    return view('index');
-});
-
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 

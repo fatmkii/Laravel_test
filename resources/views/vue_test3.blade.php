@@ -6,16 +6,10 @@
     <title>Vue test 3</title>
 </head>
 
-<style>
-    [v-cloak] {
-        display: none;
-    }
-</style>
 
 <body>
     <div id="app" v-cloak>
-
-        <my-component></my-component>
+        <parent_com></parent_com>
     </div>
 </body>
 

@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     check_DB: function () {
-      var config = {
+      const config = {
         method: "get",
         url: "/api/forums/1",
         data: {
@@ -27,9 +27,6 @@ export default {
       };
       // 发送 POST 请求
       axios(config).then((response) => (this.forum_name = response.data.name));
-      // axios
-      //     .get('http://laravel.test/api/forums/1')
-      //     .then(response => (this.forum_name = response.data.name))
     },
   },
 };

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Forum;
 use Illuminate\Http\Request;
+use App\Common\ResponseCode;
 
 class ForumController extends Controller
 {
@@ -16,7 +17,10 @@ class ForumController extends Controller
     public function index()
     {
         //
-        return Forum::all();
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'data' => Forum::all(),
+        ]);
     }
 
     /**
