@@ -6,9 +6,10 @@
       </template>
 
       <b-list-group
+        class="list-group-item-action"
         v-for="forum in forums_data"
         :key="forum.id"
-        @click="forum_show(forum.id)"
+        @click="forum_view(forum.id)"
       >
         <b-card-body>
           <b-card-title>
@@ -36,7 +37,7 @@ export default {
     };
   },
   methods: {
-    forum_show: function (forum_id) {
+    forum_view: function (forum_id) {
       window.location.href = "/forum/" + forum_id;
     },
   },

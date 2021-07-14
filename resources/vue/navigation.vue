@@ -1,11 +1,19 @@
 <template>
   <div>
-    <b-nav align="left">
-      <h2>岛2.0开发中</h2>
-      <b-nav-item>板块首页</b-nav-item>
-      <b-nav-item>皮肤切换</b-nav-item>
-      <b-nav-item>个人中心</b-nav-item>
-    </b-nav>
+    <b-navbar>
+      <b-navbar-nav>
+        <b-navbar-brand href="/"> 岛2.0开发中 </b-navbar-brand>
+        <b-nav-item-dropdown text="皮肤更换" right>
+          <b-dropdown-item href="#">Default</b-dropdown-item>
+          <b-dropdown-item href="#">Pink!</b-dropdown-item>
+          <b-dropdown-item href="#">NGA</b-dropdown-item>
+          <b-dropdown-item href="#">Night</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <b-button size="md" class="my-1 my-sm-0" variant="outline-dark" href="/">个人中心</b-button>
+      </b-navbar-nav>
+    </b-navbar>
   </div>
 </template>
 
@@ -17,5 +25,14 @@ export default {
       name: "navigation",
     };
   },
+  methods: {
+  },
 };
 </script>
+
+<style lang="sass" scoped>
+nav
+  background-color: #eee
+  a
+    color: #444
+</style>
