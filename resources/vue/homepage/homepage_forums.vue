@@ -41,7 +41,7 @@ export default {
       this.$router.push({ name: "forum", params: { id: forum_id } });
     },
   },
-  mounted: function () {
+  created: function () {
     const config = {
       method: "get",
       url: "/api/forums/",
