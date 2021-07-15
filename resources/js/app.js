@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import '../css/app.scss'
+import VueRouter from 'vue-router'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(VueRouter)
+
 window.Vue = Vue
 window.axios = require('axios')
 
@@ -14,12 +17,31 @@ Vue.component('children_com', require('../vue/test/children_com.vue').default);
 //通用导航栏
 Vue.component('navigation', require('../vue/navigation.vue').default);
 
-//主页homepage
-Vue.component('homepage_bulletin', require('../vue/homepage/homepage_bulletin.vue').default);
-Vue.component('homepage_forums', require('../vue/homepage/homepage_forums.vue').default);
 
+const routes = [
+    {
+        path: '/',
+        component: (resolve) => require(['../vue/homepage/homepage.vue'], resolve),
+    },
+    {
+        path: '*',
+        component: (resolve) => require(['../vue/homepage/homepage.vue'], resolve),
+    },
+    {
+        path: '/forum/:id',
+        component: (resolve) => require(['../vue/forum/forum.vue'], resolve),
+    },
+]
 
-//最后挂载Vue
+const router = new VueRouter({
+    mode: 'history',
+    routes // (缩写) 相当于 routes: routes
+})
+
+router.afterEach((to, from) => {
+    window.scrollTo(0, 0);
+})
+
 const app = new Vue({
-    el: '#app',
-});
+    router
+}).$mount('#app')

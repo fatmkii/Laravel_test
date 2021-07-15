@@ -42,8 +42,10 @@ class ForumController extends Controller
      */
     public function show($id)
     {
-        //
-        return Forum::find($id);
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'data' => Forum::find($id),
+        ]);
     }
 
     /**

@@ -1,10 +1,23 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="zh_CN">
 
-@section('sidebar')
-<p>这是sidebar</p>
-@stop
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> @yield('title',config('app.name'))</title>
+</head>
 
-@section('content')
-<homepage_bulletin></homepage_bulletin>
-<homepage_forums></homepage_forums>
-@stop
+<body>
+    <div id='app' class='container'>
+        <navigation></navigation>
+        <router-view></router-view>
+    </div>
+
+</body>
+
+
+<script src="{{ mix('js/manifest.js') }}"></script>
+<script src="{{ mix('js/vendor.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
+
+</html>

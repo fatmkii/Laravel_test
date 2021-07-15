@@ -26,8 +26,8 @@ class ForumSeeder extends Seeder
         ]);
         Forum::create([
             'id' =>  40,
-            'name' => '发春大舞厅',
-            'description' => '咒术大舞台，想发春你就来，24小时锁贴制，第二天不带走一片云彩',
+            'name' => '————大舞厅',
+            'description' => '——————大舞台，想发春你就来，24小时锁贴制，第二天不带走一片云彩',
         ]);
     }
 }

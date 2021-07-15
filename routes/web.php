@@ -16,24 +16,23 @@ use PHPUnit\Framework\Test;
 |
 */
 
-Route::get('/', function () {
+Route::get('/{path}', function () {
     return view('index');
-});
+})->where('path','.*');
 
+// //测试用
+// Route::get('/test', [TestController::class, 'test']);
+// Route::get('/test/login', [TestController::class, 'login'])->name('login');
+// Route::get('/test/request', [TestController::class, 'request']);
+// Route::get('/test/reply_queue', [TestController::class, 'reply_queue']);
+// Route::get('/test/index', [TestController::class, 'index']);
 
-
-Route::get('/test', [TestController::class, 'test']);
-Route::get('/test/login', [TestController::class, 'login'])->name('login');
-Route::get('/test/request', [TestController::class, 'request']);
-Route::get('/test/reply_queue', [TestController::class, 'reply_queue']);
-Route::get('/test/index', [TestController::class, 'index']);
-
-Route::prefix('vue')->group(function () {
-    Route::get('test', [TestController::class, 'vue_test']);
-    Route::get('test/{id}', [TestController::class, 'vue_test']);
-});
+// Route::prefix('vue')->group(function () {
+//     Route::get('test', [TestController::class, 'vue_test']);
+//     Route::get('test/{id}', [TestController::class, 'vue_test']);
+// });
     
-Route::prefix('bs')->group(function () {
-    Route::get('test', [TestController::class, 'bs_test']);
-    Route::get('test/{id}', [TestController::class, 'bs_test']);
-});
+// Route::prefix('bs')->group(function () {
+//     Route::get('test', [TestController::class, 'bs_test']);
+//     Route::get('test/{id}', [TestController::class, 'bs_test']);
+// });
