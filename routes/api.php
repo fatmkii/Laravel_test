@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ForumController;
+use App\Http\Controllers\API\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-// Route::get('/Forums', [Forumcontroller::class, 'index']);
+Route::post('/login', [UserController::class, 'login']);
 
 Route::apiResource('forums', ForumController::class);
+Route::apiResource('users', UserController::class);

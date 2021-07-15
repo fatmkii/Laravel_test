@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     forum_view: function (forum_id) {
-      this.$router.push("/forum/" + forum_id);
+      this.$router.push({ name: "forum", params: { id: forum_id } });
     },
   },
   mounted: function () {

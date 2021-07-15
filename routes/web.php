@@ -20,8 +20,8 @@ Route::get('/{path}', function () {
     return view('index');
 })->where('path','.*');
 
-// //测试用
-// Route::get('/test', [TestController::class, 'test']);
+//测试用
+Route::middleware('auth:sanctum')->get('/test', [TestController::class, 'test']);
 // Route::get('/test/login', [TestController::class, 'login'])->name('login');
 // Route::get('/test/request', [TestController::class, 'request']);
 // Route::get('/test/reply_queue', [TestController::class, 'reply_queue']);

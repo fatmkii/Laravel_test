@@ -7,11 +7,12 @@
 <script>
 export default {
   components: {},
-  props: {},
+  props: {
+    id: "",
+  },
   data: function () {
     return {
       name: "forum",
-      id: this.$route.params.id,
       forum_name: "",
     };
   },

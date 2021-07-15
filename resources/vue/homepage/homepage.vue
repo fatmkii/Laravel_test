@@ -11,7 +11,7 @@ import HomepageForums from "./homepage_forums.vue";
 import HomepageBulletin from "./homepage_bulletin.vue";
 
 export default {
-  components: { HomepageBulletin, HomepageForums },
+  components: { HomepageBulletin, HomepageForums},
   props: {},
   data: function () {
     return {

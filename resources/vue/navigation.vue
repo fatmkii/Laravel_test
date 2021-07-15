@@ -11,7 +11,7 @@
         </b-nav-item-dropdown>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <b-button size="md" class="my-1 my-sm-0" variant="outline-dark" href="/">个人中心</b-button>
+        <b-button size="md" class="my-1 my-sm-0" variant="outline-dark" to="/login">个人中心</b-button>
       </b-navbar-nav>
     </b-navbar>
   </div>
