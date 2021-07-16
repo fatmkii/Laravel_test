@@ -2,38 +2,12 @@ import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import '../css/app.scss'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
-
-function requireAuth(to, from, next) {
-    function proceed() {
-        // 如果用户信息已经加载并且不为空则说明该用户已登录，可以继续访问路由，否则跳转到首页
-        // 这个功能类似 Laravel 中的 auth 中间件
-        if (store.getters.getUserLoadStatus() === 2) {
-            if (store.getters.getUser != '') {
-                next();
-            } else {
-                next('/home');
-            }
-        }
-    }
-
-    if (store.getters.getUserLoadStatus() !== 2) {
-        // 如果用户信息未加载完毕则先加载
-        store.dispatch('loadUser');
-
-        // 监听用户信息加载状态，加载完成后调用 proceed 方法继续后续操作
-        store.watch(store.getters.getUserLoadStatus, function () {
-            if (store.getters.getUserLoadStatus() === 2) {
-                proceed();
-            }
-        });
-    } else {
-        // 如果用户信息加载完毕直接调用 proceed 方法
-        proceed()
-    }
-}
+Vue.use(Vuex)
+import store from './store/store'
 
 window.Vue = Vue
 window.axios = require('axios')
@@ -46,7 +20,8 @@ Vue.component('children_com', require('../vue/test/children_com.vue').default);
 
 //通用导航栏
 Vue.component('navigation', require('../vue/navigation.vue').default);
-
+//全局app.vue，用来做一些全剧请求（forums，user等）
+Vue.component('app', require('../vue/app.vue').default);
 
 const routes = [
     {
@@ -90,5 +65,6 @@ router.afterEach((to, from) => {
 })
 
 const app = new Vue({
-    router
+    router,
+    store
 }).$mount('#app')

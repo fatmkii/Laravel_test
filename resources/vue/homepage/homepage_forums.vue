@@ -27,34 +27,25 @@
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   components: {},
   props: {},
   data: function () {
     return {
       name: "homepage_forums",
-      forums_data: "",
     };
   },
+  computed: mapState({
+    forums_data: (state) => state.Forums.ForumsData,
+  }),
   methods: {
     forum_view: function (forum_id) {
       this.$router.push({ name: "forum", params: { id: forum_id } });
     },
   },
-  created: function () {
-    const config = {
-      method: "get",
-      url: "/api/forums/",
-      data: {},
-    };
-    axios(config).then((response) => {
-      if (response.data.code == 200) {
-        this.forums_data = response.data.data;
-      } else {
-        console.log("获取版面内容失败"); //Todo:待完善失败处理
-      }
-    });
-  },
+  created: function () {},
 };
 </script>
 

@@ -5,6 +5,8 @@
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   components: {},
   props: {
@@ -13,23 +15,27 @@ export default {
   data: function () {
     return {
       name: "forum",
-      forum_name: "",
+      forum_data:''
+      // forum_name: "",
+      // forum_count: "",
     };
   },
-  mounted: function () {
-    const config = {
-      method: "get",
-      url: "/api/forums/" + this.id,
-      data: {},
-    };
-    axios(config).then((response) => {
-      if (response.data.code == 200) {
-        this.forum_name = response.data.data.name;
-        window.document.title = response.data.data.name;
+  computed: {
+    forum_name() {
+      var forum_data = this.$store.getters.ForumData(this.id);
+      if (forum_data) {
+        return forum_data.name;
       } else {
-        console.log("获取版面内容失败"); //Todo:待完善失败处理
+        return "加载中……";
       }
-    });
+    },
+    forum_count() {
+      return this.$store.getters.ForumCount;
+    },
+  },
+  mounted: function () {
+    // this.forum_name = this.$store.getters.ForumData(this.id).name;
+    // this.forum_count = this.$store.getters.ForumCount;
   },
 };
 </script>

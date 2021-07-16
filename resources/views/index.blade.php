@@ -9,6 +9,7 @@
 
 <body>
     <div id='app' class='container'>
+        <app></app>
         <navigation></navigation>
         <router-view></router-view>
     </div>
