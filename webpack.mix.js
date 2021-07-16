@@ -13,7 +13,7 @@ const path = require('path');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .extract(['vue', 'bootstrap-vue', 'axios'])
+    .extract(['vue', 'bootstrap-vue', 'vuex', 'vue-router', 'axios'])
     .vue()
     .sourceMaps()
     .version()
