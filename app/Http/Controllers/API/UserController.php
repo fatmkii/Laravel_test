@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Common\ResponseCode;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -64,21 +65,38 @@ class UserController extends Controller
         //
     }
 
+    public function get_user()
+    {
+
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => '登陆成功',
+            'data' => [
+                'binggan' => Auth::user(),
+            ],
+        ]);
+    }
+
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'binggan' => 'required|string',
         ]);
 
         $binggan  = $request->get('binggan');
-        $user_data = User::where('binggan', $binggan)->first();
+        $user2 = User::where('binggan', 'abc')->first();
+        Auth::attempt(['email' => '47155837@qq.com', 'password' => '84228184']);
+        $user = Auth::user(); 
 
-        if ($user_data) {
+        if (Auth::check()) {
+            $token = $user2->createToken($binggan)->plainTextToken;
+            // Auth::login($user);
             return response()->json([
                 'code' => ResponseCode::SUCCESS,
                 'message' => '登陆成功',
                 'data' => [
-                    'binggan' => $binggan,
+                    'binggan' => Auth::user(),
+                    'token' => $token,
                 ],
             ]);
         } else {

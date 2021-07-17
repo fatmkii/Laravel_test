@@ -5,6 +5,12 @@
 		}
 	],
 	"settings": {
-		"git.ignoreLimitWarning": true
+		"git.ignoreLimitWarning": true,
+		"favorites.resources": [
+			"app\\Http\\Controllers",
+			"resources",
+			"routes",
+			"config"
+		]
 	}
 }

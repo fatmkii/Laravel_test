@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\ForumController;
-use PHPUnit\Framework\Test;
+use App\Http\Controllers\API\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +21,10 @@ Route::get('/{path}', function () {
 })->where('path','.*');
 
 //测试用
-Route::middleware('auth:sanctum')->get('/test', [TestController::class, 'test']);
-// Route::get('/test/login', [TestController::class, 'login'])->name('login');
+// Route::middleware('auth:sanctum')->get('/test', [TestController::class, 'test']);
+// Route::get('/test', [TestController::class, 'test'])->block();
+// Route::get('/test/login', [TestController::class, 'login']);
+// Route::middleware('auth')->get('/test/get_user', [TestController::class, 'get_user']);
 // Route::get('/test/request', [TestController::class, 'request']);
 // Route::get('/test/reply_queue', [TestController::class, 'reply_queue']);
 // Route::get('/test/index', [TestController::class, 'index']);

@@ -16,12 +16,12 @@ use App\Http\Controllers\API\UserController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-
+Route::get('/get_user', [UserController::class, 'get_user']);
 Route::post('/login', [UserController::class, 'login']);
 
-Route::apiResource('forums', ForumController::class);
-Route::apiResource('users', UserController::class);
+Route::middleware('auth:sanctum')->apiResource('forums', ForumController::class);
+Route::middleware('auth:sanctum')->apiResource('users', UserController::class);

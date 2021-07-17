@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id()->startingValue(100001);
             $table->string('binggan');
+            $table->string('name')->nullable();
             $table->timestamp('binggan_verified_at')->nullable();
             $table->boolean('is_temp')->default(1);  //认证后转为非临时饼干
             $table->tinyInteger('status')->default(0); //是否被ban等状态

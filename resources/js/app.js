@@ -11,7 +11,9 @@ import store from './store/store'
 
 window.Vue = Vue
 window.axios = require('axios')
-axios.defaults.withCredentials = true; // 在全局 axios 实例中启用 withCredentials 选项
+window.axios.defaults.withCredentials = false; // 在全局 axios 实例中启用 withCredentials 选项
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; 
+
 
 //测试用的
 Vue.component('axios_test', require('../vue/test/axios_test.vue').default);

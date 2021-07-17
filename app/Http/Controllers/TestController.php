@@ -3,27 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reply;
-use App\Models\Forum;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Thread;
+use App\Models\Forum;
 use Laravel\Sanctum\HasApiTokens;
 use App\Jobs\ReplyProcess;
-use App\Models\Thread;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
 {
-    public function test()
+    public function test(Request $request)
     {
-
-        return 'test ok';
+        $request->session()->push('user.teams', 'developers');
+        return  App::getLocale();
     }
 
+    public function get_user()
+    {
+        return response()->json([
+            'code' => 200,
+            'message' => '登陆成功',
+            'data' => [
+                'binggan' => Auth::user(),
+            ],
+        ]);
+    }
 
 
     public function login()
     {
-        return 'login Page';
+        Auth::loginUsingId(100001,true);
+        return response()->json([
+            'code' => 200,
+            'message' => '登陆成功',
+            'data' => [
+                'binggan' => Auth::user(),
+            ],
+        ]);
     }
 
     public function request(Request $request)
