@@ -18,7 +18,11 @@ export default {
       name: "login_page",
     };
   },
-  mounted: function () {},
+  mounted() {
+    if (this.$store.state.User.LoginStatus == true) {
+      this.$router.push({ name: "homepage" });
+    }
+  },
   methods: {},
 };
 </script>

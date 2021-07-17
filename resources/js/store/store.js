@@ -4,10 +4,21 @@ Vue.use(Vuex)
 
 const module_user = {
     state: () => ({
-        UserName: '',
-        UserLoadStatus: ''
+        Token: '',
+        Binggan: '',
+        LoginStatus: false,
     }),
-    mutations: {},
+    mutations: {
+        Token_set(state, payload) {
+            state.Token = payload
+        },
+        Binggan_set(state, payload) {
+            state.Binggan = payload
+        },
+        LoginStatus_set(state, payload) {
+            state.LoginStatus = payload
+        },
+    },
     actions: {},
     getters: {}
 }

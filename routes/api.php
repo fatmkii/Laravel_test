@@ -23,6 +23,12 @@ use App\Http\Controllers\API\AuthController;
 
 Route::get('/get_user', [UserController::class, 'get_user']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->apiResource('forums', ForumController::class);
-Route::middleware('auth:sanctum')->apiResource('users', UserController::class);
+Route::apiResource('forums', ForumController::class);
+Route::apiResource('threads', ThreadController::class);
+Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
+
+
+//测试用
+Route::middleware('auth:sanctum')->post('/get_user', [AuthController::class, 'get_user']);

@@ -19,18 +19,10 @@
             导入</b-button
           >
         </b-input-group>
-        <b-button variant="success" class="mt-4" @click="login_handle2"
-          >不用csrf登录</b-button
-        >
-        <b-button variant="success" class="mt-4" @click="get_user"
-          >获得用户名</b-button
-        >
-        <p>用户名：{{ user }}</p>
-        <b-button variant="success" class="mt-4" @click="get_forums"
-          >获取数据</b-button
+        <b-button variant="success" class="mt-4" @click="register_handle"
+          >没有饼干？来一个！</b-button
         >
       </template>
-      w
       <template v-slot:modal-footer="{ cancel }">
         <b-button size="sm" variant="outline-seco ndary" @click="cancel()">
           取消
@@ -45,37 +37,18 @@
 export default {
   components: {},
   props: {},
-  data: function () {
+  data() {
     return {
       name: "login_modal",
       binggan_input: "",
-      user: "",
     };
   },
-  mounted: function () {
+  mounted() {
     // this.$bvModal.show('login-modal');
     this.$refs["login-modal"].show();
   },
   methods: {
     login_handle() {
-      axios
-        .get("/sanctum/csrf-cookie")
-        .then((response) => {
-          const config = {
-            method: "post",
-            url: "api/login",
-
-            data: {
-              binggan: this.binggan_input,
-            },
-          };
-          axios(config).then((response) => {
-            console.log(response);
-          });
-        })
-        .catch((error) => console.log(error));
-    },
-    login_handle2() {
       const config = {
         method: "post",
         url: "api/login",
@@ -85,44 +58,22 @@ export default {
       };
       axios(config)
         .then((response) => {
-          console.log(response);
+          this.$store.commit("Token_set", response.data.data.token);
+          this.$store.commit("Binggan_set", response.data.data.binggan);
+          this.$store.commit("LoginStatus_set", true);
+          if (window.localStorage) {
+            localStorage.Token = response.data.data.token;
+            localStorage.Binggan = response.data.data.binggan;
+          } else {
+            throw new Error("此浏览器居然不支持localstorage");
+          }
+          axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
+          window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error)); // Todo:写异常返回代码
+      this.$router.push({ name: "homepage" });
     },
-    get_user() {
-      const config = {
-        method: "get",
-        url: "/api/get_user",
-        data: {},
-        headers: {
-          Authorization:
-            "Bearer " + "1|34B9WKdMj6omEcSh7JMpyv6ufunWgm6aG4yIVlM3",
-        },
-      };
-      axios(config)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => console.log(error));
-    },
-    get_forums() {
-      const config = {
-        method: "get",
-        url: "/api/forums/",
-        data: {},
-        headers: {
-          Authorization:
-            "Bearer " + "1|34B9WKdMj6omEcSh7JMpyv6ufunWgm6aG4yIVlM3",
-        },
-      };
-      axios(config).then((response) => {
-        if (response.data.code == 200) {
-          this.$store.commit("ForumsData_set", response.data.data);
-        } else {
-          console.log("获取版面内容失败"); //Todo:待完善失败处理
-        }
-      });
-    },
+    register_handle() {},
   },
 };
 </script>

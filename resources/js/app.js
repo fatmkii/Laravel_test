@@ -10,9 +10,25 @@ Vue.use(Vuex)
 import store from './store/store'
 
 window.Vue = Vue
+
+
 window.axios = require('axios')
-window.axios.defaults.withCredentials = false; // 在全局 axios 实例中启用 withCredentials 选项
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; 
+axios.defaults.withCredentials = false; // 在全局 axios 实例中启用 withCredentials 选项
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+//axios拦截器
+axios.interceptors.response.use(
+    (response) => {
+        return response
+    },
+    err => {
+        if (err.response.status === 401) {
+            window.location.href = '/login' //如果遇到401错误(用户未认证)，就统一跳转到登陆页面
+        }
+        console.log(new Error(err))
+    }
+);
+
+
 
 
 //测试用的
@@ -45,6 +61,11 @@ const routes = [
         name: 'forum',
         props: true,
         component: (resolve) => require(['../vue/forum/forum.vue'], resolve),
+    },
+    {
+        path: '/user-center',
+        name: 'user-center',
+        component: (resolve) => require(['../vue/user/user_center.vue'], resolve),
     },
 ]
 

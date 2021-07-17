@@ -72,7 +72,7 @@ class UserController extends Controller
         $token_header = $request->header('Authorization');
         if (isset($token_header)) {
             $token_header = str_replace('bearer', '', $token_header);
-            [$id, $user_token] = explode('|', $token_header, 2);
+            [$token_id, $user_token] = explode('|', $token_header, 2);
             $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
             $user_id = $token_data->tokenable_id;
         }

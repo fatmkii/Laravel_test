@@ -11,19 +11,24 @@ export default {
     };
   },
   methods: {},
-  created: function () {
+  created() {
+    if (localStorage.Token != null && localStorage.Binggan != null) {
+      this.$store.commit("Token_set", localStorage.Token);
+      this.$store.commit("Binggan_set", localStorage.Binggan);
+      this.$store.commit("LoginStatus_set", true);
+      axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
+    }
+
     const config = {
       method: "get",
       url: "/api/forums/",
       data: {},
     };
-    axios(config).then((response) => {
-      if (response.data.code == 200) {
+    axios(config)
+      .then((response) => {
         this.$store.commit("ForumsData_set", response.data.data);
-      } else {
-        console.log("获取版面内容失败"); //Todo:待完善失败处理
-      }
-    });
+      })
+      .catch((error) => console.log(error)); // Todo:写异常返回代码;
   },
 };
 </script>
