@@ -3,7 +3,7 @@
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
-
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +19,7 @@ use App\Http\Controllers\API\UserController;
 Route::get('/{path}', function () {
     return view('index');
 })->where('path','.*');
+
 
 //测试用
 // Route::middleware('auth:sanctum')->get('/test', [TestController::class, 'test']);

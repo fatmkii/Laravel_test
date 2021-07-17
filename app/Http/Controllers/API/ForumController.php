@@ -32,11 +32,6 @@ class ForumController extends Controller
     public function store(Request $request)
     {
         //
-        return response()->json([
-            'code' => ResponseCode::SUCCESS,
-            'data' => Forum::all(),
-        ]);
-
     }
 
     /**

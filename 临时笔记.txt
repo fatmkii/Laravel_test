@@ -2,3 +2,12 @@
 
 饼干 zdtyqmmpn
 
+token: 1|34B9WKdMj6omEcSh7JMpyv6ufunWgm6aG4yIVlM3
+
+由token获得user
+$post_data = $request->all();
+if (isset($post_data['user_token'])) {
+    [$id, $user_token] = explode('|', $post_data['user_token'], 2);
+    $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $partner_token))->first();
+    $user_id = $user_id->tokenable_id; // !!!THIS ID WE CAN USE TO GET DATA OF YOUR USER!!!
+}

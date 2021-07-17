@@ -10,7 +10,8 @@
 			"app\\Http\\Controllers",
 			"resources",
 			"routes",
-			"config"
+			"config",
+			"临时笔记.txt"
 		]
 	}
 }

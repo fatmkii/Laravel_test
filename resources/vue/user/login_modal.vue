@@ -63,7 +63,7 @@ export default {
         .then((response) => {
           const config = {
             method: "post",
-            url: "/api/login",
+            url: "api/login",
 
             data: {
               binggan: this.binggan_input,
@@ -78,7 +78,7 @@ export default {
     login_handle2() {
       const config = {
         method: "post",
-        url: "/api/login",
+        url: "api/login",
         data: {
           binggan: this.binggan_input,
         },
@@ -94,6 +94,10 @@ export default {
         method: "get",
         url: "/api/get_user",
         data: {},
+        headers: {
+          Authorization:
+            "Bearer " + "1|34B9WKdMj6omEcSh7JMpyv6ufunWgm6aG4yIVlM3",
+        },
       };
       axios(config)
         .then((response) => {
@@ -103,10 +107,13 @@ export default {
     },
     get_forums() {
       const config = {
-        method: "post",
+        method: "get",
         url: "/api/forums/",
         data: {},
-        headers: { withCredentials: true },
+        headers: {
+          Authorization:
+            "Bearer " + "1|34B9WKdMj6omEcSh7JMpyv6ufunWgm6aG4yIVlM3",
+        },
       };
       axios(config).then((response) => {
         if (response.data.code == 200) {

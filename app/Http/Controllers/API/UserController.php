@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Common\ResponseCode;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,48 +66,25 @@ class UserController extends Controller
         //
     }
 
-    public function get_user()
+    public function get_user(Request $request)
     {
+
+        $token_header = $request->header('Authorization');
+        if (isset($token_header)) {
+            $token_header = str_replace('bearer', '', $token_header);
+            [$id, $user_token] = explode('|', $token_header, 2);
+            $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
+            $user_id = $token_data->tokenable_id;
+        }
+        $user = User::where('id',$user_id)->first();
+        $user->tokens()->delete();
 
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'message' => '登陆成功',
             'data' => [
-                'binggan' => Auth::user(),
+                'binggan' => $user,
             ],
         ]);
-    }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'binggan' => 'required|string',
-        ]);
-
-        $binggan  = $request->get('binggan');
-        $user2 = User::where('binggan', 'abc')->first();
-        Auth::attempt(['email' => '47155837@qq.com', 'password' => '84228184']);
-        $user = Auth::user(); 
-
-        if (Auth::check()) {
-            $token = $user2->createToken($binggan)->plainTextToken;
-            // Auth::login($user);
-            return response()->json([
-                'code' => ResponseCode::SUCCESS,
-                'message' => '登陆成功',
-                'data' => [
-                    'binggan' => Auth::user(),
-                    'token' => $token,
-                ],
-            ]);
-        } else {
-            return response()->json([
-                'code' => ResponseCode::USER_NOT_FOUND,
-                'message' => '找不到此饼干',
-                'data' => [
-                    'binggan' => $binggan,
-                ],
-            ]);
-        }
     }
 }

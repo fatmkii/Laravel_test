@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ForumController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ use App\Http\Controllers\API\UserController;
 // });
 
 Route::get('/get_user', [UserController::class, 'get_user']);
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->apiResource('forums', ForumController::class);
 Route::middleware('auth:sanctum')->apiResource('users', UserController::class);
