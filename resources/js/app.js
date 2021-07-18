@@ -57,10 +57,13 @@ const routes = [
         component: (resolve) => require(['../vue/user/login_page.vue'], resolve),
     },
     {
-        path: '/forum/:id',
+        path: '/forum/:forum_id/:page?',
         name: 'forum',
-        props: true,
-        component: (resolve) => require(['../vue/forum/forum.vue'], resolve),
+        props: route => ({
+            forum_id: parseInt(route.params.forum_id),
+            page: parseInt(route.params.page),
+        }),
+        component: (resolve) => require(['../vue/forum/forum_page.vue'], resolve),
     },
     {
         path: '/user-center',

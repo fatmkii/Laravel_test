@@ -38,18 +38,45 @@ const module_forums = {
                 return state.ForumsData.find(ForumData => ForumData.id == forum_id)
             }
         },
-        ForumCount: (state) => {
-            return state.ForumsData.length
+        ForumsCount: (state) => {
+            if (state.ForumsData) {
+                return state.ForumsData.length
+            }
         }
     },
     actions: {}
 }
 
 
+const module_threads = {
+    state: () => ({
+        ThreadsData: '',
+        ThreadLoadStatus: 0,
+    }),
+    mutations: {
+        ThreadsData_set(state, payload) {
+            state.ThreadsData = payload
+        },
+        ThreadsLoadStatus_set(state, payload) {
+            state.ThreadLoadStatus = payload
+        }
+    },
+    getters: {
+        ThreadsLastPage: (state) => {
+            // if (state.ThreadsData) {
+            //     return 4
+            // }
+            return 4
+        }
+    },
+    actions: {}
+}
+
 
 export default new Vuex.Store({
     modules: {
         Forums: module_forums,
-        User: module_user
+        User: module_user,
+        Threads: module_threads,
     }
 })

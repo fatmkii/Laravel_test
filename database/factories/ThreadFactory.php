@@ -23,7 +23,8 @@ class ThreadFactory extends Factory
     public function definition()
     {
         return [
-            'forum_id' => $this->faker->randomElement(array ('1','12','40')),
+            'forum_id' => $this->faker->randomElement(array('1', '12', '40')),
+            'author_name' => '= =',
             'title' => $this->faker->sentence(6, True),
             'content' => $this->faker->text(200),
         ];

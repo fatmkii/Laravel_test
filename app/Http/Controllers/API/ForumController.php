@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Forum;
+use App\Models\Thread;
 use App\Common\ResponseCode;
 
 class ForumController extends Controller
@@ -40,11 +41,11 @@ class ForumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($forum_id, $page = 1)
     {
         return response()->json([
             'code' => ResponseCode::SUCCESS,
-            'data' => Forum::find($id),
+            'data' => Thread::where('forum_id', $forum_id)->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc')->paginate(10),
         ]);
     }
 

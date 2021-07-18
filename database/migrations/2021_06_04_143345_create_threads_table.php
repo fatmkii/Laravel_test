@@ -18,8 +18,10 @@ class CreateThreadsTable extends Migration
             $table->integer('forum_id');
             $table->timestamps();
             $table->softDeletes();
+            $table->string('author_name');
             $table->string('title');
             $table->string('content');
+            $table->integer('replies_num')->default('1'); //回帖数
             $table->string('title_color')->nullable(); //自定义标题颜色
             $table->string('created_IP')->nullable()->default(null);
             $table->string('created_binggan')->nullable()->default(null);

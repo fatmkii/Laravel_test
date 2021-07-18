@@ -42,7 +42,7 @@ export default {
   }),
   methods: {
     forum_view: function (forum_id) {
-      this.$router.push({ name: "forum", params: { id: forum_id } });
+      this.$router.push({ name: "forum", params: { forum_id: forum_id } });
     },
   },
   created: function () {},

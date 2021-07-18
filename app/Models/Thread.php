@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Thread extends Model
 {
@@ -17,7 +18,7 @@ class Thread extends Model
     ];
     protected $fillable = [
         'forum_id', 'title', 'content', 'created_binggan', 'created_IP',
-        'anti_jingfen', 'sub_id', 'nissin_time',
+        'anti_jingfen', 'sub_id', 'nissin_time', 'author_name'
     ];
     protected $guarded = [
         'id', 'created_at', 'updated_at',
@@ -34,5 +35,16 @@ class Thread extends Model
     public function Replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('Y-m-d H:i');
+    }
+    public function getUpdatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('Y-m-d H:i');
     }
 }
