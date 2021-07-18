@@ -49,8 +49,9 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.card-body
-  cursor: pointer
+<style lang="scss" scoped>
+.card-body {
+  cursor: pointer;
+}
 </style>>
 

@@ -22,7 +22,7 @@
           >
           <b-td class="text-center">{{ thread.author_name }}</b-td>
           <b-td class="text-center">{{ thread.created_at }}</b-td>
-          <b-td class="text-center">{{ thread.replies_num }}</b-td>
+          <b-td class="text-center">{{ thread.posts_num }}</b-td>
           <b-td class="text-center">{{ thread.updated_at }}</b-td>
         </b-tr>
       </b-tbody>
@@ -36,15 +36,18 @@ import { mapState } from "vuex";
 
 export default {
   components: {},
-  props: {},
+  props: {
+    forum_id: Number,
+    page: Number,
+  },
   data: function () {
     return {
       name: "forum_threads",
     };
   },
   computed: mapState({
-    threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
-    threads_load_status: (state) => state.Threads.ThreadLoadStatus, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
+    threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
+    threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
   }),
   methods: {
     reply_view(thread_id) {

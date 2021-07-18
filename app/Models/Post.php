@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Thread;
+use Carbon\Carbon;
 
-class Reply extends Model
+class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -35,5 +36,16 @@ class Reply extends Model
     public function Thread()
     {
         return $this->belongsTo(Thread::class);
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('Y-m-d H:i');
+    }
+    public function getUpdatedAtAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        return $date->format('Y-m-d H:i');
     }
 }

@@ -2,21 +2,18 @@
 <template>
   <div class="overflow-auto">
     <b-pagination-nav
-      v-model="currentPage"
       :number-of-pages="threads_last_page"
       limit="5"
       :base-url="base_url"
       use-router
       first-number
       last-number
-      align="center"
     ></b-pagination-nav>
   </div>
 </template>
 
 
 <script>
-import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {},
@@ -26,7 +23,6 @@ export default {
   data: function () {
     return {
       name: "forum_paginator",
-      currentPage: Number,
     };
   },
   computed: {

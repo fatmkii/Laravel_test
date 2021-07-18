@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reply;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Thread;
 use App\Models\Forum;
 use Laravel\Sanctum\HasApiTokens;
-use App\Jobs\ReplyProcess;
+use App\Jobs\PostProcess;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +54,7 @@ class TestController extends Controller
 
     public function reply_queue()
     {
-        $reply = new Reply([
+        $reply = new Post([
             'forum_id' => '1',
             'thread_id' => '100001',
             'floor' => '5',
@@ -63,8 +63,8 @@ class TestController extends Controller
         ]);
         // $reply->save();
 
-        ReplyProcess::dispatch(
-            new Reply([
+        PostProcess::dispatch(
+            new Post([
                 'forum_id' => '1',
                 'thread_id' => '100001',
                 'floor' => '5',
@@ -74,7 +74,7 @@ class TestController extends Controller
         );
         Redis::set('akey', 'avalue');
 
-        return Reply::all();
+        return Post::all();
     }
 
     public function index()

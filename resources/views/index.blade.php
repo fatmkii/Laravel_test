@@ -13,6 +13,7 @@
         <app></app>
         <navigation></navigation>
         <router-view></router-view>
+        <footer_navi></footer_navi>
     </div>
 
 </body>

@@ -41,11 +41,12 @@ class ForumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($forum_id, $page = 1)
+    public function show($forum_id)
     {
         return response()->json([
             'code' => ResponseCode::SUCCESS,
-            'data' => Thread::where('forum_id', $forum_id)->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc')->paginate(10),
+            'forum_data' => Forum::where('id', $forum_id)->first(),
+            'threads_data' => Thread::where('forum_id', $forum_id)->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc')->paginate(10),
         ]);
     }
 

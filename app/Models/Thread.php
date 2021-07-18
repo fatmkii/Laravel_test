@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Post;
+use App\Models\Forum;
 use Carbon\Carbon;
 
 class Thread extends Model
@@ -32,9 +34,9 @@ class Thread extends Model
         return $this->belongsTo(Forum::class);
     }
 
-    public function Replies()
+    public function Posts()
     {
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Post::class);
     }
 
     public function getCreatedAtAttribute($value)

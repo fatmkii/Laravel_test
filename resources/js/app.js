@@ -36,10 +36,13 @@ Vue.component('axios_test', require('../vue/test/axios_test.vue').default);
 Vue.component('parent_com', require('../vue/test/parent_com.vue').default);
 Vue.component('children_com', require('../vue/test/children_com.vue').default);
 
-//通用导航栏
+//全局通用导航栏
 Vue.component('navigation', require('../vue/navigation.vue').default);
 //全局app.vue，用来做一些全剧请求（forums，user等）
 Vue.component('app', require('../vue/app.vue').default);
+//全局通用底部
+Vue.component('footer_navi', require('../vue/footer_navi.vue').default);
+
 
 const routes = [
     {
@@ -64,6 +67,15 @@ const routes = [
             page: parseInt(route.params.page),
         }),
         component: (resolve) => require(['../vue/forum/forum_page.vue'], resolve),
+    },
+    {
+        path: '/thread/:thread_id/:page?',
+        name: 'thread',
+        props: route => ({
+            thread_id: parseInt(route.params.thread_id),
+            page: parseInt(route.params.page),
+        }),
+        component: (resolve) => require(['../vue/thread/thread_page.vue'], resolve),
     },
     {
         path: '/user-center',

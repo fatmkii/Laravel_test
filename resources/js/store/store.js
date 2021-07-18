@@ -26,10 +26,14 @@ const module_user = {
 const module_forums = {
     state: () => ({
         ForumsData: '',
+        CurrentForumData: '',
     }),
     mutations: {
         ForumsData_set(state, payload) {
             state.ForumsData = payload
+        },
+        CurrentForumData_set(state, payload) {
+            state.CurrentForumData = payload
         }
     },
     getters: {
@@ -51,22 +55,48 @@ const module_forums = {
 const module_threads = {
     state: () => ({
         ThreadsData: '',
-        ThreadLoadStatus: 0,
+        ThreadsLoadStatus: 0,
+        CurrentThreadData: '',
     }),
     mutations: {
         ThreadsData_set(state, payload) {
             state.ThreadsData = payload
         },
         ThreadsLoadStatus_set(state, payload) {
-            state.ThreadLoadStatus = payload
+            state.ThreadsLoadStatus = payload
+        },
+        CurrentThreadData_set(state, payload) {
+            state.CurrentThreadData = payload
         }
     },
     getters: {
         ThreadsLastPage: (state) => {
-            // if (state.ThreadsData) {
-            //     return 4
-            // }
-            return 4
+            if (state.ThreadsData) {
+                return state.ThreadsData.last_page
+            }
+        }
+    },
+    actions: {}
+}
+
+const module_posts = {
+    state: () => ({
+        PostsData: '',
+        PostsLoadStatus: 0,
+    }),
+    mutations: {
+        PostsData_set(state, payload) {
+            state.PostsData = payload
+        },
+        PostsLoadStatus_set(state, payload) {
+            state.PostsLoadStatus = payload
+        }
+    },
+    getters: {
+        PostsLastPage: (state) => {
+            if (state.PostsData) {
+                return state.PostsData.last_page
+            }
         }
     },
     actions: {}
@@ -78,5 +108,6 @@ export default new Vuex.Store({
         Forums: module_forums,
         User: module_user,
         Threads: module_threads,
+        Posts: module_posts,
     }
 })

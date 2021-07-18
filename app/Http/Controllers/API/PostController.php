@@ -4,11 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Thread;
-use App\Models\Post;
-use App\Common\ResponseCode;
 
-class ThreadController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -47,17 +44,11 @@ class ThreadController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($Thread_id)
+    public function show($id)
     {
-        $CurrentThread = Thread::where('id', $Thread_id)->first();
-        $CurrentForum = $CurrentThread->forum;
-        return response()->json([
-            'code' => ResponseCode::SUCCESS,
-            'forum_data' => $CurrentForum,
-            'thread_data' => $CurrentThread,
-            'posts_data' => Post::where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10),
-        ]);
+        //
     }
+
     /**
      * Show the form for editing the specified resource.
      *

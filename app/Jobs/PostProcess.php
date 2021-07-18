@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use App\Models\Reply;
+use App\Models\Post;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Redis;
 
-class ReplyProcess implements ShouldQueue
+class PostProcess implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
@@ -22,7 +22,7 @@ class ReplyProcess implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Reply $reply)
+    public function __construct(Post $reply)
     {
         $this->reply = $reply;
 

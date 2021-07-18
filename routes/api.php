@@ -28,6 +28,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::apiResource('forums', ForumController::class);
 Route::apiResource('threads', ThreadController::class);
+Route::apiResource('posts', PostController::class);
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
 

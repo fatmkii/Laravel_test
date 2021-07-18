@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Reply;
+use App\Models\Post;
 
-class ReplySeeder extends Seeder
+class PostSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class ReplySeeder extends Seeder
      */
     public function run()
     {
-        Reply::factory(500)->create();
+        Post::factory(5000)->create();
     }
 }
