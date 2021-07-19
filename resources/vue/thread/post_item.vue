@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="post_content my-2" style="min-height: 80px">
-      {{ post_data.content }}
+      <span v-html="post_data.content"></span>
     </div>
     <div class="post_footer">
       <span class="post_footer_text">№{{ post_data.floor }}☆☆☆</span>
