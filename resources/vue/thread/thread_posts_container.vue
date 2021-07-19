@@ -23,14 +23,14 @@
     <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
     <div class="h6 my-2">内容</div>
     <b-form-textarea
-      id="post_input"
-      v-model="post_input"
+      id="content_input"
+      v-model="content_input"
       rows="3"
       max-rows="10"
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
       <div class="col-6">
-        <b-button variant="success">回复</b-button>
+        <b-button variant="success" @click="new_post_handle">回复</b-button>
       </div>
       <div class="col-6">放点别的？</div>
     </div>
@@ -42,10 +42,10 @@
 import { mapState } from "vuex";
 import PostItem from "./post_item.vue";
 import ThreadPaginator from "./thread_paginator.vue";
-import biaoqingbao from "./biaoqingbao.vue";
+import Emoji from "./emoji.vue";
 
 export default {
-  components: { PostItem, ThreadPaginator, biaoqingbao },
+  components: { PostItem, ThreadPaginator, Emoji },
   props: {
     thread_id: Number,
   },
@@ -53,7 +53,7 @@ export default {
     return {
       name: "thread_posts_container",
       nickname_input: "= =",
-      post_input: "",
+      content_input: "",
     };
   },
   computed: mapState({
@@ -68,6 +68,24 @@ export default {
     back_to_forum() {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },
+    new_post_handle() {
+      const config = {
+        method: "post",
+        url: "/api/posts/create",
+        data: {
+          binggan: this.$store.state.User.Binggan,
+          forum_id: this.forum_id,
+          thread_id: this.thread_id,
+          content: this.content_input,
+          nickname: this.nickname_input,
+        },
+      };
+      axios(config)
+        .then((response) => {
+          this.$parent.get_posts_data();
+        })
+        .catch((error) => console.log(error)); // Todo:写异常返回代码
+      },
   },
   created() {
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData

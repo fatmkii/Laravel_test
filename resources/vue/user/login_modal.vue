@@ -73,7 +73,28 @@ export default {
         .catch((error) => console.log(error)); // Todo:写异常返回代码
       this.$router.push({ name: "homepage" });
     },
-    register_handle() {},
+    register_handle() {
+      const config = {
+        method: "post",
+        url: "api/user/register",
+      };
+      axios(config)
+        .then((response) => {
+          this.$store.commit("Token_set", response.data.data.token);
+          this.$store.commit("Binggan_set", response.data.data.binggan);
+          this.$store.commit("LoginStatus_set", true);
+          if (window.localStorage) {
+            localStorage.Token = response.data.data.token;
+            localStorage.Binggan = response.data.data.binggan;
+          } else {
+            throw new Error("此浏览器居然不支持localstorage");
+          }
+          axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
+          window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
+        })
+        .catch((error) => console.log(error)); // Todo:写异常返回代码
+      this.$router.push({ name: "homepage" });
+    },
   },
 };
 </script>

@@ -17,7 +17,7 @@ export default {
   data: function () {
     return {
       name: "homepage_bulletin",
-      bulletin_text: "不知道要开发多久……",
+      bulletin_text: "领取饼干、发帖、回帖功能都做好的了。欢迎试试。",
     };
   },
   methods: {},

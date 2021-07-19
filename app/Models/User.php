@@ -19,7 +19,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'binggan',
-        'email',
         'password',
     ];
 
@@ -32,7 +31,6 @@ class User extends Authenticatable
         'binggan',
         'email',
         'password',
-        'remember_token',
     ];
 
     /**

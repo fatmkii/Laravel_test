@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Common\ResponseCode;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -66,6 +68,43 @@ class UserController extends Controller
         //
     }
 
+    public function create(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = new User;
+            do {
+                $binggan = Str::random(9);
+            } while (!empty(User::where('binggan', $binggan)->first));
+            $user->binggan = $binggan;
+            $user->created_ip = $request->ip();
+            $user->coin = 100;
+            $user->save();
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json([
+                'code' => ResponseCode::DATABASE_FAILED,
+                'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
+            ]);
+        }
+        $token = $user->createToken($binggan)->plainTextToken;
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '创建饼干成功！',
+                'data' => [
+                    'binggan' => $binggan,
+                    'token' => $token,
+                ],
+            ],
+            200
+        );
+    }
+
+
+
+
     public function get_user(Request $request)
     {
 
@@ -76,7 +115,7 @@ class UserController extends Controller
             $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
             $user_id = $token_data->tokenable_id;
         }
-        $user = User::where('id',$user_id)->first();
+        $user = User::where('id', $user_id)->first();
         $user->tokens()->delete();
 
         return response()->json([

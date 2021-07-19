@@ -16,10 +16,8 @@ class UserSeeder extends Seeder
     {
         User::create([
             'id' =>  1,
-            'binggan' => 'abc',
-            'name' => 'fat',
-            'email' => '47155837@qq.com',
-            'password' => bcrypt('84228184'),
+            'binggan' => 'fat',
+            'admin' => 99,
         ]);
         User::factory(10)->create();
     }

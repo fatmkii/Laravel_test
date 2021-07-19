@@ -78,6 +78,14 @@ const routes = [
         component: (resolve) => require(['../vue/thread/thread_page.vue'], resolve),
     },
     {
+        path: '/new_thread/:forum_id',
+        name: 'new_thread',
+        props: route => ({
+            forum_id: parseInt(route.params.forum_id),
+        }),
+        component: (resolve) => require(['../vue/thread/new_thread.vue'], resolve),
+    },
+    {
         path: '/user-center',
         name: 'user-center',
         component: (resolve) => require(['../vue/user/user_center.vue'], resolve),

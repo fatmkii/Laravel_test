@@ -24,9 +24,8 @@ class ThreadFactory extends Factory
     {
         return [
             'forum_id' => $this->faker->randomElement(array('1', '12', '40')),
-            'author_name' => '= =',
+            'nickname' => '= =',
             'title' => $this->faker->sentence(6, True),
-            'content' => $this->faker->text(200),
         ];
     }
 }

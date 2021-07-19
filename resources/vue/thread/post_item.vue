@@ -10,7 +10,9 @@
         <b-button size="sm" variant="success">回复</b-button>
       </div>
     </div>
-    <div class="post_content my-2" style="min-height: 80px">{{ post_data.content }}</div>
+    <div class="post_content my-2" style="min-height: 80px">
+      {{ post_data.content }}
+    </div>
     <div class="post_footer">
       <span class="post_footer_text">№{{ post_data.floor }}☆☆☆</span>
       <span class="post_nick_name">{{ post_data.nickname }}</span>

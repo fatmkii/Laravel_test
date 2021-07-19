@@ -4,8 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Thread;
+use Illuminate\Support\Facades\DB;
+use App\Models\Forum;
 use App\Models\Post;
+use App\Models\Thread;
+use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 
 class ThreadController extends Controller
@@ -25,9 +28,57 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'binggan' => 'required|string',
+            'forum_id' => 'required|integer',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'nickname' => '',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            //发主题帖（Thread）
+            $thread = new Thread;
+            $thread->created_binggan = $request->binggan;
+            $thread->forum_id = $request->forum_id;
+            $thread->title = $request->title;
+            $thread->nickname = $request->nickname;
+            $thread->created_ip = $request->ip();
+            $thread->save();
+            DB::commit(); //先提交一次，不然$thread没有id.
+            //发主题帖的第0楼（Post）
+            $post = new Post;
+            $post->created_binggan = $request->binggan;
+            $post->forum_id = $request->forum_id;
+            $post->thread_id = $thread->id;
+            $post->content = $request->content;
+            $post->nickname = $request->nickname;
+            $post->created_ip = $request->ip();
+            $post->random_head = random_int(1, 40);
+            $post->floor = 0;
+            $post->save();
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json([
+                'code' => ResponseCode::DATABASE_FAILED,
+                'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
+            ]);
+        }
+
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '发表主题成功！',
+                'data' => [
+                    'forum_id' => $request->forum_id,
+                    'thread_id' => $request->thread_id,
+                ]
+            ],
+        );
     }
 
     /**

@@ -1,11 +1,9 @@
 <template>
-  <div class="footer_navi" style="min-height: 100px">
-  </div>
+  <div class="footer_navi" style="min-height: 100px"></div>
 </template>
 
 
 <script>
-
 export default {
   data: function () {
     return {
@@ -15,3 +13,4 @@ export default {
   methods: {},
 };
 </script>
+

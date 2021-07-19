@@ -1,17 +1,14 @@
 
 <template>
   <div>
-    <p>这是个用户页面</p>
-    <p>你好！{{ binggan }}，别来无恙。</p>
+    <p>你好！别来无恙。</p>
+    <p>你的饼干是：{{ binggan }}</p>
     <b-button
       size="md"
       class="my-1 my-sm-0"
       variant="dark"
       @click="logout_handle"
       >退出饼干</b-button
-    >
-    <b-button size="md" class="my-1 my-sm-0" variant="dark" @click="get_user"
-      >获得用户信息</b-button
     >
   </div>
 </template>

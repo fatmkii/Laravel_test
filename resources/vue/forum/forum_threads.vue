@@ -1,7 +1,13 @@
 
 <template>
   <div v-if="threads_load_status">
-    <b-table-simple hover small caption-top responsive class="table-striped">
+    <b-table-simple
+      hover
+      small
+      caption-top
+      responsive
+      class="threads_table table-striped"
+    >
       <b-thead head-variant="light">
         <b-tr class="text-center">
           <b-th width="40%">标题</b-th>
@@ -20,7 +26,7 @@
           <b-td class="text-left" :style="{ color: thread.title_color }">
             {{ thread.title }}</b-td
           >
-          <b-td class="text-center">{{ thread.author_name }}</b-td>
+          <b-td class="text-center">{{ thread.nickname }}</b-td>
           <b-td class="text-center">{{ thread.created_at }}</b-td>
           <b-td class="text-center">{{ thread.posts_num }}</b-td>
           <b-td class="text-center">{{ thread.updated_at }}</b-td>
@@ -63,5 +69,8 @@ export default {
 <style lang="sass" scoped>
 tr
   cursor: pointer
+
+.threads_table
+  background-color: white
 </style>>
 

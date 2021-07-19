@@ -2,7 +2,31 @@
 <template>
   <div>
     <!-- 必须使page渲染进页面，才能触发updated() -->
-    <p style="display:none">这是版面：{{ forum_name }} 第{{ page }}页</p>
+    <p style="display: none">这是版面：{{ forum_name }} 第{{ page }}页</p>
+    <div class="row align-items-center mt-3">
+      <div class="col-auto h5">
+        <b-badge variant="secondary" pill class="float-left">
+          {{ forum_id }}
+        </b-badge>
+        <span id="forum_name">{{ forum_name }}</span>
+      </div>
+      <div class="col-auto my-2 ml-auto">
+        <b-button
+          size="sm"
+          class="my-1 my-sm-0 d-lg-none"
+          variant="success"
+          @click="new_thread_botton"
+          >发表主题</b-button
+        >
+        <b-button
+          size="md"
+          class="my-1 my-sm-0 d-none d-lg-block"
+          variant="success"
+          @click="new_thread_botton"
+          >发表主题</b-button
+        >
+      </div>
+    </div>
     <ForumThreads :forum_id="forum_id" :page="page"></ForumThreads>
     <ForumPaginator :forum_id="forum_id"></ForumPaginator>
   </div>
@@ -32,7 +56,7 @@ export default {
       } else {
         return "加载中……";
       }
-    }, //这个forum_name目前没有用
+    },
   },
   methods: {
     get_threads_data() {
@@ -49,6 +73,9 @@ export default {
           this.$store.commit("ThreadsLoadStatus_set", 1);
         })
         .catch((error) => console.log(error)); // Todo:写异常返回代码;
+    },
+    new_thread_botton() {
+      this.$router.push({ name: "new_thread", params: { forum_id: this.forum_id } });
     },
   },
   updated() {

@@ -1,6 +1,6 @@
 
 <template>
-  <div class="post_item my-2 mx-3"></div>
+  <div class="post_item my-2 mx-3">表情包</div>
 </template>
 
 
@@ -10,7 +10,7 @@ export default {
   props: {},
   data: function () {
     return {
-      name: "biaoqingbao",
+      name: "emoji",
     };
   },
   methods: {},

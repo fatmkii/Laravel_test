@@ -17,11 +17,10 @@ class ThreadSeeder extends Seeder
         Thread::factory(20)->create();
         Thread::create([
             'forum_id' => 1,
-            'author_name' => '管理员',
+            'nickname' => '管理员',
             'sub_id' => 1,
             'title_color' => '#fd7e14',
             'title' => '这是一个管理员公告',
-            'content' => '没有内容',
         ]);
         Thread::factory(100)->create();
     }

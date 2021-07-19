@@ -15,18 +15,17 @@ class CreateThreadsTable extends Migration
     {
         Schema::create('threads', function (Blueprint $table) {
             $table->id()->startingValue(100001);
-            $table->integer('forum_id');
+            $table->tinyInteger('sub_id')->unsigned()->default('0')->index(); //用来排序的
+            $table->integer('forum_id')->index();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('author_name');
+            $table->string('nickname');
             $table->string('title');
-            $table->string('content');
             $table->integer('posts_num')->default('1'); //回帖数
             $table->string('title_color')->nullable(); //自定义标题颜色
             $table->string('created_IP')->nullable()->default(null);
             $table->string('created_binggan')->nullable()->default(null);
             $table->boolean('anti_jingfen')->default('0');
-            $table->tinyInteger('sub_id')->unsigned()->default('0');
             $table->integer('nissin_time')->unsigned()->default('86400');
         });
     }
