@@ -82,10 +82,11 @@ export default {
       };
       axios(config)
         .then((response) => {
+          this.content_input = "";
           this.$parent.get_posts_data();
         })
         .catch((error) => console.log(error)); // Todo:写异常返回代码
-      },
+    },
   },
   created() {
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData
@@ -98,7 +99,7 @@ export default {
   background-color: #dff0d8;
 }
 .post_container {
-  background-color: white;
+  background-color: #eefaee;
 }
 #forum_name {
   cursor: pointer;

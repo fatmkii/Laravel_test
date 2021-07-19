@@ -51,6 +51,10 @@ class PostController extends Controller
             $post->floor = Post::where('thread_id', $request->thread_id)->count();
             $post->save();
             DB::commit();
+            $thread = $post->thread;
+            $thread->posts_num = $thread->posts_num + 1;
+            $thread->save();
+            DB::commit();
         } catch (QueryException $e) {
             DB::rollback();
             return response()->json([
@@ -58,6 +62,7 @@ class PostController extends Controller
                 'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
             ]);
         }
+
         $post_id = $post->id;
         return response()->json(
             [
