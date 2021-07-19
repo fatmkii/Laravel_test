@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('admin')->default(0); //1=一般管理员，99=超管
             $table->integer('coin')->default(0); //通用货币
             $table->timestamp('last_login')->nullable();
-            $table->string('created_ip')->unique()->nullable();
+            $table->string('created_ip')->nullable();
             $table->timestamps();
         });
     }
