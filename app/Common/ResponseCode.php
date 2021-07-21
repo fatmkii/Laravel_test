@@ -28,7 +28,7 @@ class ResponseCode
         self::SUCCESS => '请求成功',
         self::DEFAULT => '服务器异常',
         self::FILED_ERROR => '表单验证未通过',
-        self::USER_NOT_FOUND => '用户无法找到',
+        self::USER_NOT_FOUND => '饼干无法找到',
         self::USER_PASSWORD_ERROR => '密码输入错误',
         self::ADMIN_UNAUTHORIZED => '管理员权限不足',
         self::CANNOTLOGIN => '用户无法登录',

@@ -20,16 +20,16 @@ axios.interceptors.response.use(
     (response) => {
         return response
     },
-    err => {
-        if (err.response.status === 401) {
-            window.location.href = '/login' //如果遇到401错误(用户未认证)，就统一跳转到登陆页面
+    error => {
+        if (error.response.status === 401) {
+            localStorage.clear('Binggan')   //如果遇到401错误(用户未认证)，就清除Binggan和Token
+            localStorage.clear('Token')
+            axios.defaults.headers.Authorization = "";
+            window.location.href = '/login' //统一跳转到登陆页面
         }
-        console.log(new Error(err))
+        throw error
     }
 );
-
-
-
 
 //测试用的
 Vue.component('axios_test', require('../vue/test/axios_test.vue').default);

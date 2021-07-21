@@ -15,10 +15,7 @@
     <div class="h6 my-2">昵称</div>
     <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
     <div class="h6 my-2">标题</div>
-    <b-form-input
-      id="title_input"
-      v-model="title_input"
-    ></b-form-input>
+    <b-form-input id="title_input" v-model="title_input"></b-form-input>
     <div class="h6 my-2">内容</div>
     <b-form-textarea
       id="content_input"
@@ -79,7 +76,16 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.back_to_forum();
+          if (response.data.code == 200) {
+            this.$bvToast.toast(response.data.message, {
+              title: "Done.",
+              autoHideDelay: 1500,
+              appendToast: true,
+            });
+          }
+          setTimeout(() => {
+            this.back_to_forum();
+          }, 1500);
         })
         .catch((error) => console.log(error)); // Todo:写异常返回代码
     },

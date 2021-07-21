@@ -40,9 +40,34 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $request->validate([
+            'binggan' => 'required|string',
+        ]);
+
+        $user = $request->user();
+        if ($user->binggan == $request->get('binggan')) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::SUCCESS,
+                    'message' => '饼干认证成功，欢迎回来',
+                    'data' => [
+                        'binggan' => $user,
+                    ],
+                ],
+                200
+            );
+        } else {
+            return response()->json(
+                [
+                    'code' => ResponseCode::CANNOTLOGIN,
+                    'message' => ResponseCode::$codeMap[ResponseCode::CANNOTLOGIN],
+                    'data' => [],
+                ],
+                401
+            );
+        }
     }
 
     /**
@@ -102,6 +127,9 @@ class UserController extends Controller
         );
     }
 
+    public function check(Request $request)
+    {
+    }
 
 
 

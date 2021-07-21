@@ -42,4 +42,9 @@ class User extends Authenticatable
         'binggan_verified_at' => 'datetime',
         'last_login' => 'datetime',
     ];
+
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d H:i');
+    }
 }

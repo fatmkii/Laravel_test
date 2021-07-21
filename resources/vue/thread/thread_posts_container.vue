@@ -21,6 +21,7 @@
     <ThreadPaginator :thread_id="thread_id"></ThreadPaginator>
     <div class="h6 my-2">昵称</div>
     <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
+    <Emoji @emoji_append="emoji_append"></Emoji>
     <div class="h6 my-2">内容</div>
     <b-form-textarea
       id="content_input"
@@ -82,11 +83,23 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.content_input = "";
-          this.$parent.get_posts_data();
+          if (response.data.code == 200) {
+            this.$bvToast.toast(response.data.message, {
+              title: "Done.",
+              autoHideDelay: 1500,
+              appendToast: true,
+            });
+            this.content_input = "";
+            this.$parent.get_posts_data();
+          }
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码
+        .catch((error) => {
+          console.log(error);
+        }); // Todo:写异常返回代码
     },
+    emoji_append(emoji_src){
+      this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>"
+    }
   },
   created() {
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData

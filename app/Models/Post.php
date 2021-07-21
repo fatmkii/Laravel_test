@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Thread;
-use Carbon\Carbon;
 
 class Post extends Model
 {
@@ -38,14 +37,10 @@ class Post extends Model
         return $this->belongsTo(Thread::class);
     }
 
-    public function getCreatedAtAttribute($value)
+    protected function serializeDate($date)
     {
-        $date = Carbon::parse($value);
-        return $date->format('Y-m-d H:i');
+        return $date->format('Y-m-d H:i:s');
     }
-    public function getUpdatedAtAttribute($value)
-    {
-        $date = Carbon::parse($value);
-        return $date->format('Y-m-d H:i');
-    }
+
+
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ForumController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\EmojiController;
 use App\Http\Controllers\API\ThreadController;
 use App\Http\Controllers\API\PostController;
 
@@ -19,27 +20,29 @@ use App\Http\Controllers\API\PostController;
 |
 */
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
-Route::get('/get_user', [UserController::class, 'get_user']);
+
+//Auth系列
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+//Forum系列
 Route::apiResource('forums', ForumController::class);
 
 //thread系列
 Route::post('/threads/create', [ThreadController::class, 'create'])->name('thread.create');
 Route::apiResource('threads', ThreadController::class);
 
-//post系列
+//Post系列
 Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::apiResource('posts', PostController::class);
 
-//user系列
-Route::get('/user/{binggan}', [UserController::class, 'show'])->middleware('auth:sanctum');
+//User系列
+Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/user/register', [UserController::class, 'create']);
+
+//Emoji系列
+Route::get('/emoji', [EmojiController::class, 'index']);
 
 
 //测试用

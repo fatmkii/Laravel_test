@@ -39,14 +39,8 @@ class Thread extends Model
         return $this->hasMany(Post::class);
     }
 
-    public function getCreatedAtAttribute($value)
+    protected function serializeDate($date)
     {
-        $date = Carbon::parse($value);
-        return $date->format('Y-m-d H:i');
-    }
-    public function getUpdatedAtAttribute($value)
-    {
-        $date = Carbon::parse($value);
         return $date->format('Y-m-d H:i');
     }
 }

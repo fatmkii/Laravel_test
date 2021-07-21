@@ -152,6 +152,7 @@ return [
 
     'attributes' => [
         'binggan' => '饼干',
+        'content' => '内容',
     ],
 
 ];
