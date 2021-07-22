@@ -15,7 +15,10 @@
     <div class="post_container">
       <div class="post_title px-2 py-3 h4">标题：{{ thread_title }}</div>
       <div v-for="post_data in posts_data" :key="post_data.id">
-        <PostItem :post_data="post_data"></PostItem>
+        <PostItem
+          :post_data="post_data"
+          @quote_click="quote_click_handle"
+        ></PostItem>
       </div>
     </div>
     <ThreadPaginator :thread_id="thread_id"></ThreadPaginator>
@@ -28,10 +31,17 @@
       v-model="content_input"
       rows="3"
       max-rows="10"
+      ref="content_input"
+      @keyup.ctrl.enter="new_post_handle"
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
       <div class="col-6">
-        <b-button variant="success" @click="new_post_handle">回复</b-button>
+        <b-button
+          variant="success"
+          v-b-popover.hover.right="'可以Ctrl+Enter喔'"
+          @click="new_post_handle"
+          >回复</b-button
+        >
       </div>
       <div class="col-6">放点别的？</div>
     </div>
@@ -97,9 +107,16 @@ export default {
           console.log(error);
         }); // Todo:写异常返回代码
     },
-    emoji_append(emoji_src){
-      this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>"
-    }
+    emoji_append(emoji_src) {
+      this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";
+    },
+    quote_click_handle(quote_content) {
+      this.content_input = quote_content;
+      document
+        .querySelector("#content_input")
+        .scrollIntoView({ behavior: "smooth" });
+      this.$refs.content_input.focus();
+    },
   },
   created() {
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData

@@ -16,7 +16,7 @@ class Thread extends Model
 
     public $hidden = [
         'created_binggan',
-        'created_ip'
+        'created_IP'
     ];
     protected $fillable = [
         'forum_id', 'title', 'content', 'created_binggan', 'created_IP',

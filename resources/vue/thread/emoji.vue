@@ -1,5 +1,11 @@
 <template>
-  <b-tabs class="emoji_tabs my-2" content-class="py-2 px2 " no-fade>
+  <b-tabs class="emoji_tabs my-2" content-class="py-2 px2 " no-fade pills>
+    <b-tab
+      id="placeholder"
+      title-link-class="placeholder"
+      active
+      title="多余占位"
+    ></b-tab>
     <b-tab
       class="emoji_container"
       :title="emoji_data.name"
@@ -42,7 +48,9 @@ export default {
     },
     emoji_open() {
       this.emoji_show = true;
-      document.querySelector("#content_input").scrollIntoView({behavior: "smooth"});
+      document
+        .querySelector("#content_input")
+        .scrollIntoView({ behavior: "smooth" });
     },
   },
   created() {
@@ -67,9 +75,10 @@ export default {
 .nav {
   background-color: #eefaee;
 }
-</style>
+.nav-link.active {
+  background-color: #28a745 !important;
+}
 
-<style scoped>
 .emoji_box {
   max-width: 60px;
   max-height: 60px;
@@ -77,5 +86,8 @@ export default {
 .emoji_container {
   max-height: 250px;
   overflow-y: auto;
+}
+#placeholder___BV_tab_button__ {
+  display: none !important;
 }
 </style>

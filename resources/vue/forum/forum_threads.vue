@@ -18,13 +18,17 @@
         </b-tr>
       </b-thead>
       <b-tbody>
-        <b-tr
-          v-for="thread in threads_data"
-          :key="thread.id"
-          @click="reply_view(thread.id)"
-        >
+        <b-tr v-for="thread in threads_data" :key="thread.id">
           <b-td class="text-left" :style="{ color: thread.title_color }">
-            {{ thread.title }}</b-td
+            <span class="thread_title" @click="reply_view(thread.id)"
+              >{{ thread.title }}&nbsp;&nbsp;</span
+            ><router-link
+              :to="
+                '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 10)
+              "
+              v-if="thread.posts_num > 10"
+              >[{{ Math.ceil(thread.posts_num / 10) }}]</router-link
+            ></b-td
           >
           <b-td class="text-center">{{ thread.nickname }}</b-td>
           <b-td class="text-center">{{ thread.created_at }}</b-td>
@@ -66,11 +70,12 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-tr
-  cursor: pointer
-
-.threads_table
-  background-color: white
+<style lang="scss" scoped>
+.thread_title {
+  cursor: pointer;
+}
+.threads_table {
+  background-color: white;
+}
 </style>>
 
