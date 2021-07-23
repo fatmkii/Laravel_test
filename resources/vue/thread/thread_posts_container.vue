@@ -17,6 +17,7 @@
       <div v-for="post_data in posts_data" :key="post_data.id">
         <PostItem
           :post_data="post_data"
+          :binggan_hash="binggan_hash"
           @quote_click="quote_click_handle"
         ></PostItem>
       </div>
@@ -32,18 +33,24 @@
       rows="3"
       max-rows="10"
       ref="content_input"
+      :disabled="!this.$store.state.User.LoginStatus"
       @keyup.ctrl.enter="new_post_handle"
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
       <div class="col-6">
         <b-button
           variant="success"
+          :disabled="!this.$store.state.User.LoginStatus"
           v-b-popover.hover.right="'可以Ctrl+Enter喔'"
           @click="new_post_handle"
-          >回复</b-button
-        >
+          >回复
+        </b-button>
+        <span v-if="!this.$store.state.User.LoginStatus">
+          请在先<router-link to="/login">导入或领取饼干</router-link
+          >后才能发言喔
+        </span>
       </div>
-      <div class="col-6">放点别的？</div>
+      <div class="col-6"></div>
     </div>
   </div>
 </template>
@@ -67,14 +74,18 @@ export default {
       content_input: "",
     };
   },
-  computed: mapState({
-    forum_name: (state) => state.Forums.CurrentForumData.name,
-    forum_id: (state) => state.Forums.CurrentForumData.id,
-    thread_title: (state) => state.Threads.CurrentThreadData.title,
-    posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
-    posts_load_status: (state) => state.Posts.PostsLoadStatus,
-  }),
-
+  computed: {
+    binggan_hash() {
+      return sha256(this.$store.state.User.Binggan);
+    },
+    ...mapState({
+      forum_name: (state) => state.Forums.CurrentForumData.name,
+      forum_id: (state) => state.Forums.CurrentForumData.id,
+      thread_title: (state) => state.Threads.CurrentThreadData.title,
+      posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
+      posts_load_status: (state) => state.Posts.PostsLoadStatus,
+    }),
+  },
   methods: {
     back_to_forum() {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
@@ -104,11 +115,12 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          alert(error);
         }); // Todo:写异常返回代码
     },
     emoji_append(emoji_src) {
       this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";
+      this.$refs.content_input.focus();
     },
     quote_click_handle(quote_content) {
       this.content_input = quote_content;

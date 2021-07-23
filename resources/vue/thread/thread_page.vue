@@ -2,7 +2,7 @@
 <template>
   <div>
     <!-- 必须使page渲染进页面，才能触发updated() -->
-    <p style="display:none">这是帖子：{{ thread_id }} 第{{ page }}页</p>
+    <p style="display: none">这是帖子：{{ thread_id }} 第{{ page }}页</p>
     <ThreadPostsContainer :thread_id="thread_id"></ThreadPostsContainer>
   </div>
 </template>
@@ -42,7 +42,7 @@ export default {
           this.$store.commit("CurrentForumData_set", response.data.forum_data);
           this.$store.commit("PostsLoadStatus_set", 1);
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码;
+        .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
   },
   updated() {

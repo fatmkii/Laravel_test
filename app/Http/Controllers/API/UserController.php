@@ -103,7 +103,7 @@ class UserController extends Controller
             } while (!empty(User::where('binggan', $binggan)->first));
             $user->binggan = $binggan;
             $user->created_ip = $request->ip();
-            $user->coin = 100;
+            $user->coin = 10000;
             $user->save();
             DB::commit();
         } catch (QueryException $e) {

@@ -8,6 +8,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EmojiController;
 use App\Http\Controllers\API\ThreadController;
 use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\CommonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +42,7 @@ Route::apiResource('posts', PostController::class);
 Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/user/register', [UserController::class, 'create']);
 
-//Emoji系列
-Route::get('/emoji', [EmojiController::class, 'index']);
 
-
-//测试用
-Route::middleware('auth:sanctum')->post('/get_user', [AuthController::class, 'get_user']);
+//杂项
+Route::get('/emoji', [CommonController::class, 'emoji_index']);
+Route::get('/subtitles', [CommonController::class, 'subtitles_index']);

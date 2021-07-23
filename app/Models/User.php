@@ -29,8 +29,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'binggan',
-        'email',
         'password',
+        'last_login',
+        'created_ip',
     ];
 
     /**

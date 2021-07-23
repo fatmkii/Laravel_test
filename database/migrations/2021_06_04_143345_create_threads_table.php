@@ -21,8 +21,10 @@ class CreateThreadsTable extends Migration
             $table->softDeletes();
             $table->string('nickname');
             $table->string('title');
+            $table->string('sub_title')->default('[闲聊]');
             $table->integer('posts_num')->default('1'); //回帖数
             $table->string('title_color')->nullable(); //自定义标题颜色
+            $table->boolean('is_anonymous')->default('0');
             $table->string('created_IP')->nullable()->default(null);
             $table->string('created_binggan')->nullable()->default(null);
             $table->boolean('anti_jingfen')->default('0');

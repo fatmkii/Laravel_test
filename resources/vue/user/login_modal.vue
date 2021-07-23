@@ -61,6 +61,7 @@ export default {
           this.$store.commit("Token_set", response.data.data.token);
           this.$store.commit("Binggan_set", response.data.data.binggan);
           this.$store.commit("LoginStatus_set", true);
+          this.$store.commit("AdminStatus_set", response.data.data.admin);
           if (window.localStorage) {
             localStorage.Token = response.data.data.token;
             localStorage.Binggan = response.data.data.binggan;
@@ -70,7 +71,7 @@ export default {
           axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
           window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码
+        .catch((error) => alert(error)); // Todo:写异常返回代码
       this.$router.push({ name: "homepage" });
     },
     register_handle() {
@@ -83,6 +84,7 @@ export default {
           this.$store.commit("Token_set", response.data.data.token);
           this.$store.commit("Binggan_set", response.data.data.binggan);
           this.$store.commit("LoginStatus_set", true);
+          this.$store.commit("AdminStatus_set", response.data.data.admin);
           if (window.localStorage) {
             localStorage.Token = response.data.data.token;
             localStorage.Binggan = response.data.data.binggan;
@@ -92,7 +94,7 @@ export default {
           axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
           window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码
+        .catch((error) => alert(error)); // Todo:写异常返回代码
       this.$router.push({ name: "homepage" });
     },
   },

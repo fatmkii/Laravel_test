@@ -15,6 +15,7 @@
           size="sm"
           class="my-1 my-sm-0 d-lg-none"
           variant="success"
+          :disabled="!this.$store.state.User.LoginStatus"
           @click="new_thread_botton"
           >发表主题</b-button
         >
@@ -22,6 +23,7 @@
           size="md"
           class="my-1 my-sm-0 d-none d-lg-block"
           variant="success"
+          :disabled="!this.$store.state.User.LoginStatus"
           @click="new_thread_botton"
           >发表主题</b-button
         >
@@ -72,10 +74,13 @@ export default {
           this.$store.commit("ThreadsData_set", response.data.threads_data);
           this.$store.commit("ThreadsLoadStatus_set", 1);
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码;
+        .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
     new_thread_botton() {
-      this.$router.push({ name: "new_thread", params: { forum_id: this.forum_id } });
+      this.$router.push({
+        name: "new_thread",
+        params: { forum_id: this.forum_id },
+      });
     },
   },
   updated() {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Forum;
 use App\Models\Post;
 use App\Models\Thread;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 
@@ -40,6 +41,12 @@ class ThreadController extends Controller
 
         try {
             DB::beginTransaction();
+            if ($request->title_color) {
+                $user = User::where('binggan', $request->binggan)->first();
+                $user->coin -= 500; //设置标题颜色减500奥利奥
+                $user->save();
+                DB::commit();
+            }
             //发主题帖（Thread）
             $thread = new Thread;
             $thread->created_binggan = $request->binggan;
@@ -47,6 +54,9 @@ class ThreadController extends Controller
             $thread->title = $request->title;
             $thread->nickname = $request->nickname;
             $thread->created_ip = $request->ip();
+            $thread->sub_title = $request->subtitle;
+            $thread->nissin_time = $request->nissin_time;
+            $thread->title_color = $request->title_color;
             $thread->save();
             DB::commit(); //先提交一次，不然$thread没有id.
             //发主题帖的第0楼（Post）

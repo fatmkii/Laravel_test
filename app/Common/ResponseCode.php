@@ -8,7 +8,11 @@ class ResponseCode
 
     const FILED_ERROR = 20422;
 
+    const USER_UNAUTHORIZED = 21401;
+
     const USER_NOT_FOUND = 21404;
+
+    const COIN_NOT_ENOUGH = 21412;
 
     const USER_PASSWORD_ERROR = 21001;
 
@@ -29,6 +33,8 @@ class ResponseCode
         self::DEFAULT => '服务器异常',
         self::FILED_ERROR => '表单验证未通过',
         self::USER_NOT_FOUND => '饼干无法找到',
+        self::USER_UNAUTHORIZED => "饼干错误",
+        self::COIN_NOT_ENOUGH => "奥利奥不足了",
         self::USER_PASSWORD_ERROR => '密码输入错误',
         self::ADMIN_UNAUTHORIZED => '管理员权限不足',
         self::CANNOTLOGIN => '用户无法登录',

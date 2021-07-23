@@ -6,6 +6,14 @@
         <span class="align-middle">随机头像：{{ post_data.random_head }}</span>
       </div>
       <div class="col-auto">
+        <b-button
+          size="sm"
+          variant="light"
+          v-if="binggan_hash == post_data.created_binggan"
+          @click="post_delect_click"
+        >
+          删除
+        </b-button>
         <b-button size="sm" variant="info">打赏</b-button>
         <b-button size="sm" variant="success" @click="quote_click">
           回复
@@ -30,7 +38,8 @@
 export default {
   components: {},
   props: {
-    post_data: "",
+    post_data: Object,
+    binggan_hash: String,
   },
   data: function () {
     return {
@@ -38,8 +47,29 @@ export default {
     };
   },
   methods: {
+    post_delect_click() {
+      var isdelete = confirm("要删除这个回复吗？（消费300奥利奥）");
+      if (isdelete == true) {
+        const config = {
+          method: "delete",
+          url: "/api/posts/" + this.post_data.id,
+          data: {
+            binggan: this.$store.state.User.Binggan,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert("帖子删除成功");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error)); 
+      }
+    },
     quote_click() {
-      const max_quote = 3;  //最大可引用的层数
+      const max_quote = 3; //最大可引用的层数
       var post_lines = this.$refs.post_centent.innerText.split("\n");
       var index_array = [];
       //搜索引用的层数
@@ -87,7 +117,7 @@ export default {
   max-height: 67px;
   max-width: 67px;
 }
-.quote_content{
+.quote_content {
   color: #777777;
 }
 </style>

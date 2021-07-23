@@ -14,10 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UserSeeder::class);
+        // $this->call(UserSeeder::class);
         $this->call(ForumSeeder::class);
-        $this->call(ThreadSeeder::class);
-        $this->call(PostSeeder::class);
-
+        // $this->call(ThreadSeeder::class);
+        // $this->call(PostSeeder::class);
+        $this->call(EmojiSeeder::class);
+        $this->call(SubtitlesSeeder::class);
     }
 }

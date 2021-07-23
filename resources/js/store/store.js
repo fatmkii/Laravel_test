@@ -7,6 +7,7 @@ const module_user = {
         Token: '',
         Binggan: '',
         LoginStatus: false,
+        AdminStatus: 0,
     }),
     mutations: {
         Token_set(state, payload) {
@@ -17,6 +18,9 @@ const module_user = {
         },
         LoginStatus_set(state, payload) {
             state.LoginStatus = payload
+        },
+        AdminStatus_set(state, payload) {
+            state.AdminStatus = payload
         },
     },
     actions: {},

@@ -27,6 +27,7 @@
                 '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 10)
               "
               v-if="thread.posts_num > 10"
+              style="color: #212529"
               >[{{ Math.ceil(thread.posts_num / 10) }}]</router-link
             ></b-td
           >

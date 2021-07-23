@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Models\Thread;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -50,10 +51,13 @@ class PostController extends Controller
             $post->random_head = random_int(1, 40);
             $post->floor = Post::where('thread_id', $request->thread_id)->count();
             $post->save();
-            DB::commit();
+            DB::commit(); //如果不先commit，可能post没ID？
             $thread = $post->thread;
             $thread->posts_num = $thread->posts_num + 1;
             $thread->save();
+            $user = User::where('binggan', $request->binggan)->first();
+            $user->coin += 10; //回复+10奥利奥
+            $user->save();
             DB::commit();
         } catch (QueryException $e) {
             DB::rollback();
@@ -128,8 +132,51 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $request->validate([
+            'binggan' => 'required|string',
+        ]);
+
+        $post = Post::find($id);
+        if ($post->created_binggan != $request->binggan) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_UNAUTHORIZED,
+                    'message' => '饼干错误',
+                    'data' => [
+                        'post_id' => $id,
+                        'created_binggan' => $post->created_binggan,
+                        '$request->binggan' => $request->binggan,
+                    ]
+                ],
+            );
+        }
+
+        $user = User::where('binggan', $request->binggan)->first();
+        if ($user->coin < 300) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::COIN_NOT_ENOUGH,
+                    'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
+                    'data' => [
+                        'post_id' => $id,
+                    ]
+                ],
+            );
+        }
+
+        $post->delete();
+        $user->coin -= 300; //删除帖子扣除300奥利奥
+        $user->save();
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '删除回复成功！',
+                'data' => [
+                    'post_id' => $id,
+                ]
+            ],
+        );
     }
 }

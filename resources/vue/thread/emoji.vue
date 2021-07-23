@@ -65,7 +65,7 @@ export default {
         }
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
       }); // Todo:写异常返回代码
   },
 };

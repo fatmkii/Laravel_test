@@ -20,7 +20,7 @@ export default {
         .then((response) => {
           this.$store.commit("ForumsData_set", response.data.data);
         })
-        .catch((error) => console.log(error)); // Todo:写异常返回代码;}
+        .catch((error) => alert(error)); // Todo:写异常返回代码;}
     },
     get_user_data() {
       if (localStorage.Token != null && localStorage.Binggan != null) {
@@ -37,14 +37,16 @@ export default {
           },
         };
         axios(config)
-          .then((response) => {})
+          .then((response) => {
+            this.$store.commit("AdminStatus_set", response.data.data.binggan.admin);
+          })
           .catch((error) => {
             if (err.response.status === 401) {
               localStorage.clear("Binggan"); //如果遇到401错误(用户未认证)，就清除Binggan和Token
               localStorage.clear("Token");
               axios.defaults.headers.Authorization = "";
             }
-            console.log(error);
+            alert('你的饼干好像有问题？请重新登录');
           }); // Todo:写异常返回代码;
       }
     },
@@ -54,6 +56,4 @@ export default {
     this.get_user_data();
   },
 };
-
-
 </script>
