@@ -31,7 +31,13 @@
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
       <div class="col-6">
-        <b-button variant="success" @click="new_thread_handle">发表</b-button>
+        <b-button
+          variant="success"
+          :disabled="new_thread_handling"
+          @click="new_thread_handle"
+          >发表</b-button
+        >
+        <p v-show="new_thread_handling">数据提交中……</p>
       </div>
       <div class="col-6"></div>
     </div>
@@ -89,6 +95,7 @@ export default {
   data: function () {
     return {
       name: "new_thread",
+      new_thread_handling: false,
       nickname_input: "= =",
       content_input: "",
       title_input: "",
@@ -117,6 +124,7 @@ export default {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },
     new_thread_handle() {
+      this.new_thread_handling = true;
       const config = {
         method: "post",
         url: "/api/threads/create",
@@ -144,7 +152,10 @@ export default {
             this.back_to_forum();
           }, 1500);
         })
-        .catch((error) => alert(error)); // Todo:写异常返回代码
+        .catch((error) => {
+          this.new_thread_handling = false;
+          alert(error);
+        }); // Todo:写异常返回代码
     },
     emoji_append(emoji_src) {
       this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";

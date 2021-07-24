@@ -11,6 +11,7 @@
       :title="emoji_data.name"
       v-for="emoji_data in emojis_data"
       :key="emoji_data.index"
+      lazy
       @click="emoji_open()"
       ><div v-show="emoji_show">
         <div

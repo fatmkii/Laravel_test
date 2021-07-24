@@ -1,8 +1,6 @@
 
 <template>
   <div>
-    <!-- 必须使page渲染进页面，才能触发updated() -->
-    <p style="display: none">这是版面：{{ forum_name }} 第{{ page }}页</p>
     <div class="row align-items-center mt-3">
       <div class="col-auto h5">
         <b-badge variant="secondary" pill class="float-left">
@@ -45,6 +43,10 @@ export default {
     forum_id: Number, //来自router，
     page: Number, //来自router
   },
+  watch: {
+    // 如果路由有变化，再次获得数据
+    $route: "get_threads_data",
+  },
   data: function () {
     return {
       name: "forum_page",
@@ -82,9 +84,6 @@ export default {
         params: { forum_id: this.forum_id },
       });
     },
-  },
-  updated() {
-    this.get_threads_data(); //当page切换时重新获得threads数据
   },
   created() {
     this.get_threads_data(); //当page切换时重新获得threads数据
