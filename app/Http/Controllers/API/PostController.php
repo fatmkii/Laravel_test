@@ -139,7 +139,7 @@ class PostController extends Controller
         ]);
 
         $post = Post::find($id);
-        if ($post->created_binggan != $request->binggan) {
+        if ($post->created_binggan != hash('sha256', $request->binggan)) { //记得获得created_binggan都是hash过的
             return response()->json(
                 [
                     'code' => ResponseCode::USER_UNAUTHORIZED,

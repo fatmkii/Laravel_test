@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id()->startingValue(100001);
             $table->string('binggan')->unique()->index();
+            $table->string('binggan_hash')->unique()->index();
             $table->string('nickname')->nullable(); //自定义昵称
             $table->string('password')->nullable();
             $table->timestamp('binggan_verified_at')->nullable();

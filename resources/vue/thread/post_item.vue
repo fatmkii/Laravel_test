@@ -61,11 +61,12 @@ export default {
           .then((response) => {
             if (response.data.code == 200) {
               alert("帖子删除成功");
+              this.$emit("get_posts_data");
             } else {
               alert(response.data.message);
             }
           })
-          .catch((error) => alert(error)); 
+          .catch((error) => alert(error));
       }
     },
     quote_click() {

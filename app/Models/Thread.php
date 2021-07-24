@@ -43,4 +43,9 @@ class Thread extends Model
     {
         return $date->format('Y-m-d H:i');
     }
+
+    public function getCreatedBingganAttribute($binggan)
+    {
+        return hash('sha256', $binggan);
+    }
 }

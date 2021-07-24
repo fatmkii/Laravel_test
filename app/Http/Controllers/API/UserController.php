@@ -100,8 +100,10 @@ class UserController extends Controller
             $user = new User;
             do {
                 $binggan = Str::random(9);
+                $binggan_hash = hash('sha256', $binggan);
             } while (!empty(User::where('binggan', $binggan)->first));
             $user->binggan = $binggan;
+            $user->binggan_hash = $binggan_hash;
             $user->created_ip = $request->ip();
             $user->coin = 10000;
             $user->save();
