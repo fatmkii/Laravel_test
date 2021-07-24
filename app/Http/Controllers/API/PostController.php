@@ -166,7 +166,8 @@ class PostController extends Controller
             );
         }
 
-        $post->delete();
+        $post->is_deleted = 1;
+        $post->save();
         $user->coin -= 300; //删除帖子扣除300奥利奥
         $user->save();
         return response()->json(

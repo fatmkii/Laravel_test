@@ -112,11 +112,12 @@ class ThreadController extends Controller
     {
         $CurrentThread = Thread::where('id', $Thread_id)->first();
         $CurrentForum = $CurrentThread->forum;
+        $posts = Post::where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'forum_data' => $CurrentForum,
             'thread_data' => $CurrentThread,
-            'posts_data' => Post::where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10),
+            'posts_data' => $posts,
         ]);
     }
     /**

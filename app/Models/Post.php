@@ -10,7 +10,6 @@ use App\Models\Thread;
 class Post extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
         'forum_id',
@@ -45,5 +44,17 @@ class Post extends Model
     public function getCreatedBingganAttribute($binggan)
     {
         return hash('sha256', $binggan);
+    }
+
+    public function getContentAttribute($content)
+    {
+        switch ($this->is_deleted) {
+            case 0:
+                return $content;
+            case 1:
+                return '*此贴已被作者删除*';
+            case 2:
+                return '*此贴已被管理员删除*';
+        }
     }
 }

@@ -16,7 +16,7 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id()->startingValue(1000001);
             $table->timestamps();
-            $table->softDeletes();
+            $table->tinyInteger('is_deleted')->default(0); //0=正常；1=被用户删除；2=被管理员删除
             $table->integer('forum_id')->index();
             $table->integer('thread_id')->index();
             $table->integer('floor')->index();

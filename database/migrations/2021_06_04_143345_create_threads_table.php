@@ -18,7 +18,7 @@ class CreateThreadsTable extends Migration
             $table->tinyInteger('sub_id')->unsigned()->default('0')->index(); //用来排序的
             $table->integer('forum_id')->index();
             $table->timestamps();
-            $table->softDeletes();
+            $table->tinyInteger('is_deleted')->default(0); //0=正常；1=被用户删除；2=被管理员删除
             $table->string('nickname');
             $table->string('title');
             $table->string('sub_title')->default('[闲聊]');

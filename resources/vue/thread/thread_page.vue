@@ -19,6 +19,7 @@
           :post_data="post_data"
           :binggan_hash="binggan_hash"
           @quote_click="quote_click_handle"
+          @get_posts_data="get_posts_data"
         ></PostItem>
       </div>
     </div>
@@ -74,8 +75,8 @@ export default {
   },
   data: function () {
     return {
-      name: "thread_page2",
-      new_thread_handling = false,
+      name: "thread_page",
+      new_thread_handling: false,
       nickname_input: "= =",
       content_input: "",
     };
@@ -118,7 +119,7 @@ export default {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },
     new_post_handle() {
-      this.new_thread_handling = true
+      this.new_thread_handling = true;
       const config = {
         method: "post",
         url: "/api/posts/create",

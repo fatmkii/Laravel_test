@@ -21,7 +21,10 @@
       </div>
     </div>
     <div class="post_content my-2" style="min-height: 80px" ref="post_centent">
-      <span v-html="post_data.content.replace(/\n/g, '<br>')"></span>
+      <span
+        v-html="post_data.content.replace(/\n/g, '<br>')"
+        style="word-wrap: break-word; white-space: normal"
+      ></span>
     </div>
     <div class="post_footer" ref="post_author_info">
       <span class="post_footer_text">№{{ post_data.floor }} ☆☆☆</span>

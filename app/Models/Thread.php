@@ -11,7 +11,6 @@ use Carbon\Carbon;
 
 class Thread extends Model
 {
-    use SoftDeletes;
     use HasFactory;
 
     public $hidden = [

@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Forum extends Model
 {
 
-    use SoftDeletes;
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $timestamps = false;
 
@@ -25,16 +24,14 @@ class Forum extends Model
      *
      * @var array
      */
-    protected $hidden = [
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
-    ];
+    protected $casts = [];
 
     public function Threads()
     {
