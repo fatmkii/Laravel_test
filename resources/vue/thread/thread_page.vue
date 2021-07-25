@@ -170,7 +170,7 @@ export default {
   },
   created() {
     this.get_posts_data();
-    // this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData
+    this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData
   },
 };
 </script>

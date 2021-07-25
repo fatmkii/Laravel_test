@@ -195,6 +195,9 @@ export default {
 .post_footer_text {
   color: #5fb878;
 }
+.post_footer {
+  font-size: calc(0.8rem + 0.3vw);
+}
 .post_item {
   border-bottom: 1px solid #111;
 }
