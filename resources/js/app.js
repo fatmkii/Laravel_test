@@ -9,7 +9,6 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 import store from './store/store'
 import router from './routes.js'
-import "rfs";
 
 window.sha256 = require('js-sha256')
 
