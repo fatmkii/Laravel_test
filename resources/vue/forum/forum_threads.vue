@@ -20,8 +20,9 @@
       <b-tbody>
         <b-tr v-for="thread in threads_data" :key="thread.id">
           <b-td class="text-left" :style="{ color: thread.title_color }">
+            <span class="thread_sub_title"> {{ thread.sub_title }}&nbsp; </span>
             <span class="thread_title" @click="reply_view(thread.id)">
-              {{ thread.sub_title }}&nbsp;{{ thread.title }}&nbsp;&nbsp;
+              {{ thread.title }}&nbsp;&nbsp;
             </span>
             <router-link
               :to="
@@ -75,6 +76,7 @@ export default {
 <style lang="scss" scoped>
 .thread_title {
   cursor: pointer;
+  color: #0000ee;
 }
 .threads_table {
   background-color: white;

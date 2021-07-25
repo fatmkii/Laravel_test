@@ -11,8 +11,9 @@
         :key="thread.id"
       >
         <div class="text-left my-1 py-1" :style="{ color: thread.title_color }">
+          <span class="thread_sub_title"> {{ thread.sub_title }}&nbsp; </span>
           <span class="thread_title" @click="reply_view(thread.id)">
-            {{ thread.sub_title }}&nbsp;{{ thread.title }}&nbsp;&nbsp;
+            {{ thread.title }}&nbsp;&nbsp;
           </span>
           <router-link
             :to="
@@ -68,6 +69,7 @@ export default {
 <style lang="scss" scoped>
 .thread_title {
   cursor: pointer;
+  color: #0000EE;
 }
 .threads_table_header {
   background-color: #e9ecef;
