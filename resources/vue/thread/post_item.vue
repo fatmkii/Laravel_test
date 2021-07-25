@@ -1,4 +1,3 @@
-
 <template>
   <div class="post_item my-2 mx-3">
     <div class="post_header row">
@@ -9,12 +8,18 @@
         <b-button
           size="sm"
           variant="light"
-          v-if="binggan_hash == post_data.created_binggan"
+          v-if="binggan_hash == post_data.created_binggan_hash"
           @click="post_delect_click"
         >
           删除
         </b-button>
-        <b-button size="sm" variant="info">打赏</b-button>
+        <b-button
+          size="sm"
+          variant="info"
+          v-if="binggan_hash != post_data.created_binggan_hash"
+          @click="reward_click"
+          >打赏</b-button
+        >
         <b-button size="sm" variant="success" @click="quote_click">
           回复
         </b-button>
@@ -33,6 +38,43 @@
       <span class="post_created_at">{{ post_data.created_at }}</span
       ><span class="post_footer_text"> 留言 ☆☆☆</span>
     </div>
+    <div>
+      <b-modal ref="reward_modal" id="reward_modal">
+        <template v-slot:modal-header>
+          <h5>打赏olo 给№{{ post_data.floor }}楼</h5>
+        </template>
+        <template v-slot:default>
+          <p>
+            友情提示：您在打赏回贴作者以后，将会扣除7%的手续费。
+            <br />
+            例如您打赏1000块奥利奥，则对方将获得
+            <span style="color: red">930 </span>块奥利奥。
+          </p>
+          <b-input-group prepend="打赏：">
+            <b-form-input
+              v-model="coin_reward_input"
+              placeholder="olo数量"
+            ></b-form-input>
+          </b-input-group>
+          <b-input-group prepend="留言：">
+            <b-form-input v-model="content_reward_input"></b-form-input>
+          </b-input-group>
+        </template>
+        <template v-slot:modal-footer="{ cancel }">
+          <b-button-group>
+            <b-button
+              variant="success"
+              :disabled="reward_handling"
+              @click="reward_handle"
+              >打赏！</b-button
+            >
+            <b-button variant="outline-secondary" @click="cancel()">
+              取消
+            </b-button>
+          </b-button-group>
+        </template>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -47,9 +89,51 @@ export default {
   data: function () {
     return {
       name: "post_item",
+      content_reward_input: "",
+      coin_reward_input: "",
+      reward_handling: false,
     };
   },
   methods: {
+    reward_click() {
+      this.$refs["reward_modal"].show();
+    },
+    reward_handle() {
+      this.reward_handling = true;
+      const config = {
+        method: "post",
+        url: "/api/user/reward",
+        data: {
+          binggan: this.$store.state.User.Binggan,
+          forum_id: this.post_data.forum_id,
+          thread_id: this.post_data.thread_id,
+          post_id: this.post_data.id,
+          content: this.content_reward_input,
+          coin: this.coin_reward_input,
+          post_floor_message: this.$refs.post_author_info.innerText,
+        },
+      };
+      axios(config)
+        .then((response) => {
+          if (response.data.code == 200) {
+            this.$bvToast.toast(response.data.message, {
+              title: "Done.",
+              autoHideDelay: 1500,
+              appendToast: true,
+            });
+            this.$refs["reward_modal"].hide();
+            this.reward_handling = false;
+            this.$parent.get_posts_data();
+          } else {
+            this.reward_handling = false;
+            alert(response.data.message);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+          this.reward_handling = false;
+        }); // Todo:写异常返回代码
+    },
     post_delect_click() {
       var isdelete = confirm("要删除这个回复吗？（消费300奥利奥）");
       if (isdelete == true) {
@@ -98,14 +182,6 @@ export default {
         "</span>" +
         "\n";
       return this.$emit("quote_click", quote_content);
-    },
-  },
-  computed: {
-    content() {
-      return "We are proud Microsoft to announce that Microsoft has ".replace(
-        /Microsoft/g,
-        "W3School"
-      );
     },
   },
 };

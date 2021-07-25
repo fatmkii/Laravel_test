@@ -52,13 +52,14 @@ class PostController extends Controller
             $post->random_head = random_int(1, 40);
             $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();
             $post->save();
-            DB::commit(); //如果不先commit，可能post没ID？
+
             $thread = $post->thread;
             $thread->posts_num = $thread->posts_num + 1;
             $thread->save();
             $user = User::where('binggan', $request->binggan)->first();
             $user->coin += 10; //回复+10奥利奥
             $user->save();
+
             DB::commit();
         } catch (QueryException $e) {
             DB::rollback();
@@ -134,10 +135,9 @@ class PostController extends Controller
             'thread_id' => 'required|integer',
         ]);
 
-        // $post = Post::suffix(intval($request->thread_id / 10000))->find($id);
         $post = Post::suffix(intval($request->thread_id / 10000))->find($id);
         //判断删帖操作者饼干和post饼干是否相同
-        if ($post->created_binggan != hash('sha256', $request->binggan)) { //记得获得created_binggan都是hash过的
+        if ($post->created_binggan != $request->binggan) {
             return response()->json(
                 [
                     'code' => ResponseCode::USER_UNAUTHORIZED,

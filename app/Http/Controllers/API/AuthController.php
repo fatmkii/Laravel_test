@@ -63,7 +63,7 @@ class AuthController extends Controller
         // }
 
         $user = request()->user();
-        
+
         if (isset($user)) {
             if ($binggan !== $user->binggan) {
                 return response()->json(
@@ -90,26 +90,5 @@ class AuthController extends Controller
                 );
             }
         }
-    }
-
-    public function get_user(Request $request)
-    {
-
-        // $token_header = $request->header('Authorization');
-        // if (isset($token_header)) {
-        //     $token_header = str_replace('bearer', '', $token_header);
-        //     [$token_id, $user_token] = explode('|', $token_header, 2);
-        //     $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
-        //     $user_id = $token_data->tokenable_id;
-        // }
-        // $user = User::where('id', $user_id)->first();
-        $user = request()->user();
-        return response()->json([
-            'code' => ResponseCode::SUCCESS,
-            'message' => '获得用户信息',
-            'data' => [
-                'binggan' => $user,
-            ],
-        ]);
     }
 }

@@ -41,6 +41,7 @@ Route::apiResource('posts', PostController::class);
 //User系列
 Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/user/register', [UserController::class, 'create']);
+Route::post('/user/reward', [UserController::class, 'reward']);
 
 
 //杂项

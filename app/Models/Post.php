@@ -24,7 +24,11 @@ class Post extends myModel
 
     protected $hidden = [
         'created_IP',
-        // 'created_binggan',
+        'created_binggan',
+    ];
+
+    protected $appends = [
+        'created_binggan_hash'
     ];
 
     protected $casts = [];
@@ -41,9 +45,9 @@ class Post extends myModel
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getCreatedBingganAttribute($binggan)
+    public function getCreatedBingganHashAttribute()
     {
-        return hash('sha256', $binggan);
+        return hash('sha256', $this->created_binggan);
     }
 
     public function getContentAttribute($content)
