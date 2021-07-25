@@ -12,6 +12,8 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 
+use function Symfony\Component\VarDumper\Dumper\esc;
+
 class ThreadController extends Controller
 {
     /**
@@ -36,7 +38,7 @@ class ThreadController extends Controller
             'forum_id' => 'required|integer',
             'title' => 'required|string',
             'content' => 'required|string',
-            'nickname' => '',
+            'anti_jingfen' => 'required|boolean'
         ]);
 
         try {
@@ -57,6 +59,7 @@ class ThreadController extends Controller
             $thread->sub_title = $request->subtitle;
             $thread->nissin_time = $request->nissin_time;
             $thread->title_color = $request->title_color;
+            $thread->anti_jingfen = $request->anti_jingfen;
             $thread->save();
             DB::commit(); //先提交一次，不然$thread没有id.
             //发主题帖的第0楼（Post）
@@ -109,11 +112,24 @@ class ThreadController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($Thread_id)
+    public function show(Request $request, $Thread_id)
     {
         $CurrentThread = Thread::where('id', $Thread_id)->first();
         $CurrentForum = $CurrentThread->forum;
-        $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+        if ($request->query('binggan')) {
+            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+            foreach ($posts as $post) {
+                $post->setBinggan($request->query('binggan')); //为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
+            }
+        } else {
+            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+        }
+
+        //为反精分帖子加上created_binggan_hash
+        if ($CurrentThread->anti_jingfen) {
+            $posts->append('created_binggan_hash');
+        }
+
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'forum_data' => $CurrentForum,

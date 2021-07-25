@@ -8,7 +8,7 @@
         <b-button
           size="sm"
           variant="light"
-          v-if="binggan_hash == post_data.created_binggan_hash"
+          v-if="post_data.is_your_post"
           @click="post_delect_click"
         >
           删除
@@ -16,7 +16,7 @@
         <b-button
           size="sm"
           variant="info"
-          v-if="binggan_hash != post_data.created_binggan_hash"
+          v-if="!post_data.is_your_post"
           @click="reward_click"
           >打赏</b-button
         >
@@ -35,8 +35,11 @@
       <span class="post_footer_text">№{{ post_data.floor }} ☆☆☆</span>
       <span class="post_nick_name">{{ post_data.nickname }}</span>
       <span class="post_footer_text">于</span>
-      <span class="post_created_at">{{ post_data.created_at }}</span
-      ><span class="post_footer_text"> 留言 ☆☆☆</span>
+      <span class="post_created_at">{{ post_data.created_at }}</span>
+      <span class="post_footer_text"> 留言 ☆☆☆</span>
+      <span v-if="thread_anti_jingfen" class="post_anti_jingfen">
+        →{{ post_data.created_binggan_hash.slice(0, 5) }}
+      </span>
     </div>
     <div>
       <b-modal ref="reward_modal" id="reward_modal">
@@ -85,6 +88,7 @@ export default {
   props: {
     post_data: Object,
     binggan_hash: String,
+    thread_anti_jingfen: Boolean,
   },
   data: function () {
     return {

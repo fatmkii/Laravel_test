@@ -45,7 +45,7 @@
     <div class="row align-items-center mt-3">
       <div class="col-4"><span class="h6 my-2">副标题</span></div>
       <div class="col-4"><span class="h6 my-2">锁帖时间</span></div>
-      <div class="col-4"><span class="h6 my-2"></span></div>
+      <div class="col-4"><span class="h6 my-2">反精分</span></div>
     </div>
     <div class="row align-items-center mt-3">
       <div class="col-4">
@@ -58,6 +58,12 @@
         <b-form-select
           v-model="nissin_time_selected"
           :options="nissin_time_options"
+        ></b-form-select>
+      </div>
+      <div class="col-4">
+        <b-form-select
+          v-model="anti_jingfen_selected"
+          :options="anti_jingfen_options"
         ></b-form-select>
       </div>
       <div class="col-4"></div>
@@ -101,6 +107,11 @@ export default {
       title_input: "",
       subtitles_options: [],
       subtitles_selected: "[闲聊]",
+      anti_jingfen_options: [
+        { value: false, text: "" },
+        { value: true, text: "设为反精分贴" },
+      ],
+      anti_jingfen_selected: false,
       nissin_time_options: [
         { value: 86400, text: "24小时" },
         { value: 172800, text: "48小时" },
@@ -137,6 +148,7 @@ export default {
           subtitle: this.subtitles_selected,
           nissin_time: this.nissin_time_selected,
           title_color: this.title_color_input,
+          anti_jingfen: this.anti_jingfen_selected,
         },
       };
       axios(config)

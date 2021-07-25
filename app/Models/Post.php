@@ -11,6 +11,8 @@ class Post extends myModel
 {
     use HasFactory;
 
+    protected $binggan = '';
+
     protected $fillable = [
         'forum_id',
         'thread_id',
@@ -28,7 +30,8 @@ class Post extends myModel
     ];
 
     protected $appends = [
-        'created_binggan_hash'
+        // 'created_binggan_hash',
+        'is_your_post',
     ];
 
     protected $casts = [];
@@ -59,6 +62,31 @@ class Post extends myModel
                 return '*此贴已被作者删除*';
             case 2:
                 return '*此贴已被管理员删除*';
+        }
+    }
+
+    public function setBinggan($binggan)
+    {
+        $this->binggan = $binggan;
+    }
+
+    public static function Binggan($binggan)
+    {
+        $instance = new static;
+        $instance->setBinggan($binggan);
+
+        return $instance->newQuery();
+    }
+
+
+    public function getIsYourPostAttribute()
+    {
+        if ($this->binggan) {
+            if ($this->binggan == $this->created_binggan) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

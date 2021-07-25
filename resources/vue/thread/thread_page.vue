@@ -18,6 +18,7 @@
         <PostItem
           :post_data="post_data"
           :binggan_hash="binggan_hash"
+          :thread_anti_jingfen="thread_anti_jingfen"
           @quote_click="quote_click_handle"
           @get_posts_data="get_posts_data"
         ></PostItem>
@@ -90,6 +91,8 @@ export default {
       forum_name: (state) => state.Forums.CurrentForumData.name,
       forum_id: (state) => state.Forums.CurrentForumData.id,
       thread_title: (state) => state.Threads.CurrentThreadData.title,
+      thread_anti_jingfen: (state) =>
+        state.Threads.CurrentThreadData.anti_jingfen,
       posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
       posts_load_status: (state) => state.Posts.PostsLoadStatus,
     }),
@@ -101,6 +104,7 @@ export default {
         url: "/api/threads/" + this.thread_id,
         params: {
           page: this.page,
+          binggan: this.$store.state.User.Binggan,
         },
       };
       axios(config)

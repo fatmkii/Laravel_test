@@ -23,10 +23,8 @@ class UserFactory extends Factory
     public function definition()
     {
         $binggan = $this->faker->bothify('?????????');
-        $binggan_hash = hash('sha256', $binggan);
         return [
             'binggan' => $binggan,
-            'binggan_hash' => $binggan_hash,
         ];
     }
 
