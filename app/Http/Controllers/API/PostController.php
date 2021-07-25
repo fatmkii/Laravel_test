@@ -42,6 +42,7 @@ class PostController extends Controller
         try {
             DB::beginTransaction();
             $post = new Post;
+            $post->setSuffix(intval($request->thread_id / 10000));
             $post->created_binggan = $request->binggan;
             $post->forum_id = $request->forum_id;
             $post->thread_id = $request->thread_id;
@@ -49,7 +50,7 @@ class PostController extends Controller
             $post->nickname = $request->nickname;
             $post->created_ip = $request->ip();
             $post->random_head = random_int(1, 40);
-            $post->floor = Post::where('thread_id', $request->thread_id)->count();
+            $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();
             $post->save();
             DB::commit(); //如果不先commit，可能post没ID？
             $thread = $post->thread;
@@ -126,19 +127,16 @@ class PostController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
         $request->validate([
             'binggan' => 'required|string',
+            'thread_id' => 'required|integer',
         ]);
 
-        $post = Post::find($id);
+        // $post = Post::suffix(intval($request->thread_id / 10000))->find($id);
+        $post = Post::suffix(intval($request->thread_id / 10000))->find($id);
+        //判断删帖操作者饼干和post饼干是否相同
         if ($post->created_binggan != hash('sha256', $request->binggan)) { //记得获得created_binggan都是hash过的
             return response()->json(
                 [
@@ -153,6 +151,7 @@ class PostController extends Controller
             );
         }
 
+        //判断饼干是否足够
         $user = User::where('binggan', $request->binggan)->first();
         if ($user->coin < 300) {
             return response()->json(
@@ -176,6 +175,7 @@ class PostController extends Controller
                 'message' => '删除回复成功！',
                 'data' => [
                     'post_id' => $id,
+                    '$post' => $post
                 ]
             ],
         );

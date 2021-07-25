@@ -147,10 +147,13 @@ export default {
               autoHideDelay: 1500,
               appendToast: true,
             });
+            setTimeout(() => {
+              this.back_to_forum();
+            }, 1500);
+          } else {
+            this.new_thread_handling = false;
+            alert(response.data.message);
           }
-          setTimeout(() => {
-            this.back_to_forum();
-          }, 1500);
         })
         .catch((error) => {
           this.new_thread_handling = false;

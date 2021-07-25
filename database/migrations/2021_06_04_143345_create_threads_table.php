@@ -14,7 +14,7 @@ class CreateThreadsTable extends Migration
     public function up()
     {
         Schema::create('threads', function (Blueprint $table) {
-            $table->id()->startingValue(100001);
+            $table->id()->startingValue(10001);
             $table->tinyInteger('sub_id')->unsigned()->default('0')->index(); //用来排序的
             $table->integer('forum_id')->index();
             $table->timestamps();

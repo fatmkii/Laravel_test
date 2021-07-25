@@ -58,6 +58,7 @@ export default {
           url: "/api/posts/" + this.post_data.id,
           data: {
             binggan: this.$store.state.User.Binggan,
+            thread_id: this.post_data.thread_id,
           },
         };
         axios(config)

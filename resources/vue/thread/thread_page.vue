@@ -119,7 +119,7 @@ export default {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },
     new_post_handle() {
-      this.new_thread_handling = true;
+      this.new_post_handling = true;
       const config = {
         method: "post",
         url: "/api/posts/create",
@@ -140,13 +140,16 @@ export default {
               appendToast: true,
             });
             this.content_input = "";
-            this.new_thread_handling = false;
+            this.new_post_handling = false;
             this.get_posts_data();
+          } else {
+            this.new_post_handling = false;
+            alert(response.data.message);
           }
         })
         .catch((error) => {
           alert(error);
-          this.new_thread_handling = false;
+          this.new_post_handling = false;
         }); // Todo:写异常返回代码
     },
     emoji_append(emoji_src) {

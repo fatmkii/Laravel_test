@@ -61,6 +61,7 @@ class ThreadController extends Controller
             DB::commit(); //先提交一次，不然$thread没有id.
             //发主题帖的第0楼（Post）
             $post = new Post;
+            $post->setSuffix(intval($thread->id / 10000));
             $post->created_binggan = $request->binggan;
             $post->forum_id = $request->forum_id;
             $post->thread_id = $thread->id;
@@ -112,7 +113,7 @@ class ThreadController extends Controller
     {
         $CurrentThread = Thread::where('id', $Thread_id)->first();
         $CurrentForum = $CurrentThread->forum;
-        $posts = Post::where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+        $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'forum_data' => $CurrentForum,

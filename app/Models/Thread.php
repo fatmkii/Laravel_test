@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\myModel;
 use App\Models\Post;
 use App\Models\Forum;
 use Carbon\Carbon;
 
-class Thread extends Model
+class Thread extends myModel
 {
     use HasFactory;
 
@@ -35,7 +36,14 @@ class Thread extends Model
 
     public function Posts()
     {
-        return $this->hasMany(Post::class);
+        // Posts数据库表分表。根据Tread->id万位以上数字作为Post表后缀
+        // 例如thread->id是2xxxx的post在表post_2表里。
+        // suffix方法写在myModel类里
+
+        // $instance = new Post();
+        // $instance->setSuffix(intval($this->id % 10000));
+        $posts = Post::suffix(intval($this->id / 10000));
+        return $this->hasMany($posts);
     }
 
     protected function serializeDate($date)
