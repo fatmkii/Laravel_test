@@ -88,7 +88,7 @@ export default {
   props: {
     post_data: Object,
     binggan_hash: String,
-    thread_anti_jingfen: Boolean,
+    thread_anti_jingfen: Number,
   },
   data: function () {
     return {

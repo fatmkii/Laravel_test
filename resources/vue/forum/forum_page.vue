@@ -28,6 +28,7 @@
       </div>
     </div>
     <ForumThreads :forum_id="forum_id" :page="page"></ForumThreads>
+    <ForumThreadsMobile :forum_id="forum_id" :page="page"></ForumThreadsMobile>
     <ForumPaginator :forum_id="forum_id"></ForumPaginator>
   </div>
 </template>
@@ -36,9 +37,10 @@
 <script>
 import ForumThreads from "./forum_threads.vue";
 import ForumPaginator from "./forum_paginator.vue";
+import ForumThreadsMobile from "./forum_threads_mobile.vue";
 
 export default {
-  components: { ForumThreads, ForumPaginator },
+  components: { ForumThreads, ForumPaginator, ForumThreadsMobile },
   props: {
     forum_id: Number, //来自router，
     page: Number, //来自router

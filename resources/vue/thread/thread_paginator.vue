@@ -8,6 +8,7 @@
     first-number
     last-number
     align="right"
+    class="my-2"
   ></b-pagination-nav>
 </template>
 

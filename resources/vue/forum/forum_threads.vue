@@ -1,6 +1,6 @@
 
 <template>
-  <div v-if="threads_load_status">
+  <div v-if="threads_load_status" class="d-none d-lg-block d-xl-block">
     <b-table-simple
       hover
       small
@@ -20,9 +20,10 @@
       <b-tbody>
         <b-tr v-for="thread in threads_data" :key="thread.id">
           <b-td class="text-left" :style="{ color: thread.title_color }">
-            <span class="thread_title" @click="reply_view(thread.id)"
-              >{{ thread.title }}&nbsp;&nbsp;</span
-            ><router-link
+            <span class="thread_title" @click="reply_view(thread.id)">
+              {{ thread.sub_title }}&nbsp;{{ thread.title }}&nbsp;&nbsp;
+            </span>
+            <router-link
               :to="
                 '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 10)
               "
