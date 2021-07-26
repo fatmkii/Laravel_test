@@ -39,6 +39,15 @@ class PostController extends Controller
             'nickname' => '',
         ]);
 
+        $ban_ip = array('116.199.28.99',);
+
+        if (in_array($request->ip(), $ban_ip)) {
+            return response()->json([
+                'code' => ResponseCode::USER_PASSWORD_ERROR,
+                'message' => ResponseCode::$codeMap[ResponseCode::USER_PASSWORD_ERROR],
+            ]);
+        }
+
         try {
             DB::beginTransaction();
             $post = new Post;
