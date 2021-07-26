@@ -19,9 +19,9 @@
             :to="
               '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 200)
             "
-            v-if="thread.posts_num > 10"
+            v-if="thread.posts_num > 200"
             style="color: #212529"
-            >[{{ Math.ceil(thread.posts_num / 10) }}]</router-link
+            >[{{ Math.ceil(thread.posts_num / 200) }}]</router-link
           >
         </div>
         <div class="my-1 py-1" style="font-size: 0.8rem">
