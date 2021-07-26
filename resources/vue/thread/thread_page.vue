@@ -88,8 +88,12 @@ export default {
       return sha256(this.$store.state.User.Binggan);
     },
     ...mapState({
-      forum_name: (state) => state.Forums.CurrentForumData.name,
-      forum_id: (state) => state.Forums.CurrentForumData.id,
+      forum_name: (state) =>
+        state.Forums.CurrentForumData.name
+          ? state.Forums.CurrentForumData.name
+          : "",
+      forum_id: (state) =>
+        state.Forums.CurrentForumData.id ? state.Forums.CurrentForumData.id : 0,
       thread_title: (state) => state.Threads.CurrentThreadData.title,
       thread_anti_jingfen: (state) =>
         state.Threads.CurrentThreadData.anti_jingfen,
@@ -114,7 +118,13 @@ export default {
             "CurrentThreadData_set",
             response.data.thread_data
           );
-          this.$store.commit("CurrentForumData_set", response.data.forum_data);
+          if (response.data.forum_data != null) {
+            //如果有forum_data才更新（因为公告在岛0）
+            this.$store.commit(
+              "CurrentForumData_set",
+              response.data.forum_data
+            );
+          }
           this.$store.commit("PostsLoadStatus_set", 1);
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;

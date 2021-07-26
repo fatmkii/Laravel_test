@@ -3,12 +3,12 @@
     <b-navbar>
       <b-navbar-nav>
         <b-navbar-brand href="/"> 岛2.0开发中 </b-navbar-brand>
-        <b-nav-item-dropdown text="皮肤更换" right>
+        <!-- <b-nav-item-dropdown text="皮肤更换" right>
           <b-dropdown-item href="#">Default</b-dropdown-item>
           <b-dropdown-item href="#">Pink!</b-dropdown-item>
           <b-dropdown-item href="#">NGA</b-dropdown-item>
           <b-dropdown-item href="#">Night</b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-nav-item-dropdown> -->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-button

@@ -7,6 +7,22 @@
       <div class="col-auto">
         <b-button
           size="sm"
+          variant="warning"
+          v-if="admin_status"
+          @click="ban_cookie_click_admin"
+        >
+          碎饼
+        </b-button>
+        <b-button
+          size="sm"
+          variant="warning"
+          v-if="admin_status"
+          @click="post_delect_click_admin"
+        >
+          管删
+        </b-button>
+        <b-button
+          size="sm"
           variant="light"
           v-if="post_data.is_your_post"
           @click="post_delect_click"
@@ -83,6 +99,7 @@
 
 
 <script>
+import { mapState } from "vuex";
 export default {
   components: {},
   props: {
@@ -97,6 +114,11 @@ export default {
       coin_reward_input: "",
       reward_handling: false,
     };
+  },
+  computed: {
+    ...mapState({
+      admin_status: (state) => state.User.AdminStatus,
+    }),
   },
   methods: {
     reward_click() {
@@ -161,6 +183,8 @@ export default {
           .catch((error) => alert(error));
       }
     },
+    post_delect_click_admin() {},
+    ban_cookie_click_admin() {},
     quote_click() {
       const max_quote = 3; //最大可引用的层数
       var post_lines = this.$refs.post_centent.innerText.split("\n");
