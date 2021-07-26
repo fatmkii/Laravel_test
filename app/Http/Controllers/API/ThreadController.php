@@ -117,12 +117,12 @@ class ThreadController extends Controller
         $CurrentThread = Thread::where('id', $Thread_id)->first();
         $CurrentForum = $CurrentThread->forum;
         if ($request->query('binggan')) {
-            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
             foreach ($posts as $post) {
                 $post->setBinggan($request->query('binggan')); //为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
             }
         } else {
-            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(10);
+            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
         }
 
         //为反精分帖子加上created_binggan_hash

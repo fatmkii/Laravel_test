@@ -47,7 +47,7 @@ class ForumController extends Controller
             'code' => ResponseCode::SUCCESS,
             'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
             'forum_data' => Forum::where('id', $forum_id)->first(),
-            'threads_data' => Thread::where('forum_id', $forum_id)->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc')->paginate(10),
+            'threads_data' => Thread::where('forum_id', $forum_id)->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc')->paginate(30),
         ]);
     }
 

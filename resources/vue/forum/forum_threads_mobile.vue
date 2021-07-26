@@ -17,7 +17,7 @@
           </span>
           <router-link
             :to="
-              '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 10)
+              '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 200)
             "
             v-if="thread.posts_num > 10"
             style="color: #212529"
