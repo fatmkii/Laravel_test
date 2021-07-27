@@ -2,7 +2,7 @@
   <div class="post_item my-2 mx-3">
     <div class="post_header row">
       <div class="col-auto mr-auto">
-        <span class="align-middle">随机头像：{{ post_data.random_head }}</span>
+        <span class="align-middle">头像:{{ post_data.random_head }}</span>
       </div>
       <div class="col-auto" v-if="this.$store.state.User.LoginStatus">
         <b-button
