@@ -9,6 +9,10 @@
         <span id="forum_name">{{ forum_name }}</span>
       </div>
       <div class="col-auto my-2 ml-auto">
+        <span v-if="!this.$store.state.User.LoginStatus">
+          请在先<router-link to="/login">导入或领取饼干 </router-link>
+          后才能发言喔
+        </span>
         <b-button
           size="sm"
           class="my-1 my-sm-0 d-lg-none"

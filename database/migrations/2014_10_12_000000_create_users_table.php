@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->timestamp('binggan_verified_at')->nullable();
             $table->boolean('is_temp')->default(1);  //认证后转为非临时饼干
-            $table->tinyInteger('status')->default(0); //是否被ban等状态。0=正常；1=banned；
+            $table->boolean('is_banned')->default(0); //0=正常；1=banned；
+            $table->timestamp('locked_until')->nullable(); //被暂时锁定直到某时间
             $table->tinyInteger('admin')->default(0); //1=一般管理员，99=超管
             $table->integer('coin')->default(0); //通用货币
             $table->timestamp('last_login')->nullable();

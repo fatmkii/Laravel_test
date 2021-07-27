@@ -4,11 +4,11 @@
       <div class="col-auto mr-auto">
         <span class="align-middle">随机头像：{{ post_data.random_head }}</span>
       </div>
-      <div class="col-auto">
+      <div class="col-auto" v-if="this.$store.state.User.LoginStatus">
         <b-button
           size="sm"
           variant="warning"
-          v-if="admin_status"
+          v-if="this.$store.state.User.AdminStatus"
           @click="ban_cookie_click_admin"
         >
           碎饼
@@ -16,7 +16,15 @@
         <b-button
           size="sm"
           variant="warning"
-          v-if="admin_status"
+          v-if="this.$store.state.User.AdminStatus"
+          @click="lock_cookie_click_admin"
+        >
+          封禁
+        </b-button>
+        <b-button
+          size="sm"
+          variant="warning"
+          v-if="this.$store.state.User.AdminStatus"
           @click="post_delect_click_admin"
         >
           管删
@@ -99,7 +107,6 @@
 
 
 <script>
-import { mapState } from "vuex";
 export default {
   components: {},
   props: {
@@ -115,11 +122,7 @@ export default {
       reward_handling: false,
     };
   },
-  computed: {
-    ...mapState({
-      admin_status: (state) => state.User.AdminStatus,
-    }),
-  },
+  computed: {},
   methods: {
     reward_click() {
       this.$refs["reward_modal"].show();
@@ -183,8 +186,75 @@ export default {
           .catch((error) => alert(error));
       }
     },
-    post_delect_click_admin() {},
-    ban_cookie_click_admin() {},
+    post_delect_click_admin() {
+      var isdelete = confirm("要用管理员权限删除这个回复吗？");
+      if (isdelete == true) {
+        const config = {
+          method: "post",
+          url: "/api/admin/post_delete/",
+          data: {
+            post_id: this.post_data.id,
+            thread_id: this.post_data.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
+    ban_cookie_click_admin() {
+      var isban = confirm("你要永久粉碎这个饼干吗？");
+      if (isban == true) {
+        const config = {
+          method: "post",
+          url: "/api/admin/user_ban/",
+          data: {
+            post_id: this.post_data.id,
+            thread_id: this.post_data.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
+    lock_cookie_click_admin() {
+      var isban = confirm("你要封禁这个饼干吗？（默认3天）");
+      if (isban == true) {
+        const config = {
+          method: "post",
+          url: "/api/admin/user_lock/",
+          data: {
+            post_id: this.post_data.id,
+            thread_id: this.post_data.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
     quote_click() {
       const max_quote = 3; //最大可引用的层数
       var post_lines = this.$refs.post_centent.innerText.split("\n");

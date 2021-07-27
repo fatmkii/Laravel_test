@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Common\ResponseCode;
+use Carbon\Carbon;
+
+use function Symfony\Component\VarDumper\Dumper\esc;
 
 class User extends Authenticatable
 {
@@ -32,6 +36,10 @@ class User extends Authenticatable
         'password',
         'last_login',
         'created_ip',
+        'created_at',
+        'updated_at',
+        'is_banned',
+        'locked_until',
     ];
 
     /**
@@ -44,8 +52,30 @@ class User extends Authenticatable
         'last_login' => 'datetime',
     ];
 
+    protected $appends = [
+        'locked_TTL',
+    ];
+
+    public function getLockedTTLAttribute()
+    {
+        if ($this->locked_until != null && Carbon::parse($this->locked_until)->gt(Carbon::now())) {
+            return Carbon::parse($this->locked_until)->diffInSeconds(Carbon::now(), true);  //返回差值int
+        } else {
+            return 0;
+        }
+    }
+
     protected function serializeDate($date)
     {
         return $date->format('Y-m-d H:i');
+    }
+
+    public function lockedTTL()
+    {
+        if ($this->locked_until != null && Carbon::parse($this->locked_until)->gt(Carbon::now())) {
+            return Carbon::parse($this->locked_until)->diffInSeconds(Carbon::now(), true);  //返回差值int
+        } else {
+            return 0;
+        }
     }
 }

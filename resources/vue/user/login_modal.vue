@@ -19,9 +19,18 @@
             导入</b-button
           >
         </b-input-group>
-        <b-button variant="success" class="mt-4" @click="register_handle"
-          >没有饼干？来一个！</b-button
-        >
+        <b-button
+          variant="success"
+          class="mt-4"
+          :disabled="reg_record_TTL > 0"
+          @click="register_handle"
+          >没有饼干？来一个！
+        </b-button>
+        <p v-if="reg_record_TTL > 0">
+          你需要等待{{
+            Math.floor(reg_record_TTL / 86400) + 1
+          }}天后才能再次申请新饼干
+        </p>
       </template>
       <template v-slot:modal-footer="{ cancel }">
         <b-button size="sm" variant="outline-seco ndary" @click="cancel()">
@@ -41,11 +50,20 @@ export default {
     return {
       name: "login_modal",
       binggan_input: "",
+      reg_record_TTL: 1, //如果记录不存在，TTL返回-2
     };
   },
   mounted() {
-    // this.$bvModal.show('login-modal');
     this.$refs["login-modal"].show();
+    const config = {
+      method: "get",
+      url: "api/user/check_reg_record",
+    };
+    axios(config)
+      .then((response) => {
+        this.reg_record_TTL = response.data.data.reg_record_TTL;
+      })
+      .catch((error) => alert(error)); // Todo:写异常返回代码
   },
   methods: {
     login_handle() {
@@ -58,18 +76,23 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.$store.commit("Token_set", response.data.data.token);
-          this.$store.commit("Binggan_set", response.data.data.binggan);
-          this.$store.commit("LoginStatus_set", true);
-          this.$store.commit("AdminStatus_set", response.data.data.admin);
-          if (window.localStorage) {
-            localStorage.Token = response.data.data.token;
-            localStorage.Binggan = response.data.data.binggan;
+          if (response.data.code == 200) {
+            this.$store.commit("Token_set", response.data.data.token);
+            this.$store.commit("Binggan_set", response.data.data.binggan);
+            this.$store.commit("LoginStatus_set", true);
+            this.$store.commit("AdminStatus_set", response.data.data.admin);
+            if (window.localStorage) {
+              localStorage.Token = response.data.data.token;
+              localStorage.Binggan = response.data.data.binggan;
+            } else {
+              throw new Error("此浏览器居然不支持localstorage");
+            }
+            axios.defaults.headers.Authorization =
+              "Bearer " + localStorage.Token;
+            window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
           } else {
-            throw new Error("此浏览器居然不支持localstorage");
+            alert(response.data.message);
           }
-          axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
-          window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码
       this.$router.push({ name: "homepage" });
@@ -81,21 +104,26 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.$store.commit("Token_set", response.data.data.token);
-          this.$store.commit("Binggan_set", response.data.data.binggan);
-          this.$store.commit("LoginStatus_set", true);
-          this.$store.commit("AdminStatus_set", response.data.data.admin);
-          if (window.localStorage) {
-            localStorage.Token = response.data.data.token;
-            localStorage.Binggan = response.data.data.binggan;
+          if (response.data.code == 200) {
+            this.$store.commit("Token_set", response.data.data.token);
+            this.$store.commit("Binggan_set", response.data.data.binggan);
+            this.$store.commit("LoginStatus_set", true);
+            this.$store.commit("AdminStatus_set", response.data.data.admin);
+
+            if (window.localStorage) {
+              localStorage.Token = response.data.data.token;
+              localStorage.Binggan = response.data.data.binggan;
+            } else {
+              throw new Error("此浏览器居然不支持localstorage");
+            }
+            axios.defaults.headers.Authorization =
+              "Bearer " + localStorage.Token;
+            window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
           } else {
-            throw new Error("此浏览器居然不支持localstorage");
+            alert(response.data.message);
           }
-          axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
-          window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码
-      this.$router.push({ name: "homepage" });
     },
   },
 };

@@ -19,9 +19,31 @@ class AuthController extends Controller
 
         $binggan  = $request->get('binggan');
         $user = User::where('binggan', $binggan)->first();
+        if (!$user) {
+            return response()->json([
+                'code' => ResponseCode::USER_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+            ]);
+        }
+
+        if ($user->is_banned) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_BANNED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_BANNED],
+                    'data' => [
+                        'binggan' => $binggan,
+                    ],
+                ],
+            );
+        }
 
         if ($user) {
-            $token = $user->createToken($binggan)->plainTextToken;
+            if ($user->admin == 0) {
+                $token = $user->createToken($binggan, ['normal'])->plainTextToken;
+            } else {
+                $token = $user->createToken($binggan, ['admin'])->plainTextToken;
+            }
             return response()->json(
                 [
                     'code' => ResponseCode::SUCCESS,
@@ -32,17 +54,6 @@ class AuthController extends Controller
                     ],
                 ],
                 200
-            );
-        } else {
-            return response()->json(
-                [
-                    'code' => ResponseCode::USER_NOT_FOUND,
-                    'message' => '找不到此饼干',
-                    'data' => [
-                        'binggan' => $binggan,
-                    ],
-                ],
-                401,
             );
         }
     }

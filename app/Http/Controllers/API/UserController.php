@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Common\ResponseCode;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use App\Models\User;
 use App\Models\Post;
 use Carbon\Carbon;
@@ -48,9 +49,25 @@ class UserController extends Controller
             'binggan' => 'required|string',
         ]);
 
+
+
         $user = $request->user();
         $user->last_login = Carbon::now();
         $user->save();
+
+        if ($user->is_banned) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_BANNED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_BANNED],
+                    'data' => [
+                        'binggan' => $user->binggan,
+                    ],
+                ],
+                401
+            );
+        }
+
         if ($user->binggan == $request->get('binggan')) {
             return response()->json(
                 [
@@ -99,6 +116,15 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        if (Redis::exists('reg_record_' . $request->ip())) {
+            $limted_day = intval(Redis::TTL('reg_record_' . $request->ip()) / 86400) + 1;
+            return response()->json([
+                'code' => ResponseCode::USER_REGISTER_FAIL,
+                'message' => ResponseCode::$codeMap[ResponseCode::USER_REGISTER_FAIL] . '，你只能在'
+                    . $limted_day . '天后再领取饼干。',
+            ]);
+        }
+
         try {
             DB::beginTransaction();
             $user = new User;
@@ -107,7 +133,7 @@ class UserController extends Controller
             } while (!empty(User::where('binggan', $binggan)->first));
             $user->binggan = $binggan;
             $user->created_ip = $request->ip();
-            $user->coin = 10000;
+            $user->coin = 0;
             $user->save();
             DB::commit();
         } catch (QueryException $e) {
@@ -117,7 +143,10 @@ class UserController extends Controller
                 'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
             ]);
         }
-        $token = $user->createToken($binggan)->plainTextToken;
+        $token = $user->createToken($binggan, ['normal'])->plainTextToken;
+        //用redis记录饼干申请ip。限定7天内只能申请1次。
+        Redis::setex('reg_record_' . $request->ip(), 7 * 24 * 3600, 1);
+
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -128,6 +157,19 @@ class UserController extends Controller
                 ],
             ],
             200
+        );
+    }
+
+    public function check_reg_record(Request $request)
+    {
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '申请饼干记录TTL',
+                'data' => [
+                    'reg_record_TTL' => Redis::TTL('reg_record_' . $request->ip()),
+                ],
+            ],
         );
     }
 

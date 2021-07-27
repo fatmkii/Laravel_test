@@ -10,7 +10,13 @@ class ResponseCode
 
     const USER_UNAUTHORIZED = 21401;
 
+    const USER_REGISTER_FAIL = 21403;
+
     const USER_NOT_FOUND = 21404;
+
+    const USER_LOCKED = 21443;
+
+    const USER_BANNED = 21499;
 
     const COIN_NOT_ENOUGH = 21412;
 
@@ -20,7 +26,9 @@ class ResponseCode
 
     const CANNOTLOGIN = 21401;
 
-    const TOPIC_CANNOT_FOUND = 23404;
+    const THREAD_NOT_FOUND = 23404;
+
+    const POST_NOT_FOUND = 24404;
 
     const LOGIN_FAILED = 20001;
 
@@ -33,14 +41,18 @@ class ResponseCode
         self::DEFAULT => '服务器异常',
         self::FILED_ERROR => '表单验证未通过',
         self::USER_NOT_FOUND => '饼干无法找到',
+        self::USER_LOCKED => '你的饼干已封禁',
+        self::USER_BANNED => '你的饼干已碎',
         self::USER_UNAUTHORIZED => "饼干错误",
         self::COIN_NOT_ENOUGH => "奥利奥不足了",
         self::USER_PASSWORD_ERROR => '密码输入错误',
         self::ADMIN_UNAUTHORIZED => '管理员权限不足',
         self::CANNOTLOGIN => '用户无法登录',
-        self::TOPIC_CANNOT_FOUND => '主题贴获取失败',
+        self::THREAD_NOT_FOUND => '主题贴获取失败',
+        self::POST_NOT_FOUND => '未找到该帖子',
         self::LOGIN_FAILED => '登录态失效',
         self::DATABASE_FAILED => '数据库错误',
+        self::USER_REGISTER_FAIL => '申请饼干失败',
     ];
 }
 

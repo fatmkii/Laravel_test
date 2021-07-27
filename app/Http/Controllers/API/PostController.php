@@ -39,15 +39,41 @@ class PostController extends Controller
             'nickname' => '',
         ]);
 
-        $ban_ip = array('116.199.28.99',);
-
-        if (in_array($request->ip(), $ban_ip)) {
-            return response()->json([
-                'code' => ResponseCode::USER_PASSWORD_ERROR,
-                'message' => ResponseCode::$codeMap[ResponseCode::USER_PASSWORD_ERROR],
-            ]);
+        $user = User::where('binggan', $request->binggan)->first();
+        if (!$user) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+                ],
+            );
+        }
+        //如果饼干被ban，直接返回错误
+        if ($user->is_banned) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_BANNED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_BANNED],
+                    'data' => [
+                        'binggan' => $user->binggan,
+                    ],
+                ],
+                401
+            );
         }
 
+        //查询饼干是否在封禁期
+        if ($user->lockedTTL) {
+            $lockTTL_hours = intval($user->lockedTTL / 3600) + 1;
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_LOCKED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_LOCKED] . '，将于' . $lockTTL_hours . '小时后解封',
+                ],
+            );
+        }
+
+        //执行追加新回复流程
         try {
             DB::beginTransaction();
             $post = new Post;
@@ -65,7 +91,6 @@ class PostController extends Controller
             $thread = $post->thread;
             $thread->posts_num = $thread->posts_num + 1;
             $thread->save();
-            $user = User::where('binggan', $request->binggan)->first();
             $user->coin += 10; //回复+10奥利奥
             $user->save();
 

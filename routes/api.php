@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ForumController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\EmojiController;
 use App\Http\Controllers\API\ThreadController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\CommonController;
+use App\Http\Controllers\API\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +39,17 @@ Route::post('/posts/create', [PostController::class, 'create'])->name('posts.cre
 Route::apiResource('posts', PostController::class);
 
 //User系列
-Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum');
-Route::post('/user/register', [UserController::class, 'create']);
-Route::post('/user/reward', [UserController::class, 'reward']);
+Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum'); //获得用户信息
+Route::post('/user/register', [UserController::class, 'create']);   //新建饼干
+Route::post('/user/reward', [UserController::class, 'reward']);     //打赏
+Route::get('/user/check_reg_record', [UserController::class, 'check_reg_record']); //返回注册记录TTL
 
+//Admin系列
+Route::post('/admin/login', [AdminController::class, 'login']);
+Route::post('/admin/logout', [AdminController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/admin/post_delete', [AdminController::class, 'post_delete'])->middleware('auth:sanctum'); //碎饼
+Route::post('/admin/user_ban', [AdminController::class, 'user_ban'])->middleware('auth:sanctum'); //碎饼
+Route::post('/admin/user_lock', [AdminController::class, 'user_lock'])->middleware('auth:sanctum'); //封id（临时）
 
 //杂项
 Route::get('/emoji', [CommonController::class, 'emoji_index']);

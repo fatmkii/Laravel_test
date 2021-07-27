@@ -12,7 +12,8 @@
 			"routes",
 			"config",
 			"临时笔记.txt",
-			"app\\Models"
+			"app\\Models",
+			"database"
 		]
 	}
 }

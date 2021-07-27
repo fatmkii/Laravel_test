@@ -38,7 +38,22 @@ export default {
         };
         axios(config)
           .then((response) => {
-            this.$store.commit("AdminStatus_set", response.data.data.binggan.admin);
+            if (response.data.code == 200) {
+              this.$store.commit(
+                "AdminStatus_set",
+                response.data.data.binggan.admin
+              );
+              this.$store.commit(
+                "LockedTTL_set",
+                response.data.data.binggan.locked_TTL
+              );
+            } else {
+              localStorage.clear("Binggan");
+              localStorage.clear("Token");
+              axios.defaults.headers.Authorization = "";
+              window.location.href = "/"; //因为想清空Vuex状态，所以用js原生的重定向，而不是Vuerouter的push
+              alert(response.data.message);
+            }
           })
           .catch((error) => {
             if (err.response.status === 401) {
@@ -46,7 +61,7 @@ export default {
               localStorage.clear("Token");
               axios.defaults.headers.Authorization = "";
             }
-            alert('你的饼干好像有问题？请重新登录');
+            alert("你的饼干好像有问题？请重新登录");
           }); // Todo:写异常返回代码;
       }
     },

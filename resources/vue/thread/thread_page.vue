@@ -35,24 +35,30 @@
       rows="3"
       max-rows="10"
       ref="content_input"
-      :disabled="!this.$store.state.User.LoginStatus"
+      :disabled="!this.$store.state.User.LoginStatus || Boolean(locked_TTL)"
       @keyup.ctrl.enter="new_post_handle"
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
-      <div class="col-6">
+      <div class="col-auto">
         <b-button
           variant="success"
-          :disabled="!this.$store.state.User.LoginStatus"
+          :disabled="!this.$store.state.User.LoginStatus || Boolean(locked_TTL)"
           v-b-popover.hover.right="'可以Ctrl+Enter喔'"
           @click="new_post_handle"
           >回复
         </b-button>
+      </div>
+      <div class="col-auto">
         <span v-if="!this.$store.state.User.LoginStatus">
           请在先<router-link to="/login">导入或领取饼干</router-link
           >后才能发言喔
         </span>
+        <span v-if="locked_TTL">
+          你的饼干封禁中，将于{{
+            Math.floor(locked_TTL / 3600) + 1
+          }}小时后解封。
+        </span>
       </div>
-      <div class="col-6"></div>
     </div>
   </div>
 </template>
@@ -99,6 +105,7 @@ export default {
         state.Threads.CurrentThreadData.anti_jingfen,
       posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
       posts_load_status: (state) => state.Posts.PostsLoadStatus,
+      locked_TTL: (state) => state.User.LockedTTL,
     }),
   },
   methods: {

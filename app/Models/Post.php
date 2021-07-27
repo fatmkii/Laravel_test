@@ -30,7 +30,6 @@ class Post extends myModel
     ];
 
     protected $appends = [
-        // 'created_binggan_hash',
         'is_your_post',
     ];
 

@@ -30,16 +30,22 @@
       max-rows="20"
     ></b-form-textarea>
     <div class="row align-items-center mt-3">
-      <div class="col-6">
+      <div class="col-auto">
         <b-button
           variant="success"
-          :disabled="new_thread_handling"
+          :disabled="new_thread_handling || Boolean(locked_TTL)"
           @click="new_thread_handle"
-          >发表</b-button
-        >
-        <p v-show="new_thread_handling">数据提交中……</p>
+          >发表
+        </b-button>
       </div>
-      <div class="col-6"></div>
+      <div class="col-auto">
+        <span v-show="new_thread_handling">数据提交中……</span>
+        <span v-if="locked_TTL">
+          你的饼干封禁中，将于{{
+            Math.floor(locked_TTL / 3600) + 1
+          }}小时后解封。
+        </span>
+      </div>
     </div>
     <hr />
     <div class="row align-items-center mt-3">
@@ -127,6 +133,9 @@ export default {
       if (forum_data) {
         return forum_data.name;
       }
+    },
+    locked_TTL() {
+      return this.$store.state.User.LockedTTL;
     },
   },
 
