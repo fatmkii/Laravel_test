@@ -25,15 +25,23 @@
           size="sm"
           variant="warning"
           v-if="this.$store.state.User.AdminStatus"
-          @click="post_delect_click_admin"
+          @click="post_delete_all_click_admin"
         >
-          管删
+          删全
+        </b-button>
+        <b-button
+          size="sm"
+          variant="warning"
+          v-if="this.$store.state.User.AdminStatus"
+          @click="post_delete_click_admin"
+        >
+          删帖
         </b-button>
         <b-button
           size="sm"
           variant="light"
           v-if="post_data.is_your_post"
-          @click="post_delect_click"
+          @click="post_delete_click"
         >
           删除
         </b-button>
@@ -163,7 +171,7 @@ export default {
           this.reward_handling = false;
         }); // Todo:写异常返回代码
     },
-    post_delect_click() {
+    post_delete_click() {
       var isdelete = confirm("要删除这个回复吗？（消费300奥利奥）");
       if (isdelete == true) {
         const config = {
@@ -186,12 +194,35 @@ export default {
           .catch((error) => alert(error));
       }
     },
-    post_delect_click_admin() {
+    post_delete_click_admin() {
       var isdelete = confirm("要用管理员权限删除这个回复吗？");
       if (isdelete == true) {
         const config = {
           method: "post",
           url: "/api/admin/post_delete/",
+          data: {
+            post_id: this.post_data.id,
+            thread_id: this.post_data.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
+    post_delete_all_click_admin() {
+      var isdelete = confirm("要用管理员权限删除该饼干全部回复吗？");
+      if (isdelete == true) {
+        const config = {
+          method: "post",
+          url: "/api/admin/post_delete_all/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
