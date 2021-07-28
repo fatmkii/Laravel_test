@@ -50,7 +50,10 @@
     <hr />
     <div class="row align-items-center mt-3">
       <div class="col-4"><span class="h6 my-2">副标题</span></div>
-      <div class="col-4"><span class="h6 my-2">锁帖时间</span></div>
+      <div class="col-4">
+        <span class="h6 my-2">日清时间</span>
+        <span v-if="!forum_nissin">（本版不日清）</span>
+      </div>
       <div class="col-4"><span class="h6 my-2">反精分</span></div>
     </div>
     <div class="row align-items-center mt-3">
@@ -64,6 +67,7 @@
         <b-form-select
           v-model="nissin_time_selected"
           :options="nissin_time_options"
+          :disabled="!forum_nissin"
         ></b-form-select>
       </div>
       <div class="col-4">
@@ -72,7 +76,6 @@
           :options="anti_jingfen_options"
         ></b-form-select>
       </div>
-      <div class="col-4"></div>
     </div>
     <hr />
     <div class="row align-items-center mt-3">
@@ -91,6 +94,25 @@
       </div>
       <div class="col-4"></div>
       <div class="col-4"></div>
+    </div>
+    <div v-if="this.$store.state.User.AdminStatus">
+      <hr />
+      <div class="row align-items-center mt-3">
+        <div class="col-4"><span class="h6 my-2">管理员选项</span></div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+      </div>
+      <div class="row align-items-center mt-3">
+        <div class="col-4">
+          <b-form-select
+            v-model="admin_subtitles_selected"
+            :options="admin_subtitles_options"
+            :disabled="subtitles_selected != '[公告]'"
+          ></b-form-select>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -113,6 +135,11 @@ export default {
       title_input: "",
       subtitles_options: [],
       subtitles_selected: "[闲聊]",
+      admin_subtitles_options: [
+        { value: 1, text: "本版公告" },
+        { value: 0, text: "全岛公告" },
+      ],
+      admin_subtitles_selected: 1,
       anti_jingfen_options: [
         { value: false, text: "" },
         { value: true, text: "设为反精分贴" },
@@ -132,6 +159,12 @@ export default {
       var forum_data = this.$store.getters.ForumData(this.forum_id);
       if (forum_data) {
         return forum_data.name;
+      }
+    },
+    forum_nissin() {
+      var forum_data = this.$store.getters.ForumData(this.forum_id);
+      if (forum_data) {
+        return forum_data.is_nissin;
       }
     },
     locked_TTL() {
@@ -158,6 +191,7 @@ export default {
           nissin_time: this.nissin_time_selected,
           title_color: this.title_color_input,
           anti_jingfen: this.anti_jingfen_selected,
+          admin_subtitle: this.admin_subtitles_selected,
         },
       };
       axios(config)

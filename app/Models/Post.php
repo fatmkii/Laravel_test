@@ -27,6 +27,8 @@ class Post extends myModel
     protected $hidden = [
         'created_IP',
         'created_binggan',
+        'is_anonymous',
+        'is_delete',
     ];
 
     protected $appends = [

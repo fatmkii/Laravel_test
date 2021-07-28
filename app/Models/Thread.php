@@ -16,11 +16,13 @@ class Thread extends myModel
 
     public $hidden = [
         'created_binggan',
-        'created_IP'
+        'created_IP',
+        'sub_id',
+        'is_anonymous',
     ];
     protected $fillable = [
         'forum_id', 'title', 'content', 'created_binggan', 'created_IP',
-        'anti_jingfen', 'sub_id', 'nissin_time', 'author_name'
+        'anti_jingfen', 'sub_id', 'nissin_date', 'author_name'
     ];
     protected $guarded = [
         'id', 'created_at', 'updated_at',

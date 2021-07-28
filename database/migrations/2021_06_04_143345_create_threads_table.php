@@ -28,7 +28,7 @@ class CreateThreadsTable extends Migration
             $table->string('created_IP')->nullable()->default(null);
             $table->string('created_binggan')->nullable()->default(null);
             $table->boolean('anti_jingfen')->default('0');
-            $table->integer('nissin_time')->unsigned()->default('86400');
+            $table->timestamp('nissin_date')->nullable();
         });
     }
 

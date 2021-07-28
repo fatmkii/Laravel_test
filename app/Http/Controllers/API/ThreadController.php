@@ -11,6 +11,7 @@ use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
+use Carbon\Carbon;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
 
@@ -38,7 +39,8 @@ class ThreadController extends Controller
             'forum_id' => 'required|integer',
             'title' => 'required|string',
             'content' => 'required|string',
-            'anti_jingfen' => 'required|boolean'
+            'anti_jingfen' => 'required|boolean',
+            'nissin_time' => 'integer',
         ]);
 
         $user = User::where('binggan', $request->binggan)->first();
@@ -47,6 +49,16 @@ class ThreadController extends Controller
                 [
                     'code' => ResponseCode::USER_NOT_FOUND,
                     'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+                ],
+            );
+        }
+
+        //确认是否冒认管理员发公告
+        if ($user->admin == 0 && $request->subtitle == "[公告]") {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
                 ],
             );
         }
@@ -65,7 +77,6 @@ class ThreadController extends Controller
             );
         }
 
-
         //查询饼干是否在封禁期
         if ($user->lockedTTL) {
             $lockTTL_hours = intval($user->lockedTTL / 3600) + 1;
@@ -82,7 +93,15 @@ class ThreadController extends Controller
             DB::beginTransaction();
             if ($request->title_color) {
                 $user = User::where('binggan', $request->binggan)->first();
-                $user->coin -= 500; //设置标题颜色减500奥利奥
+                if ($user->coin < 500) {
+                    return response()->json(
+                        [
+                            'code' => ResponseCode::COIN_NOT_ENOUGH,
+                            'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
+                        ],
+                    );
+                }
+                $user->coin -= 500; //设置标题颜色减500奥利奥   
                 $user->save();
                 DB::commit();
             }
@@ -90,11 +109,16 @@ class ThreadController extends Controller
             $thread = new Thread;
             $thread->created_binggan = $request->binggan;
             $thread->forum_id = $request->forum_id;
+            if ($request->subtitle == '[公告]') {
+                $thread->sub_id = $request->admin_subtitle ?   10 : 99; //$request->admin_subtitle == 0是全岛公告。把sub_id=99
+            }
             $thread->title = $request->title;
             $thread->nickname = $request->nickname;
             $thread->created_ip = $request->ip();
             $thread->sub_title = $request->subtitle;
-            $thread->nissin_time = $request->nissin_time;
+            if ($request->nissin_time > 0) { //如果请求中带有nissin_time，才设定nissin_date
+                $thread->nissin_date = Carbon::now()->addSeconds($request->nissin_time);
+            }
             $thread->title_color = $request->title_color;
             $thread->anti_jingfen = $request->anti_jingfen;
             $thread->save();
@@ -151,15 +175,24 @@ class ThreadController extends Controller
      */
     public function show(Request $request, $Thread_id)
     {
-        $CurrentThread = Thread::where('id', $Thread_id)->first();
+        $CurrentThread = Thread::find($Thread_id);
         $CurrentForum = $CurrentThread->forum;
+
+        //判断帖子是否已经被日清
+        if ($CurrentForum->is_nissin && $CurrentThread->nissin_date < Carbon::now()) {
+            return response()->json([
+                'code' => ResponseCode::THREAD_WAS_NISSINED,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
+            ]);
+        }
+
+        $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
+
+        //如果有提供binggan，为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
         if ($request->query('binggan')) {
-            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
             foreach ($posts as $post) {
-                $post->setBinggan($request->query('binggan')); //为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
+                $post->setBinggan($request->query('binggan'));
             }
-        } else {
-            $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
         }
 
         //为反精分帖子加上created_binggan_hash

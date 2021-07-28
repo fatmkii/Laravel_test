@@ -18,8 +18,8 @@ class CreateForumsTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->tinyInteger('status')->default('1');
-            $table->boolean('is_anonymous')->default('0');
-            $table->string('sub_ids')->nullable()->default(null);
+            $table->boolean('is_anonymous')->default(0);
+            $table->boolean('is_nissin')->default(0);
             $table->softDeletes();
         });
     }

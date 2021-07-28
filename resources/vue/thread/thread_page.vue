@@ -58,6 +58,11 @@
             Math.floor(locked_TTL / 3600) + 1
           }}小时后解封。
         </span>
+        <span
+          >本贴将于
+          <span style="color: #dd0000">{{ nissin_TTL }}</span>
+          后日清，请及时更换帖子喔
+        </span>
       </div>
     </div>
   </div>
@@ -93,6 +98,15 @@ export default {
     binggan_hash() {
       return sha256(this.$store.state.User.Binggan);
     },
+    nissin_TTL() {
+      const seconds =
+        (Date.parse(this.$store.state.Threads.CurrentThreadData.nissin_date) -
+          Date.parse(Date())) /
+        1000;
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      return hours + "小时" + minutes + "分钟";
+    },
     ...mapState({
       forum_name: (state) =>
         state.Forums.CurrentForumData.name
@@ -120,19 +134,23 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.$store.commit("PostsData_set", response.data.posts_data);
-          this.$store.commit(
-            "CurrentThreadData_set",
-            response.data.thread_data
-          );
-          if (response.data.forum_data != null) {
-            //如果有forum_data才更新（因为公告在岛0）
+          if (response.data.code == 200) {
+            this.$store.commit("PostsData_set", response.data.posts_data);
             this.$store.commit(
-              "CurrentForumData_set",
-              response.data.forum_data
+              "CurrentThreadData_set",
+              response.data.thread_data
             );
+            if (response.data.forum_data != null) {
+              //如果有forum_data才更新（因为公告在岛0），forum_data为空
+              this.$store.commit(
+                "CurrentForumData_set",
+                response.data.forum_data
+              );
+            }
+            this.$store.commit("PostsLoadStatus_set", 1);
+          } else {
+            alert(response.data.message);
           }
-          this.$store.commit("PostsLoadStatus_set", 1);
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
     },

@@ -22,7 +22,7 @@ class CommonController extends Controller
     public function subtitles_index()
     {
         return response()->json([
-            'code' => ResponseCode::SUCCESS,
+            'code' => ResponseCode::SUCCESS, 
             'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
             'data' => DB::table('subtitles')->get(),
         ]);

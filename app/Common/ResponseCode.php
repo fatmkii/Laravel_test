@@ -28,6 +28,8 @@ class ResponseCode
 
     const THREAD_NOT_FOUND = 23404;
 
+    const THREAD_WAS_NISSINED = 23410;
+
     const POST_NOT_FOUND = 24404;
 
     const LOGIN_FAILED = 20001;
@@ -49,6 +51,7 @@ class ResponseCode
         self::ADMIN_UNAUTHORIZED => '管理员权限不足',
         self::CANNOTLOGIN => '用户无法登录',
         self::THREAD_NOT_FOUND => '主题贴获取失败',
+        self::THREAD_WAS_NISSINED => '主题已被日清',
         self::POST_NOT_FOUND => '未找到该帖子',
         self::LOGIN_FAILED => '登录态失效',
         self::DATABASE_FAILED => '数据库错误',

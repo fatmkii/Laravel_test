@@ -13,7 +13,9 @@
 			"config",
 			"临时笔记.txt",
 			"app\\Models",
-			"database"
-		]
+			"database",
+			"更新履历.txt"
+		],
+		"favorites.sortOrder": "ASC"
 	}
 }
