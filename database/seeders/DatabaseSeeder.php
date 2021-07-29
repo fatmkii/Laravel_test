@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(PostSeeder::class);
         $this->call(EmojiSeeder::class);
         $this->call(SubtitlesSeeder::class);
+        $this->call(RandomHeadsSeeder::class);
     }
 }

@@ -1,8 +1,11 @@
 <template>
-  <div class="post_item my-2 mx-3">
+  <div class="post_item my-2">
     <div class="post_header row">
       <div class="col-auto mr-auto">
-        <span class="align-middle">头像:{{ post_data.random_head }}</span>
+        <b-img
+          :src="random_head_add"
+          :class="'head_' + post_data.random_head"
+        ></b-img>
       </div>
       <div class="col-auto" v-if="this.$store.state.User.LoginStatus">
         <b-button
@@ -120,6 +123,7 @@ export default {
     post_data: Object,
     binggan_hash: String,
     thread_anti_jingfen: Number,
+    random_head_add: String,
   },
   data: function () {
     return {

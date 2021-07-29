@@ -82,7 +82,7 @@
       <div class="col-4">
         <span class="h6 my-2">给标题换个颜色吗？（收费500奥利奥）</span>
       </div>
-      <div class="col-4"><span class="h6 my-2"></span></div>
+      <div class="col-4"><span class="h6 my-2">选择随机头像组</span></div>
       <div class="col-4"><span class="h6 my-2"></span></div>
     </div>
     <div class="row align-items-center mt-3">
@@ -92,7 +92,14 @@
           v-model="title_color_input"
         ></b-form-input>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4">
+        <b-form-select
+          v-model="random_heads_group_selected"
+          :options="random_heads_group"
+          value-field="id"
+          text-field="name"
+        ></b-form-select>
+      </div>
       <div class="col-4"></div>
     </div>
     <div v-if="this.$store.state.User.AdminStatus">
@@ -103,13 +110,7 @@
         <div class="col-4"></div>
       </div>
       <div class="row align-items-center mt-3">
-        <div class="col-4">
-          <b-form-select
-            v-model="admin_subtitles_selected"
-            :options="admin_subtitles_options"
-            :disabled="subtitles_selected != '[公告]'"
-          ></b-form-select>
-        </div>
+        <div class="col-4"></div>
         <div class="col-4"></div>
         <div class="col-4"></div>
       </div>
@@ -133,6 +134,8 @@ export default {
       nickname_input: "= =",
       content_input: "",
       title_input: "",
+      random_heads_group_selected: 1,
+      random_heads_group: [],
       subtitles_options: [],
       subtitles_selected: "[闲聊]",
       admin_subtitles_options: [
@@ -188,6 +191,7 @@ export default {
           content: this.content_input,
           nickname: this.nickname_input,
           subtitle: this.subtitles_selected,
+          random_heads_group: this.random_heads_group_selected,
           nissin_time: this.nissin_time_selected,
           title_color: this.title_color_input,
           anti_jingfen: this.anti_jingfen_selected,
@@ -219,28 +223,46 @@ export default {
       this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";
       this.$refs.content_input.focus();
     },
+    get_subtitles() {
+      const config = {
+        method: "get",
+        url: "/api/subtitles",
+        data: {},
+      };
+      axios(config)
+        .then((response) => {
+          this.subtitles_options = response.data.data;
+          // 如果不是管理员，就删除部分管理员专用选项
+          if (!this.$store.state.User.AdminStatus) {
+            this.subtitles_options.forEach((subtitles_option, index) => {
+              if (subtitles_option.for_admin == 1) {
+                this.subtitles_options.splice(index, 1);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        }); // Todo:写异常返回代码;
+    },
+    get_random_heads_index() {
+      const config = {
+        method: "get",
+        url: "/api/random_heads",
+        data: {},
+      };
+      axios(config)
+        .then((response) => {
+          this.random_heads_group = response.data.data;
+        })
+        .catch((error) => {
+          alert(error);
+        }); // Todo:写异常返回代码;
+    },
   },
   created() {
-    const config = {
-      method: "get",
-      url: "/api/subtitles",
-      data: {},
-    };
-    axios(config)
-      .then((response) => {
-        this.subtitles_options = response.data.data;
-        // 如果不是管理员，就删除部分管理员专用选项
-        if (!this.$store.state.User.AdminStatus) {
-          this.subtitles_options.forEach((subtitles_option, index) => {
-            if (subtitles_option.for_admin == 1) {
-              this.subtitles_options.splice(index, 1);
-            }
-          });
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      }); // Todo:写异常返回代码;
+    this.get_subtitles();
+    this.get_random_heads_index();
   },
 };
 </script>

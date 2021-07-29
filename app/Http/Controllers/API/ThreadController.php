@@ -42,6 +42,7 @@ class ThreadController extends Controller
             'content' => 'required|string',
             'anti_jingfen' => 'required|boolean',
             'nissin_time' => 'integer',
+            'random_heads_group' => 'integer',
         ]);
 
         $user = User::where('binggan', $request->binggan)->first();
@@ -111,6 +112,7 @@ class ThreadController extends Controller
             $thread->nickname = $request->nickname;
             $thread->created_ip = $request->ip();
             $thread->sub_title = $request->subtitle;
+            $thread->random_heads_group = $request->random_heads_group;
             if ($request->nissin_time > 0) { //如果请求中带有nissin_time，才设定nissin_date
                 $thread->nissin_date = Carbon::now()->addSeconds($request->nissin_time);
             }
@@ -209,11 +211,15 @@ class ThreadController extends Controller
             $posts->append('created_binggan_hash');
         }
 
+        //提供该帖子的随机头像地址表
+        $random_heads = DB::table('random_heads')->find($CurrentThread->random_heads_group);
+
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'forum_data' => $CurrentForum,
             'thread_data' => $CurrentThread,
             'posts_data' => $posts,
+            'random_heads' => $random_heads,
         ]);
     }
     /**

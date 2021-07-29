@@ -84,7 +84,7 @@ class PostController extends Controller
             $post->content = $request->content;
             $post->nickname = $request->nickname;
             $post->created_ip = $request->ip();
-            $post->random_head = random_int(1, 40);
+            $post->random_head = random_int(0, 39);
             $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();
             $post->save();
 

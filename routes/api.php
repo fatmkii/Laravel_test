@@ -56,3 +56,4 @@ Route::post('/admin/user_lock', [AdminController::class, 'user_lock'])->middlewa
 //杂项
 Route::get('/emoji', [CommonController::class, 'emoji_index']);
 Route::get('/subtitles', [CommonController::class, 'subtitles_index']);
+Route::get('/random_heads', [CommonController::class, 'random_heads_index']);

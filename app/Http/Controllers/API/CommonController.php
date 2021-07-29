@@ -22,10 +22,27 @@ class CommonController extends Controller
     public function subtitles_index()
     {
         return response()->json([
-            'code' => ResponseCode::SUCCESS, 
+            'code' => ResponseCode::SUCCESS,
             'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
             'data' => DB::table('subtitles')->get(),
         ]);
     }
 
+    public function random_heads_index()
+    {
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
+            'data' => DB::table('random_heads')->get(['id', 'name']),
+        ]);
+    }
+
+    public function random_heads_show($id)
+    {
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
+            'data' => DB::table('random_heads')->find($id),
+        ]);
+    }
 }

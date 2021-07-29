@@ -19,6 +19,7 @@
           :post_data="post_data"
           :binggan_hash="binggan_hash"
           :thread_anti_jingfen="thread_anti_jingfen"
+          :random_head_add="random_heads_data[post_data.random_head]"
           @quote_click="quote_click_handle"
           @get_posts_data="get_posts_data"
         ></PostItem>
@@ -222,6 +223,7 @@ export default {
       roll_num: 1,
       roll_range: 100,
       roll_handling: false,
+      random_heads_data: Object,
     };
   },
 
@@ -259,6 +261,8 @@ export default {
       thread_title: (state) => state.Threads.CurrentThreadData.title,
       thread_anti_jingfen: (state) =>
         state.Threads.CurrentThreadData.anti_jingfen,
+      random_heads_group: (state) =>
+        state.Threads.CurrentThreadData.random_heads_group,
       posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
       posts_load_status: (state) => state.Posts.PostsLoadStatus,
       locked_TTL: (state) => state.User.LockedTTL,
@@ -282,14 +286,10 @@ export default {
               "CurrentThreadData_set",
               response.data.thread_data
             );
-            if (response.data.forum_data != null) {
-              //如果有forum_data才更新（因为公告在岛0），forum_data为空
-              this.$store.commit(
-                "CurrentForumData_set",
-                response.data.forum_data
-              );
-            }
             this.$store.commit("PostsLoadStatus_set", 1);
+            this.random_heads_data = JSON.parse(
+              response.data.random_heads.random_heads
+            );
             if (remind) {
               this.$bvToast.toast("已刷新帖子", {
                 title: "Done.",
@@ -303,6 +303,7 @@ export default {
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
+
     back_to_forum() {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },
