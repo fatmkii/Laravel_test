@@ -179,7 +179,7 @@ class ThreadController extends Controller
         $CurrentForum = $CurrentThread->forum;
 
         //判断帖子是否已经被日清
-        if ($CurrentForum->is_nissin && $CurrentThread->nissin_date < Carbon::now()) {
+        if ($CurrentForum->is_nissin && $CurrentThread->nissin_date < Carbon::now() && $CurrentThread->sub_id == 0) {
             return response()->json([
                 'code' => ResponseCode::THREAD_WAS_NISSINED,
                 'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
