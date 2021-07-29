@@ -30,7 +30,11 @@ class ResponseCode
 
     const THREAD_WAS_NISSINED = 23410;
 
+    const THREAD_TOO_MANY = 23429;
+
     const POST_NOT_FOUND = 24404;
+
+    const POST_TOO_MANY = 24429;
 
     const LOGIN_FAILED = 20001;
 
@@ -52,7 +56,9 @@ class ResponseCode
         self::CANNOTLOGIN => '用户无法登录',
         self::THREAD_NOT_FOUND => '主题贴不存在',
         self::THREAD_WAS_NISSINED => '主题已被日清',
+        self::THREAD_TOO_MANY =>'发新主题过于频繁',
         self::POST_NOT_FOUND => '未找到该帖子',
+        self::POST_TOO_MANY =>'回帖过于频繁',
         self::LOGIN_FAILED => '登录态失效',
         self::DATABASE_FAILED => '数据库错误',
         self::USER_REGISTER_FAIL => '申请饼干失败',
@@ -77,3 +83,4 @@ class ResponseCode
 // 415	Unsupported Media Type	服务器无法处理请求附带的媒体格式
 // 416	Requested range not satisfiable	客户端请求的范围无效
 // 417	Expectation Failed	服务器无法满足Expect的请求头信息
+// 429, 请求过于频繁.

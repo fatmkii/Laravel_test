@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use Carbon\Carbon;
 use App\Exceptions\CoinException;
+use Illuminate\Support\Facades\Redis;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
 
@@ -44,6 +45,17 @@ class ThreadController extends Controller
             'nissin_time' => 'integer',
             'random_heads_group' => 'integer',
         ]);
+
+        //如果发帖频率过高，返回错误
+        if (Redis::exists('new_thread_record_' . $request->binggan)) {
+            $limted_minutes = intval(Redis::TTL('new_thread_record_' . $request->binggan) / 60) + 1;
+            return response()->json([
+                'code' => ResponseCode::THREAD_TOO_MANY,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_TOO_MANY] . '，你只能在'
+                    . $limted_minutes . '分钟后再发新主题。',
+            ]);
+        }
+
 
         $user = User::where('binggan', $request->binggan)->first();
         if (!$user) {
@@ -147,6 +159,8 @@ class ThreadController extends Controller
                 ],
             );
         }
+        //用redis记录发帖频率。限定5分钟内只能发帖1次。
+        Redis::setex('new_thread_record_' . $request->binggan, 5 * 60, 1);
 
         return response()->json(
             [

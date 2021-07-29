@@ -11,6 +11,7 @@ use App\Models\Thread;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 class PostController extends Controller
 {
@@ -38,6 +39,14 @@ class PostController extends Controller
             'content' => 'required|string',
             'nickname' => '',
         ]);
+
+        //如果回帖频率过高，返回错误
+        if (Redis::GET('new_post_record_' . $request->binggan) >= 10) {
+            return response()->json([
+                'code' => ResponseCode::POST_TOO_MANY,
+                'message' => ResponseCode::$codeMap[ResponseCode::POST_TOO_MANY] . '为防止刷屏，每1分钟最多回帖10次',
+            ]);
+        }
 
         $user = User::where('binggan', $request->binggan)->first();
         if (!$user) {
@@ -101,6 +110,13 @@ class PostController extends Controller
                 'code' => ResponseCode::DATABASE_FAILED,
                 'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
             ]);
+        }
+
+        //用redis记录回频率。限定1分钟内只能回帖10次。
+        if (Redis::exists('new_post_record_' . $request->binggan)) {
+            Redis::incr('new_post_record_' . $request->binggan);
+        } else {
+            Redis::setex('new_post_record_' . $request->binggan,  60, 1);
         }
 
         $post_id = $post->id;
