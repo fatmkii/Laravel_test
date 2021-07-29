@@ -59,6 +59,10 @@
           }}小时后解封。
         </span>
         <span
+          v-if="
+            this.$store.state.Forums.CurrentForumData.is_nissin == 1 &&
+            this.$store.state.Threads.CurrentThreadData.sub_id == 0
+          "
           >本贴将于
           <span style="color: #dd0000">{{ nissin_TTL }}</span>
           后日清，请及时更换帖子喔

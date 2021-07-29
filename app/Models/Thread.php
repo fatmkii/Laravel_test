@@ -17,7 +17,6 @@ class Thread extends myModel
     public $hidden = [
         'created_binggan',
         'created_IP',
-        'sub_id',
         'is_anonymous',
     ];
     protected $fillable = [
