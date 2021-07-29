@@ -107,7 +107,7 @@ class PostController extends Controller
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
-                'message' => '发表回复成功！',
+                'message' => '发表回复成功！奥利奥+10',
                 'data' => [
                     'forum_id' => $request->forum_id,
                     'thread_id' => $request->thread_id,
@@ -210,6 +210,117 @@ class PostController extends Controller
                 'data' => [
                     'post_id' => $id,
                     '$post' => $post
+                ]
+            ],
+        );
+    }
+
+    public function create_roll(Request $request)
+    {
+        $request->validate([
+            'binggan' => 'required|string',
+            'forum_id' => 'required|integer',
+            'thread_id' => 'required|integer',
+            'roll_name' => 'string',
+            'roll_event' => 'required|string',
+            'roll_num' => 'required|integer|max:1000|min:1',
+            'roll_range' => 'required|integer|max:100000000|min:1',
+        ]);
+
+        $user = User::where('binggan', $request->binggan)->first();
+        if (!$user) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+                ],
+            );
+        }
+        //如果饼干被ban，直接返回错误
+        if ($user->is_banned) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_BANNED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_BANNED],
+                    'data' => [
+                        'binggan' => $user->binggan,
+                    ],
+                ],
+                401
+            );
+        }
+
+        //查询饼干是否在封禁期
+        if ($user->lockedTTL) {
+            $lockTTL_hours = intval($user->lockedTTL / 3600) + 1;
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_LOCKED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_LOCKED] . '，将于' . $lockTTL_hours . '小时后解封',
+                ],
+            );
+        }
+
+        //生成roll点结果
+        $roll_result_arr = array();
+        for ($i = 0; $i < $request->roll_num; $i++) {
+            array_push($roll_result_arr, rand(1, $request->roll_range));
+        }
+
+        //执行追加新roll点的流程
+        try {
+            DB::beginTransaction();
+            $post = new Post;
+            $post->setSuffix(intval($request->thread_id / 10000));
+            $post->created_binggan = $request->binggan;
+            $post->forum_id = $request->forum_id;
+            $post->thread_id = $request->thread_id;
+            if ($request->roll_name) {
+                $post->content = sprintf(
+                    "「%s」，「%s」的结果：%s d %s = 「%s」.",
+                    $request->roll_name,
+                    $request->roll_event,
+                    $request->roll_num,
+                    $request->roll_range,
+                    join(", ", $roll_result_arr),
+                );
+            } else {
+                $post->content = sprintf(
+                    "「%s」的结果：%s d %s = 「%s」.",
+                    $request->roll_event,
+                    $request->roll_num,
+                    $request->roll_range,
+                    join(", ", $roll_result_arr),
+                );
+            }
+            $post->create_by_admin = 2; //0=一般用户 1=管理员发布，2=系统发布
+            $post->nickname = 'Roll点系统';
+            $post->created_ip = $request->ip();
+            $post->random_head = random_int(1, 40);
+            $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();
+            $post->save();
+
+            $thread = $post->thread;
+            $thread->posts_num = $thread->posts_num + 1;
+            $thread->save();
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json([
+                'code' => ResponseCode::DATABASE_FAILED,
+                'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
+            ]);
+        }
+
+        $post_id = $post->id;
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => 'roll点成功！',
+                'data' => [
+                    'forum_id' => $request->forum_id,
+                    'thread_id' => $request->thread_id,
+                    'post_id' => $post_id,
                 ]
             ],
         );

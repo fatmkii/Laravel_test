@@ -36,6 +36,7 @@ Route::apiResource('threads', ThreadController::class);
 
 //Post系列
 Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
+Route::post('/posts/create_roll', [PostController::class, 'create_roll']);
 Route::apiResource('posts', PostController::class);
 
 //User系列

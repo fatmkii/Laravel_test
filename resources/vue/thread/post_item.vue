@@ -73,43 +73,42 @@
         →{{ post_data.created_binggan_hash.slice(0, 5) }}
       </span>
     </div>
-    <div>
-      <b-modal ref="reward_modal" id="reward_modal">
-        <template v-slot:modal-header>
-          <h5>打赏olo 给№{{ post_data.floor }}楼</h5>
-        </template>
-        <template v-slot:default>
-          <p>
-            友情提示：您在打赏回贴作者以后，将会扣除7%的手续费。
-            <br />
-            例如您打赏1000块奥利奥，则对方将获得
-            <span style="color: red">930 </span>块奥利奥。
-          </p>
-          <b-input-group prepend="打赏：">
-            <b-form-input
-              v-model="coin_reward_input"
-              placeholder="olo数量"
-            ></b-form-input>
-          </b-input-group>
-          <b-input-group prepend="留言：">
-            <b-form-input v-model="content_reward_input"></b-form-input>
-          </b-input-group>
-        </template>
-        <template v-slot:modal-footer="{ cancel }">
-          <b-button-group>
-            <b-button
-              variant="success"
-              :disabled="reward_handling"
-              @click="reward_handle"
-              >打赏！</b-button
-            >
-            <b-button variant="outline-secondary" @click="cancel()">
-              取消
-            </b-button>
-          </b-button-group>
-        </template>
-      </b-modal>
-    </div>
+
+    <b-modal ref="reward_modal" id="reward_modal">
+      <template v-slot:modal-header>
+        <h5>打赏olo 给№{{ post_data.floor }}楼</h5>
+      </template>
+      <template v-slot:default>
+        <p>
+          友情提示：您在打赏回贴作者以后，将会扣除7%的手续费。
+          <br />
+          例如您打赏1000块奥利奥，则对方将获得
+          <span style="color: red">930 </span>块奥利奥。
+        </p>
+        <b-input-group prepend="打赏：">
+          <b-form-input
+            v-model="coin_reward_input"
+            placeholder="olo数量"
+          ></b-form-input>
+        </b-input-group>
+        <b-input-group prepend="留言：">
+          <b-form-input v-model="content_reward_input"></b-form-input>
+        </b-input-group>
+      </template>
+      <template v-slot:modal-footer="{ cancel }">
+        <b-button-group>
+          <b-button
+            variant="success"
+            :disabled="reward_handling"
+            @click="reward_handle"
+            >打赏！</b-button
+          >
+          <b-button variant="outline-secondary" @click="cancel()">
+            取消
+          </b-button>
+        </b-button-group>
+      </template>
+    </b-modal>
   </div>
 </template>
 
