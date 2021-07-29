@@ -110,7 +110,13 @@
         <div class="col-4"></div>
       </div>
       <div class="row align-items-center mt-3">
-        <div class="col-4"></div>
+        <div class="col-4">
+          <b-form-select
+            v-model="admin_subtitles_selected"
+            :options="admin_subtitles_options"
+            :disabled="subtitles_selected != '[公告]'"
+          ></b-form-select>
+        </div>
         <div class="col-4"></div>
         <div class="col-4"></div>
       </div>
