@@ -50,7 +50,7 @@ class ResponseCode
         self::USER_PASSWORD_ERROR => '密码输入错误',
         self::ADMIN_UNAUTHORIZED => '管理员权限不足',
         self::CANNOTLOGIN => '用户无法登录',
-        self::THREAD_NOT_FOUND => '主题贴获取失败',
+        self::THREAD_NOT_FOUND => '主题贴不存在',
         self::THREAD_WAS_NISSINED => '主题已被日清',
         self::POST_NOT_FOUND => '未找到该帖子',
         self::LOGIN_FAILED => '登录态失效',

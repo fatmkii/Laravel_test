@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Common\ResponseCode;
+use App\Exceptions\CoinException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use App\Models\User;
@@ -225,7 +226,9 @@ class UserController extends Controller
             $user_target->coin += $coin_get;
             $user->save();
             $user_target->save();
-
+            if ($user->coin < 0) {
+                throw new CoinException();
+            }
             $post = new Post;
             $post->setSuffix(intval($request->thread_id / 10000));
             $post->created_binggan = $request->binggan;
@@ -253,6 +256,14 @@ class UserController extends Controller
                 'code' => ResponseCode::DATABASE_FAILED,
                 'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
             ]);
+        } catch (CoinException $e) {
+            DB::rollback();
+            return response()->json(
+                [
+                    'code' => ResponseCode::COIN_NOT_ENOUGH,
+                    'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
+                ],
+            );
         }
 
         return response()->json(

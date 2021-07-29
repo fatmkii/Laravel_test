@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use Carbon\Carbon;
+use App\Exceptions\CoinException;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
 
@@ -93,17 +94,11 @@ class ThreadController extends Controller
             DB::beginTransaction();
             if ($request->title_color) {
                 $user = User::where('binggan', $request->binggan)->first();
-                if ($user->coin < 500) {
-                    return response()->json(
-                        [
-                            'code' => ResponseCode::COIN_NOT_ENOUGH,
-                            'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
-                        ],
-                    );
-                }
                 $user->coin -= 500; //设置标题颜色减500奥利奥   
                 $user->save();
-                DB::commit();
+                if ($user->coin < 0) {
+                    throw new CoinException();
+                }
             }
             //发主题帖（Thread）
             $thread = new Thread;
@@ -122,7 +117,6 @@ class ThreadController extends Controller
             $thread->title_color = $request->title_color;
             $thread->anti_jingfen = $request->anti_jingfen;
             $thread->save();
-            DB::commit(); //先提交一次，不然$thread没有id.
             //发主题帖的第0楼（Post）
             $post = new Post;
             $post->setSuffix(intval($thread->id / 10000));
@@ -142,6 +136,14 @@ class ThreadController extends Controller
                 'code' => ResponseCode::DATABASE_FAILED,
                 'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
             ]);
+        } catch (CoinException $e) {
+            DB::rollback();
+            return response()->json(
+                [
+                    'code' => ResponseCode::COIN_NOT_ENOUGH,
+                    'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
+                ],
+            );
         }
 
         return response()->json(
@@ -176,6 +178,13 @@ class ThreadController extends Controller
     public function show(Request $request, $Thread_id)
     {
         $CurrentThread = Thread::find($Thread_id);
+        if (!$CurrentThread) {
+            return response()->json([
+                'code' => ResponseCode::THREAD_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_NOT_FOUND],
+            ]);
+        }
+
         $CurrentForum = $CurrentThread->forum;
 
         //判断帖子是否已经被日清
