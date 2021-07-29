@@ -13,13 +13,30 @@
       </div>
     </div>
     <div class="post_container">
-      <div class="post_title px-2 py-3 h4">标题：{{ thread_title }}</div>
+      <div class="post_title px-2 py-3 h4">
+        <span>标题：{{ thread_title }}</span>
+      </div>
+      <div v-if="this.$store.state.User.AdminStatus" class="d-inline-flex">
+        <b-form-checkbox v-model="admin_button_show" align="right">
+          显示管理员按钮
+        </b-form-checkbox>
+        <b-button
+          size="sm"
+          variant="warning"
+          v-if="this.$store.state.User.AdminStatus"
+          v-show="admin_button_show"
+          @click="thread_delete_click_admin"
+        >
+          删主题
+        </b-button>
+      </div>
       <div v-for="post_data in posts_data" :key="post_data.id">
         <PostItem
           :post_data="post_data"
           :binggan_hash="binggan_hash"
           :thread_anti_jingfen="thread_anti_jingfen"
           :random_head_add="random_heads_data[post_data.random_head]"
+          :admin_button_show="admin_button_show"
           @quote_click="quote_click_handle"
           @get_posts_data="get_posts_data"
         ></PostItem>
@@ -171,10 +188,16 @@
         </div>
         <div class="mt-3">
           <b-input-group prepend="骰子数量">
-            <b-form-input v-model="roll_num"></b-form-input>
+            <b-form-input
+              v-model="roll_num"
+              placeholder="max:1000"
+            ></b-form-input>
           </b-input-group>
           <b-input-group prepend="骰子大小">
-            <b-form-input v-model="roll_range"></b-form-input>
+            <b-form-input
+              v-model="roll_range"
+              placeholder="max:100000000"
+            ></b-form-input>
           </b-input-group>
         </div>
       </template>
@@ -224,6 +247,7 @@ export default {
       roll_range: 100,
       roll_handling: false,
       random_heads_data: Object,
+      admin_button_show: false,
     };
   },
 
@@ -286,6 +310,10 @@ export default {
               "CurrentThreadData_set",
               response.data.thread_data
             );
+            this.$store.commit(
+              "CurrentForumData_set",
+              response.data.forum_data
+            );
             this.$store.commit("PostsLoadStatus_set", 1);
             this.random_heads_data = JSON.parse(
               response.data.random_heads.random_heads
@@ -303,7 +331,28 @@ export default {
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
-
+    thread_delete_click_admin() {
+      var isdelete = confirm("要用管理员权限删除这个主题吗？");
+      if (isdelete == true) {
+        const config = {
+          method: "post",
+          url: "/api/admin/thread_delete/",
+          data: {
+            thread_id: this.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
     back_to_forum() {
       this.$router.push({ name: "forum", params: { forum_id: this.forum_id } });
     },

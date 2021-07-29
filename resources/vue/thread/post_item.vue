@@ -12,6 +12,7 @@
           size="sm"
           variant="warning"
           v-if="this.$store.state.User.AdminStatus"
+          v-show="admin_button_show"
           @click="ban_cookie_click_admin"
         >
           碎饼
@@ -20,6 +21,7 @@
           size="sm"
           variant="warning"
           v-if="this.$store.state.User.AdminStatus"
+          v-show="admin_button_show"
           @click="lock_cookie_click_admin"
         >
           封禁
@@ -28,6 +30,7 @@
           size="sm"
           variant="warning"
           v-if="this.$store.state.User.AdminStatus"
+          v-show="admin_button_show"
           @click="post_delete_all_click_admin"
         >
           删全
@@ -36,6 +39,7 @@
           size="sm"
           variant="warning"
           v-if="this.$store.state.User.AdminStatus"
+          v-show="admin_button_show"
           @click="post_delete_click_admin"
         >
           删帖
@@ -124,6 +128,7 @@ export default {
     binggan_hash: String,
     thread_anti_jingfen: Number,
     random_head_add: String,
+    admin_button_show: Boolean,
   },
   data: function () {
     return {

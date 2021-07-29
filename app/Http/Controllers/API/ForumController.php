@@ -44,7 +44,7 @@ class ForumController extends Controller
      */
     public function show($forum_id)
     {
-        $threads = Thread::where('forum_id', $forum_id);
+        $threads = Thread::where('forum_id', $forum_id)->where('is_deleted', 0);
         $CurrentForum = Forum::find($forum_id);
 
         //如果是日清版，加入日清条件。

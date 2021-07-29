@@ -14,6 +14,39 @@ use Illuminate\Database\QueryException;
 
 class AdminController extends Controller
 {
+    public function thread_delete(Request $request)
+    {
+        $request->validate([
+            'thread_id' => 'required|integer',
+        ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('admin')) {
+            return response()->json([
+                'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+            ]);
+        }
+
+        $thread = Thread::find($request->thread_id);
+        if (!$thread) {
+            return response()->json([
+                'code' => ResponseCode::THREAD_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_NOT_FOUND],
+            ]);
+        }
+
+        $thread->is_deleted = 2;
+        $thread->save();
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => '该主题已删除。',
+            'data' => [
+                'thread_id' => $thread->id,
+            ],
+        ]);
+    }
+
     public function post_delete(Request $request)
     {
         $request->validate([

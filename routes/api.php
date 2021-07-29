@@ -48,6 +48,7 @@ Route::get('/user/check_reg_record', [UserController::class, 'check_reg_record']
 //Admin系列
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/admin/logout', [AdminController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/admin/thread_delete', [AdminController::class, 'thread_delete'])->middleware('auth:sanctum'); //删主题
 Route::post('/admin/post_delete', [AdminController::class, 'post_delete'])->middleware('auth:sanctum'); //删帖
 Route::post('/admin/post_delete_all', [AdminController::class, 'post_delete_all'])->middleware('auth:sanctum'); //删主题内该作者全部回帖
 Route::post('/admin/user_ban', [AdminController::class, 'user_ban'])->middleware('auth:sanctum'); //碎饼
