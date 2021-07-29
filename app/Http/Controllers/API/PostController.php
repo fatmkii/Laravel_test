@@ -221,7 +221,6 @@ class PostController extends Controller
             'binggan' => 'required|string',
             'forum_id' => 'required|integer',
             'thread_id' => 'required|integer',
-            'roll_name' => 'string',
             'roll_event' => 'required|string',
             'roll_num' => 'required|integer|max:1000|min:1',
             'roll_range' => 'required|integer|max:100000000|min:1',
