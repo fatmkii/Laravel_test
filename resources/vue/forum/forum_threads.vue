@@ -25,6 +25,7 @@
               class="thread_title"
               :to="'/thread/' + thread.id"
               :style="{ color: thread.title_color }"
+              :target="router_target"
             >
               {{ thread.title }}&nbsp;&nbsp;
             </router-link>
@@ -56,16 +57,22 @@ export default {
   props: {
     forum_id: Number,
     page: Number,
+    new_window_to_post: Boolean,
   },
   data: function () {
     return {
       name: "forum_threads",
     };
   },
-  computed: mapState({
-    threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
-    threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
-  }),
+  computed: {
+    router_target() {
+      return this.new_window_to_post ? "_blank" : "false";
+    },
+    ...mapState({
+      threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
+      threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
+    }),
+  },
   methods: {},
   created() {
     this.$store.commit("ThreadsLoadStatus_set", 0); //避免显示上个ThreadsData

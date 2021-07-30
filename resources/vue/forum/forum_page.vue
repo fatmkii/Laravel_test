@@ -8,6 +8,11 @@
         </b-badge>
         <span id="forum_name">{{ forum_name }}</span>
       </div>
+      <div class="col-auto">
+        <b-form-checkbox v-model="new_window_to_post" switch>
+          新窗口打开
+        </b-form-checkbox>
+      </div>
       <div class="col-auto my-2 ml-auto">
         <span v-if="!this.$store.state.User.LoginStatus">
           请在先<router-link to="/login">导入或领取饼干 </router-link>
@@ -31,8 +36,16 @@
         >
       </div>
     </div>
-    <ForumThreads :forum_id="forum_id" :page="page"></ForumThreads>
-    <ForumThreadsMobile :forum_id="forum_id" :page="page"></ForumThreadsMobile>
+    <ForumThreads
+      :forum_id="forum_id"
+      :page="page"
+      :new_window_to_post="new_window_to_post"
+    ></ForumThreads>
+    <ForumThreadsMobile
+      :forum_id="forum_id"
+      :page="page"
+      :new_window_to_post="new_window_to_post"
+    ></ForumThreadsMobile>
     <ForumPaginator :forum_id="forum_id"></ForumPaginator>
   </div>
 </template>
@@ -52,10 +65,17 @@ export default {
   watch: {
     // 如果路由有变化，再次获得数据
     $route: "get_threads_data",
+    new_window_to_post: function () {
+      localStorage.setItem(
+        "new_window_to_post",
+        this.new_window_to_post ? "true" : ""
+      );
+    },
   },
   data: function () {
     return {
       name: "forum_page",
+      new_window_to_post: false,
     };
   },
   computed: {
@@ -92,7 +112,12 @@ export default {
     },
   },
   created() {
-    this.get_threads_data(); //当page切换时重新获得threads数据
+    this.get_threads_data();
+    if (localStorage.getItem("new_window_to_post") == null) {
+      localStorage.new_window_to_post = false;
+    } else {
+      this.new_window_to_post = localStorage.new_window_to_post;
+    }
   },
 };
 </script>
