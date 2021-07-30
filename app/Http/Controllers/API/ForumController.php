@@ -8,6 +8,7 @@ use App\Models\Forum;
 use App\Models\Thread;
 use App\Common\ResponseCode;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ForumController extends Controller
 {
@@ -18,10 +19,12 @@ class ForumController extends Controller
      */
     public function index()
     {
-        //
+        $forums = Cache::remember('forums_cache',  24 * 3600, function () {
+            return Forum::where('id', '<>', 0)->get(); //把0岛隐藏掉
+        });
         return response()->json([
             'code' => ResponseCode::SUCCESS,
-            'data' => Forum::where('id', '<>', 0)->get(), //把0岛隐藏掉
+            'data' => $forums,
         ]);
     }
 
@@ -44,8 +47,8 @@ class ForumController extends Controller
      */
     public function show($forum_id)
     {
-        $threads = Thread::where('forum_id', $forum_id)->where('is_deleted', 0);
         $CurrentForum = Forum::find($forum_id);
+        $threads = $CurrentForum->threads()->where('is_deleted', 0);
 
         //如果是日清版，加入日清条件。
         if ($CurrentForum->is_nissin == true) {

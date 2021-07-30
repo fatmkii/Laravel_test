@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\myModel;
 use App\Models\Post;
 use App\Models\Forum;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 
 class Thread extends myModel
@@ -40,8 +41,10 @@ class Thread extends myModel
         // Posts数据库表分表。根据Tread->id万位以上数字作为Post表后缀
         // 例如thread->id是2xxxx的post在表post_2表里。
         // suffix方法写在myModel类里
-        $posts = Post::suffix(intval($this->id / 10000));
-        return $this->hasMany($posts);
+        // $posts = Post::suffix(intval($this->id / 10000));
+        $posts = new Post;
+        $posts->setSuffix(intval($this->id / 10000));
+        return new HasMany($posts->newQuery(), $this, 'thread_id', 'id');
     }
 
     protected function serializeDate($date)

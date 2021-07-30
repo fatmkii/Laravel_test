@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use Carbon\Carbon;
 use App\Exceptions\CoinException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
@@ -211,7 +212,8 @@ class ThreadController extends Controller
             ]);
         }
 
-        $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
+        // $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
+        $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
 
         //如果有提供binggan，为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
         if ($request->query('binggan')) {
@@ -226,7 +228,9 @@ class ThreadController extends Controller
         }
 
         //提供该帖子的随机头像地址表
-        $random_heads = DB::table('random_heads')->find($CurrentThread->random_heads_group);
+        $random_heads = Cache::remember('random_heads_cache_' . $CurrentThread->random_heads_group, 7 * 24 * 3600, function () use ($CurrentThread) {
+            return DB::table('random_heads')->find($CurrentThread->random_heads_group);
+        });
 
         return response()->json([
             'code' => ResponseCode::SUCCESS,
