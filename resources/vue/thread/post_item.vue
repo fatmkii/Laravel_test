@@ -72,7 +72,12 @@
     </div>
     <div class="post_footer" ref="post_author_info">
       <span class="post_footer_text">№{{ post_data.floor }} ☆☆☆</span>
-      <span class="post_nick_name">{{ post_data.nickname }}</span>
+      <span
+        class="post_nick_name"
+        :style="{ color: author_color[post_data.created_by_admin] }"
+      >
+        {{ post_data.nickname }}
+      </span>
       <span class="post_footer_text">于</span>
       <span class="post_created_at">{{ post_data.created_at }}</span>
       <span class="post_footer_text"> 留言 ☆☆☆</span>
@@ -136,6 +141,7 @@ export default {
       content_reward_input: "",
       coin_reward_input: "",
       reward_handling: false,
+      author_color: ["", "#DD0000", "#5fb878"],
     };
   },
   computed: {},

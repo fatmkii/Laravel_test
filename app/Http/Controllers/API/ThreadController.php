@@ -45,6 +45,7 @@ class ThreadController extends Controller
             'anti_jingfen' => 'required|boolean',
             'nissin_time' => 'integer',
             'random_heads_group' => 'integer',
+            'post_with_admin' => 'boolean',
         ]);
 
         //如果发帖频率过高，返回错误
@@ -68,8 +69,11 @@ class ThreadController extends Controller
             );
         }
 
-        //确认是否冒认管理员发公告
-        if ($user->admin == 0 && $request->subtitle == "[公告]") {
+        //确认是否冒认管理员发公告或者管理员帖
+        if (
+            $user->admin == 0 &&
+            ($request->subtitle == "[公告]" || $request->post_with_admin == true)
+        ) {
             return response()->json(
                 [
                     'code' => ResponseCode::ADMIN_UNAUTHORIZED,
@@ -140,6 +144,7 @@ class ThreadController extends Controller
             $post->thread_id = $thread->id;
             $post->content = $request->content;
             $post->nickname = $request->nickname;
+            $post->created_by_admin = $request->post_with_admin  ? 1 : 0;
             $post->created_ip = $request->ip();
             $post->random_head = random_int(1, 40);
             $post->floor = 0;

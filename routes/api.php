@@ -53,6 +53,9 @@ Route::post('/admin/post_delete', [AdminController::class, 'post_delete'])->midd
 Route::post('/admin/post_delete_all', [AdminController::class, 'post_delete_all'])->middleware('auth:sanctum'); //删主题内该作者全部回帖
 Route::post('/admin/user_ban', [AdminController::class, 'user_ban'])->middleware('auth:sanctum'); //碎饼
 Route::post('/admin/user_lock', [AdminController::class, 'user_lock'])->middleware('auth:sanctum'); //封id（临时）
+Route::post('/admin/thread_set_top', [AdminController::class, 'thread_set_top'])->middleware('auth:sanctum'); //设置置顶
+Route::post('/admin/thread_cancel_top', [AdminController::class, 'thread_cancel_top'])->middleware('auth:sanctum'); //取消置顶
+
 
 //杂项
 Route::get('/emoji', [CommonController::class, 'emoji_index']);

@@ -22,7 +22,7 @@ class CreatePostsTable extends Migration
                 $table->integer('thread_id')->index();
                 $table->integer('floor')->index();
                 $table->tinyInteger('random_head')->nullable(); //论坛随机头像功能用
-                $table->tinyInteger('create_by_admin')->default(0); //0=一般用户 1=管理员发布，2=系统发布
+                $table->tinyInteger('created_by_admin')->default(0); //0=一般用户 1=管理员发布，2=系统发布
                 $table->longText('content')->nullable();
                 $table->string('nickname')->nullable();
                 $table->boolean('is_anonymous')->default('0');

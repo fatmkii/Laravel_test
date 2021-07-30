@@ -47,6 +47,72 @@ class AdminController extends Controller
         ]);
     }
 
+    public function thread_set_top(Request $request)
+    {
+        $request->validate([
+            'thread_id' => 'required|integer',
+        ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('admin')) {
+            return response()->json([
+                'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+            ]);
+        }
+
+        $thread = Thread::find($request->thread_id);
+        if (!$thread) {
+            return response()->json([
+                'code' => ResponseCode::THREAD_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_NOT_FOUND],
+            ]);
+        }
+
+        $thread->sub_id = 10; 
+        $thread->save();
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => '该主题已经置顶',
+            'data' => [
+                'thread_id' => $thread->id,
+            ],
+        ]);
+    }
+
+    public function thread_cancel_top(Request $request)
+    {
+        $request->validate([
+            'thread_id' => 'required|integer',
+        ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('admin')) {
+            return response()->json([
+                'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+            ]);
+        }
+
+        $thread = Thread::find($request->thread_id);
+        if (!$thread) {
+            return response()->json([
+                'code' => ResponseCode::THREAD_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_NOT_FOUND],
+            ]);
+        }
+
+        $thread->sub_id = 0; 
+        $thread->save();
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => '该主题已经取消置顶',
+            'data' => [
+                'thread_id' => $thread->id,
+            ],
+        ]);
+    }
+
     public function post_delete(Request $request)
     {
         $request->validate([

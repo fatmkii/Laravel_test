@@ -239,7 +239,7 @@ class UserController extends Controller
                 '</span><br>我为你打赏了' . $coin_get .
                 '块奥利奥<br>——' . $request->content;
             $post->nickname = '奥利奥打赏系统';
-            $post->create_by_admin = 2; //0=一般用户 1=管理员发布，2=系统发布
+            $post->created_by_admin = 2; //0=一般用户 1=管理员发布，2=系统发布
             $post->created_ip = $request->ip();
             $post->random_head = random_int(1, 40);
             $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();

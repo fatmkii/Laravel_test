@@ -38,6 +38,7 @@ class PostController extends Controller
             'thread_id' => 'required|integer',
             'content' => 'required|string',
             'nickname' => '',
+            'post_with_admin' => 'boolean',
         ]);
 
         //如果回帖频率过高，返回错误
@@ -82,6 +83,16 @@ class PostController extends Controller
             );
         }
 
+        //确认是否冒充管理员发帖
+        if ($user->admin == 0 && $request->post_with_admin == true) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
         //执行追加新回复流程
         try {
             DB::beginTransaction();
@@ -92,6 +103,7 @@ class PostController extends Controller
             $post->thread_id = $request->thread_id;
             $post->content = $request->content;
             $post->nickname = $request->nickname;
+            $post->created_by_admin = $request->post_with_admin  ? 1 : 0;
             $post->created_ip = $request->ip();
             $post->random_head = random_int(0, 39);
             $post->floor = Post::suffix(intval($request->thread_id / 10000))->where('thread_id', $request->thread_id)->count();
@@ -308,7 +320,7 @@ class PostController extends Controller
                     join(", ", $roll_result_arr),
                 );
             }
-            $post->create_by_admin = 2; //0=一般用户 1=管理员发布，2=系统发布
+            $post->created_by_admin = 2; //0=一般用户 1=管理员发布，2=系统发布
             $post->nickname = 'Roll点系统';
             $post->created_ip = $request->ip();
             $post->random_head = random_int(1, 40);

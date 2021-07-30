@@ -12,7 +12,20 @@
         <span>发表新话题</span>
       </div>
     </div>
-    <div class="h6 my-2">昵称</div>
+    <div class="h6 my-2 row">
+      <div class="col-2">昵称</div>
+      <div class="col-10">
+        <b-form-checkbox
+          class="mx-2"
+          v-if="this.$store.state.User.AdminStatus"
+          v-model="post_with_admin"
+          v-b-popover.hover.right="'名字会显示红色'"
+          switch
+        >
+          以管理员身份
+        </b-form-checkbox>
+      </div>
+    </div>
     <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
     <div class="h6 my-2">标题</div>
     <b-form-input
@@ -161,7 +174,13 @@ export default {
       ],
       nissin_time_selected: 86400,
       title_color_input: "",
+      post_with_admin: false,
     };
+  },
+  watch: {
+    post_with_admin: function () {
+      this.nickname_input = this.post_with_admin ? "管理员" : "= =";
+    },
   },
   computed: {
     forum_name() {
@@ -202,6 +221,7 @@ export default {
           title_color: this.title_color_input,
           anti_jingfen: this.anti_jingfen_selected,
           admin_subtitle: this.admin_subtitles_selected,
+          post_with_admin: this.post_with_admin,
         },
       };
       axios(config)

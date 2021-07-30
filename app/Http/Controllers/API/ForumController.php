@@ -56,7 +56,7 @@ class ForumController extends Controller
         }
 
         $threads
-            ->orWhere('sub_id', 99) //加入全岛公告（sub_id=99）
+            ->orWhere('sub_id', [99, 10]) //加入全岛和本版公告（sub_id=10,99）
             ->orderBy('sub_id', 'desc')->orderBy('updated_at', 'desc'); //sub_id是用来把公告等提前的
 
         return response()->json([

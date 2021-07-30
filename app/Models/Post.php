@@ -18,7 +18,7 @@ class Post extends myModel
         'thread_id',
         'floor',
         'random_head',
-        'create_by_admin',
+        'created_by_admin',
         'content',
         'created_IP',
         'created_binggan',
