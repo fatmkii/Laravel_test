@@ -40,8 +40,8 @@ class ThreadController extends Controller
         $request->validate([
             'binggan' => 'required|string',
             'forum_id' => 'required|integer',
-            'title' => 'required|string',
-            'content' => 'required|string',
+            'title' => 'required|string|max:100',
+            'content' => 'required|string|max:20000',
             'anti_jingfen' => 'required|boolean',
             'nissin_time' => 'integer',
             'random_heads_group' => 'integer',

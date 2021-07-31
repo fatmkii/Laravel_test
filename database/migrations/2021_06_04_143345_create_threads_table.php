@@ -18,7 +18,7 @@ class CreateThreadsTable extends Migration
             $table->tinyInteger('sub_id')->unsigned()->default('0')->index(); //用来排序的
             $table->integer('forum_id')->index();
             $table->string('nickname');
-            $table->string('title');
+            $table->text('title');
             $table->string('sub_title')->default('[闲聊]');
             $table->tinyInteger('random_heads_group')->default(1);
             $table->integer('posts_num')->default('1'); //回帖数

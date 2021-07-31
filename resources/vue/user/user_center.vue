@@ -59,27 +59,28 @@ export default {
     },
   },
   created() {
+    document.title = "个人中心";
     if (localStorage.Token != null && localStorage.Binggan != null) {
-        const config = {
-          method: "post",
-          url: "/api/user/show",
-          data: {
-            binggan: localStorage.Binggan,
-          },
-        };
-        axios(config)
-          .then((response) => {
-            this.user_coin = response.data.data.binggan.coin;
-          })
-          .catch((error) => {
-            if (err.response.status === 401) {
-              localStorage.clear("Binggan"); //如果遇到401错误(用户未认证)，就清除Binggan和Token
-              localStorage.clear("Token");
-              axios.defaults.headers.Authorization = "";
-            }
-            alert(error);
-          }); // Todo:写异常返回代码;
-      }
+      const config = {
+        method: "post",
+        url: "/api/user/show",
+        data: {
+          binggan: localStorage.Binggan,
+        },
+      };
+      axios(config)
+        .then((response) => {
+          this.user_coin = response.data.data.binggan.coin;
+        })
+        .catch((error) => {
+          if (err.response.status === 401) {
+            localStorage.clear("Binggan"); //如果遇到401错误(用户未认证)，就清除Binggan和Token
+            localStorage.clear("Token");
+            axios.defaults.headers.Authorization = "";
+          }
+          alert(error);
+        }); // Todo:写异常返回代码;
+    }
   },
 };
 </script>

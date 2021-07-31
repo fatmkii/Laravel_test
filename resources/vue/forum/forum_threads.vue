@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     router_target() {
-      return this.new_window_to_post ? "_blank" : "false";
+      return this.new_window_to_post == true ? "_blank" : "false";
     },
     ...mapState({
       threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据

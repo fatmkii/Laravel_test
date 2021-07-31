@@ -64,14 +64,16 @@
         </b-button>
       </div>
     </div>
-    <div class="post_content my-2" style="min-height: 80px" ref="post_centent">
+    <div class="post_content my-2" ref="post_centent">
       <span
         v-html="post_data.content.replace(/\n/g, '<br>')"
         style="word-wrap: break-word; white-space: normal"
       ></span>
     </div>
     <div class="post_footer" ref="post_author_info">
-      <span class="post_footer_text">№{{ post_data.floor }} ☆☆☆</span>
+      <span class="post_footer_text" @click="quote_click"
+        >№{{ post_data.floor }} ☆☆☆</span
+      >
       <span
         class="post_nick_name"
         :style="{ color: author_color[post_data.created_by_admin] }"

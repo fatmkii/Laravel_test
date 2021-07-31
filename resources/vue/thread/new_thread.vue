@@ -242,8 +242,8 @@ export default {
         })
         .catch((error) => {
           this.new_thread_handling = false;
-          alert(error);
-        }); // Todo:写异常返回代码
+          alert(Object.values(error.response.data.errors)[0]);
+        }); 
     },
     emoji_append(emoji_src) {
       this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";

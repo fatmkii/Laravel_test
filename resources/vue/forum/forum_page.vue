@@ -101,6 +101,7 @@ export default {
         .then((response) => {
           this.$store.commit("ThreadsData_set", response.data.threads_data);
           this.$store.commit("ThreadsLoadStatus_set", 1);
+          document.title = this.forum_name;
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
@@ -115,8 +116,9 @@ export default {
     this.get_threads_data();
     if (localStorage.getItem("new_window_to_post") == null) {
       localStorage.new_window_to_post = false;
+      this.new_window_to_post = false;
     } else {
-      this.new_window_to_post = localStorage.new_window_to_post;
+      this.new_window_to_post = Boolean(localStorage.new_window_to_post);
     }
   },
 };

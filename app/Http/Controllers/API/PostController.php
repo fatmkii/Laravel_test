@@ -36,7 +36,7 @@ class PostController extends Controller
             'binggan' => 'required|string',
             'forum_id' => 'required|integer',
             'thread_id' => 'required|integer',
-            'content' => 'required|string',
+            'content' => 'required|string|max:20000',
             'nickname' => '',
             'post_with_admin' => 'boolean',
         ]);

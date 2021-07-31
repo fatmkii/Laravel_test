@@ -358,6 +358,7 @@ export default {
             this.random_heads_data = JSON.parse(
               response.data.random_heads.random_heads
             );
+            document.title = this.thread_title;
             if (remind) {
               this.$bvToast.toast("已刷新帖子", {
                 title: "Done.",
@@ -427,9 +428,9 @@ export default {
           }
         })
         .catch((error) => {
-          alert(error);
           this.new_post_handling = false;
-        }); // Todo:写异常返回代码
+          alert(Object.values(error.response.data.errors)[0]);
+        });
     },
     emoji_append(emoji_src) {
       this.content_input += "<img src='" + emoji_src + "' class='emoji_img'>";
@@ -439,7 +440,7 @@ export default {
       this.content_input = quote_content;
       document
         .querySelector("#content_input")
-        .scrollIntoView({ behavior: "smooth" });
+        .scrollIntoView({ block: "end", behavior: "smooth" });
       this.$refs.content_input.focus();
     },
     scroll_bottom() {
