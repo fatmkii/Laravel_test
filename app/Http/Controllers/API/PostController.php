@@ -41,13 +41,7 @@ class PostController extends Controller
             'post_with_admin' => 'boolean',
         ]);
 
-        //如果回帖频率过高，返回错误
-        if (Redis::GET('new_post_record_' . $request->binggan) >= 10) {
-            return response()->json([
-                'code' => ResponseCode::POST_TOO_MANY,
-                'message' => ResponseCode::$codeMap[ResponseCode::POST_TOO_MANY] . '为防止刷屏，每1分钟最多回帖10次',
-            ]);
-        }
+
 
         $user = User::where('binggan', $request->binggan)->first();
         if (!$user) {
@@ -58,6 +52,15 @@ class PostController extends Controller
                 ],
             );
         }
+
+        //如果回帖频率过高，返回错误
+        if (Redis::GET('new_post_record_' . $request->binggan) >= 10 && $user->admin == 0) {
+            return response()->json([
+                'code' => ResponseCode::POST_TOO_MANY,
+                'message' => ResponseCode::$codeMap[ResponseCode::POST_TOO_MANY] . '为防止刷屏，每1分钟最多回帖10次',
+            ]);
+        }
+
         //如果饼干被ban，直接返回错误
         if ($user->is_banned) {
             return response()->json(

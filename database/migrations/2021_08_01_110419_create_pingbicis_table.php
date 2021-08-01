@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmojiTable extends Migration
+class CreatePingbicisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +13,11 @@ class CreateEmojiTable extends Migration
      */
     public function up()
     {
-        Schema::create('emoji', function (Blueprint $table) {
+        Schema::create('pingbicis', function (Blueprint $table) {
             $table->id();
-            $table->tinyinteger('heads_id')->index()->default(0);
-            $table->string('name');
-            $table->json('emojis');
-            $table->softDeletes();
+            $table->integer('user_id')->index();
+            $table->json('title_pingbici')->nullable();
+            $table->json('content_pingbici')->nullable();
         });
     }
 
@@ -30,6 +28,6 @@ class CreateEmojiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('emoji');
+        Schema::dropIfExists('pingbicis');
     }
 }

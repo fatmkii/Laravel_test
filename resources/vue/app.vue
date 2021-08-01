@@ -28,7 +28,7 @@ export default {
         this.$store.commit("Binggan_set", localStorage.Binggan);
         this.$store.commit("LoginStatus_set", true);
         axios.defaults.headers.Authorization = "Bearer " + localStorage.Token;
-        //确认饼干和token是否合法
+        //确认饼干和token是否合法和获得屏蔽词等
         const config = {
           method: "post",
           url: "/api/user/show",
@@ -47,6 +47,20 @@ export default {
                 "LockedTTL_set",
                 response.data.data.binggan.locked_TTL
               );
+              this.$store.commit(
+                "UsePingbici_set",
+                response.data.data.binggan.use_pingbici
+              );
+              if (response.data.data.pingbici) {
+                this.$store.commit(
+                  "TitlePingbici_set",
+                  response.data.data.pingbici.title_pingbici
+                );
+                this.$store.commit(
+                  "ContentPingbici_set",
+                  response.data.data.pingbici.content_pingbici
+                );
+              }
             } else {
               localStorage.clear("Binggan");
               localStorage.clear("Token");
@@ -56,7 +70,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (err.response.status === 401) {
+            if (error.response.status === 401) {
               localStorage.clear("Binggan"); //如果遇到401错误(用户未认证)，就清除Binggan和Token
               localStorage.clear("Token");
               axios.defaults.headers.Authorization = "";

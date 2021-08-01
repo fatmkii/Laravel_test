@@ -77,10 +77,10 @@ return [
         'array' => 'The :attribute must not have more than :value items.',
     ],
     'max' => [
-        'numeric' => 'The :attribute must not be greater than :max.',
-        'file' => 'The :attribute must not be greater than :max kilobytes.',
-        'string' => 'The :attribute must not be greater than :max characters.',
-        'array' => 'The :attribute must not have more than :max items.',
+        'numeric' => ':attribute的最大值为:max.',
+        'file' => ':attribute不能超过:maxKB.',
+        'string' => ':attribute不能超过:max个字符.',
+        'array' => ':attribute must not have more than :max items.',
     ],
     'mimes' => 'The :attribute must be a file of type: :values.',
     'mimetypes' => 'The :attribute must be a file of type: :values.',
@@ -153,6 +153,9 @@ return [
     'attributes' => [
         'binggan' => '饼干',
         'content' => '内容',
+        'title' => '标题',
+        'title_pingbici' => '标题屏蔽词',
+        'content_pingbici' => '内容屏蔽词',
     ],
 
 ];

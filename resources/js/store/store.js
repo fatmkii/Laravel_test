@@ -9,6 +9,9 @@ const module_user = {
         LoginStatus: false,
         AdminStatus: 0,
         LockedTTL: 0,
+        UsePingbici: false,
+        TitlePingbici: [],
+        ContentPingbici:[],
     }),
     mutations: {
         Token_set(state, payload) {
@@ -25,6 +28,15 @@ const module_user = {
         },
         LockedTTL_set(state, payload) {
             state.LockedTTL = payload
+        },
+        UsePingbici_set(state, payload) {
+            state.UsePingbici = payload
+        },
+        TitlePingbici_set(state, payload) {
+            state.TitlePingbici = payload
+        },
+        ContentPingbici_set(state, payload) {
+            state.ContentPingbici = payload
         },
     },
     actions: {},

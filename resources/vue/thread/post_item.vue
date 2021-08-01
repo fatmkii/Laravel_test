@@ -67,8 +67,12 @@
     <div class="post_content my-2" ref="post_centent">
       <span
         v-html="post_data.content.replace(/\n/g, '<br>')"
+        v-show="post_content_show"
         style="word-wrap: break-word; white-space: normal"
       ></span>
+      <span v-show="!post_content_show" @click="post_content_show_click"
+        >*此回帖已屏蔽*</span
+      >
     </div>
     <div class="post_footer" ref="post_author_info">
       <span class="post_footer_text" @click="quote_click"
@@ -144,9 +148,20 @@ export default {
       coin_reward_input: "",
       reward_handling: false,
       author_color: ["", "#DD0000", "#5fb878"],
+      post_content_show: true,
     };
   },
-  computed: {},
+  created() {
+    if (this.$store.state.User.UsePingbici) {
+      const title_pingbici = JSON.parse(this.$store.state.User.ContentPingbici);
+      for (var i = 0; i < title_pingbici.length; i++) {
+        var reg = new RegExp(title_pingbici[i], "g");
+        if (reg.test(this.post_data.content)) {
+          this.post_content_show = false;
+        }
+      }
+    }
+  },
   methods: {
     reward_click() {
       this.$refs["reward_modal"].show();
@@ -328,6 +343,9 @@ export default {
         "\n";
       return this.$emit("quote_click", quote_content);
     },
+    post_content_show_click() {
+      this.post_content_show = true;
+    },
   },
 };
 </script>
@@ -337,7 +355,7 @@ export default {
   color: #5fb878;
 }
 .post_footer {
-  font-size: calc(0.8rem + 0.3vw);
+  font-size: calc(0.8rem + 0.2vw);
 }
 .post_item {
   border-bottom: 1px solid #111;

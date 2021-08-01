@@ -66,14 +66,14 @@
       </div>
     </div>
     <ThreadPaginator :thread_id="thread_id"></ThreadPaginator>
-    <div class="h6 my-2 row">
-      <div class="col-2">昵称</div>
-      <div class="col-10">
+    <div class="h6 my-2 row d-inline-flex">
+      <div class="col-auto pr-0">昵称</div>
+      <div class="col-auto">
         <b-form-checkbox
-          class="mx-2"
+          class="mr-auto"
           v-if="this.$store.state.User.AdminStatus"
           v-model="post_with_admin"
-          v-b-popover.hover.right="'名字会显示红色'"
+          v-b-popover.hover.left="'名字会显示红色'"
           switch
         >
           以管理员身份

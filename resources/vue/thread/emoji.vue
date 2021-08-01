@@ -49,9 +49,6 @@ export default {
     },
     emoji_open() {
       this.emoji_show = true;
-      document
-        .querySelector("#content_input")
-        .scrollIntoView({ behavior: "smooth" });
     },
   },
   created() {

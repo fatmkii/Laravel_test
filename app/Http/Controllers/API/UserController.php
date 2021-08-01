@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Pingbici;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -76,16 +77,15 @@ class UserController extends Controller
                     'message' => '饼干认证成功，欢迎回来',
                     'data' => [
                         'binggan' => $user,
+                        'pingbici' => $user->pingbici,
                     ],
                 ],
-                200
             );
         } else {
             return response()->json(
                 [
                     'code' => ResponseCode::CANNOTLOGIN,
                     'message' => ResponseCode::$codeMap[ResponseCode::CANNOTLOGIN],
-                    'data' => [],
                 ],
                 401
             );
@@ -274,6 +274,59 @@ class UserController extends Controller
                     'binggan' => $request->binggan,
                     'binggan_target' => $request->binggan_target,
                     'coin' => $request->coin
+                ]
+            ],
+        );
+    }
+
+    public function pingbici_set(Request $request)
+    {
+        $request->validate([
+            'binggan' => 'required|string',
+            'use_pingbici' => 'required|boolean',
+            'title_pingbici' => 'json|max:1000',
+            'content_pingbici' => 'json|max:1000',
+        ]);
+
+        $user = User::where('binggan', $request->binggan)->first();
+        if (!$user) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+                ],
+            );
+        }
+
+        if ($user->pingbici) {
+            $pingbici = $user->pingbici;
+        } else {
+            $pingbici = new Pingbici();
+        }
+        try {
+            DB::beginTransaction();
+            $user->use_pingbici = $request->use_pingbici;
+            $pingbici->user_id = $user->id;
+            $pingbici->title_pingbici = $request->title_pingbici;
+            $pingbici->content_pingbici = $request->content_pingbici;
+            $user->save();
+            $pingbici->save();
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json([
+                'code' => ResponseCode::DATABASE_FAILED,
+                'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
+            ]);
+        }
+
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '已设定屏蔽词',
+                'data' => [
+                    'user' => $user,
+                    'pingbici' => $pingbici,
                 ]
             ],
         );

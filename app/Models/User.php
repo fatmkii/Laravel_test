@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Common\ResponseCode;
+use App\Models\Pingbici;
 use Carbon\Carbon;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
@@ -55,6 +56,11 @@ class User extends Authenticatable
     protected $appends = [
         'locked_TTL',
     ];
+
+    public function Pingbici()
+    {
+        return $this->hasOne(Pingbici::class);
+    }
 
     public function getLockedTTLAttribute()
     {

@@ -44,6 +44,7 @@ Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:san
 Route::post('/user/register', [UserController::class, 'create']);   //新建饼干
 Route::post('/user/reward', [UserController::class, 'reward']);     //打赏
 Route::get('/user/check_reg_record', [UserController::class, 'check_reg_record']); //返回注册记录TTL
+Route::post('/user/pingbici_set', [UserController::class, 'pingbici_set']);     //设定屏蔽词
 
 //Admin系列
 Route::post('/admin/login', [AdminController::class, 'login']);

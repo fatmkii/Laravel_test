@@ -11,6 +11,53 @@
       @click="logout_handle"
       >退出饼干</b-button
     >
+    <hr />
+    <b-tabs pills>
+      <b-tab title="屏蔽词">
+        <div class="mx-2 my-2">
+          <p class="my-2">
+            标题屏蔽词：（请参考下述JSON格式。前后有[]，最后一个不要有,逗号）
+          </p>
+          <b-form-textarea
+            id="title_pingbici_input"
+            v-model="title_pingbici_input"
+            rows="3"
+            max-rows="20"
+          ></b-form-textarea>
+          <p class="my-2">
+            内容屏蔽词：（请参考下述JSON格式。前后有[]，最后一个不要有,逗号）
+          </p>
+          <b-form-textarea
+            id="content_pingbici_input"
+            v-model="content_pingbici_input"
+            rows="3"
+            max-rows="20"
+          ></b-form-textarea>
+          <div class="row align-items-center mt-2">
+            <div class="col-auto">
+              <b-button
+                variant="success"
+                :disabled="pingbici_set_handling"
+                @click="pingbici_set_handle"
+                >提交
+              </b-button>
+            </div>
+            <div class="col-auto">
+              <b-form-checkbox
+                class="mx-2"
+                switch
+                v-model="use_pingbici_input"
+                v-b-popover.hover.buttom="'切换后也要点击提交喔'"
+              >
+                启用屏蔽词
+              </b-form-checkbox>
+            </div>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab title="自定表情包">还没做好啦</b-tab>
+      <b-tab title="切换皮肤">也还没做好啦</b-tab>
+    </b-tabs>
   </div>
 </template>
 
@@ -25,12 +72,18 @@ export default {
     return {
       name: "user_center",
       user_coin: 0,
+      title_pingbici_input: '["屏蔽词#1","屏蔽词#2"]',
+      content_pingbici_input: '["屏蔽词#1","屏蔽词#2"]',
+      use_pingbici_input: false,
+      pingbici_set_handling: false,
     };
   },
-  computed: mapState({
-    login_status: (state) => state.User.LoginStatus,
-    binggan: (state) => state.User.Binggan,
-  }),
+  computed: {
+    ...mapState({
+      login_status: (state) => state.User.LoginStatus,
+      binggan: (state) => state.User.Binggan,
+    }),
+  },
   methods: {
     logout_handle() {
       const config = {
@@ -57,9 +110,53 @@ export default {
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码
     },
+    pingbici_set_handle() {
+      try {
+        //转换并确认用户输入是否满足JSON格式
+        var title_pingbici = JSON.stringify(
+          JSON.parse(this.title_pingbici_input)
+        );
+        var content_pingbici = JSON.stringify(
+          JSON.parse(this.content_pingbici_input)
+        );
+      } catch (e) {
+        alert("屏蔽词格式输入有误，请检查");
+        return;
+      }
+      this.pingbici_set_handling = true;
+      const config = {
+        method: "post",
+        url: "/api/user/pingbici_set",
+        data: {
+          binggan: this.$store.state.User.Binggan,
+          title_pingbici: title_pingbici,
+          content_pingbici: content_pingbici,
+          use_pingbici: this.use_pingbici_input,
+        },
+      };
+      axios(config)
+        .then((response) => {
+          if (response.data.code == 200) {
+            this.$bvToast.toast(response.data.message, {
+              title: "Done.",
+              autoHideDelay: 1500,
+              appendToast: true,
+            });
+            this.pingbici_set_handling = false;
+          } else {
+            this.pingbici_set_handling = false;
+            alert(response.data.message);
+          }
+        })
+        .catch((error) => {
+          this.pingbici_set_handling = false;
+          alert(Object.values(error.response.data.errors)[0]);
+        });
+    },
   },
   created() {
     document.title = "个人中心";
+    //更新用户信息
     if (localStorage.Token != null && localStorage.Binggan != null) {
       const config = {
         method: "post",
@@ -71,9 +168,19 @@ export default {
       axios(config)
         .then((response) => {
           this.user_coin = response.data.data.binggan.coin;
+          //设定屏蔽词相关状态
+          this.use_pingbici_input = Boolean(
+            response.data.data.binggan.use_pingbici
+          );
+          if (response.data.data.pingbici) {
+            this.title_pingbici_input =
+              response.data.data.pingbici.title_pingbici;
+            this.content_pingbici_input =
+              response.data.data.pingbici.content_pingbici;
+          }
         })
         .catch((error) => {
-          if (err.response.status === 401) {
+          if (error.response.status === 401) {
             localStorage.clear("Binggan"); //如果遇到401错误(用户未认证)，就清除Binggan和Token
             localStorage.clear("Token");
             axios.defaults.headers.Authorization = "";
@@ -84,3 +191,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.nav {
+  background-color: #eefaee;
+}
+.nav-link.active {
+  background-color: #28a745 !important;
+}
+</style>

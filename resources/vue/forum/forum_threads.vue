@@ -68,8 +68,23 @@ export default {
     router_target() {
       return this.new_window_to_post == true ? "_blank" : "false";
     },
+    threads_data() {
+      if (this.$store.state.User.UsePingbici) {
+        const title_pingbici = JSON.parse(this.$store.state.User.TitlePingbici);
+        return this.$store.state.Threads.ThreadsData.data.filter((thread) => {
+          for (var i = 0; i < title_pingbici.length; i++) {
+            var reg = new RegExp(title_pingbici[i], "g");
+            if (reg.test(thread.title)) {
+              return false;
+            }
+          }
+          return true;
+        }); // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
+      } else {
+        return this.$store.state.Threads.ThreadsData.data;
+      }
+    },
     ...mapState({
-      threads_data: (state) => state.Threads.ThreadsData.data, // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
       threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
     }),
   },
