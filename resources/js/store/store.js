@@ -11,9 +11,9 @@ const module_user = {
         LockedTTL: 0,
         UsePingbici: false,
         TitlePingbici: [],
-        ContentPingbici:[],
-        MyEmoji:[],
-        Emojis:[],
+        ContentPingbici: [],
+        MyEmoji: "",
+        Emojis: [],
     }),
     mutations: {
         Token_set(state, payload) {
