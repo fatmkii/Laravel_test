@@ -1,70 +1,69 @@
 <template>
   <div class="post_item my-2">
-    <div class="post_header row">
-      <div class="col-auto mr-auto">
-        <b-img
-          :src="random_head_add"
-          :class="'head_' + post_data.random_head"
-        ></b-img>
-      </div>
-      <div class="col-auto" v-if="this.$store.state.User.LoginStatus">
-        <b-button
-          size="sm"
-          variant="warning"
-          v-if="this.$store.state.User.AdminStatus"
-          v-show="admin_button_show"
-          @click="ban_cookie_click_admin"
-        >
-          碎饼
-        </b-button>
-        <b-button
-          size="sm"
-          variant="warning"
-          v-if="this.$store.state.User.AdminStatus"
-          v-show="admin_button_show"
-          @click="lock_cookie_click_admin"
-        >
-          封禁
-        </b-button>
-        <b-button
-          size="sm"
-          variant="warning"
-          v-if="this.$store.state.User.AdminStatus"
-          v-show="admin_button_show"
-          @click="post_delete_all_click_admin"
-        >
-          删全
-        </b-button>
-        <b-button
-          size="sm"
-          variant="warning"
-          v-if="this.$store.state.User.AdminStatus"
-          v-show="admin_button_show"
-          @click="post_delete_click_admin"
-        >
-          删帖
-        </b-button>
-        <b-button
-          size="sm"
-          variant="light"
-          v-if="post_data.is_your_post"
-          @click="post_delete_click"
-        >
-          删除
-        </b-button>
-        <b-button
-          size="sm"
-          variant="info"
-          v-if="!post_data.is_your_post"
-          @click="reward_click"
-          >打赏</b-button
-        >
-        <b-button size="sm" variant="success" @click="quote_click">
-          回复
-        </b-button>
-      </div>
+    <div class="float-right" v-if="this.$store.state.User.LoginStatus">
+      <b-button
+        size="sm"
+        variant="warning"
+        v-if="this.$store.state.User.AdminStatus"
+        v-show="admin_button_show"
+        @click="ban_cookie_click_admin"
+      >
+        碎饼
+      </b-button>
+      <b-button
+        size="sm"
+        variant="warning"
+        v-if="this.$store.state.User.AdminStatus"
+        v-show="admin_button_show"
+        @click="lock_cookie_click_admin"
+      >
+        封禁
+      </b-button>
+      <b-button
+        size="sm"
+        variant="warning"
+        v-if="this.$store.state.User.AdminStatus"
+        v-show="admin_button_show"
+        @click="post_delete_all_click_admin"
+      >
+        删全
+      </b-button>
+      <b-button
+        size="sm"
+        variant="warning"
+        v-if="this.$store.state.User.AdminStatus"
+        v-show="admin_button_show"
+        @click="post_delete_click_admin"
+      >
+        删帖
+      </b-button>
+      <b-button
+        size="sm"
+        variant="light"
+        v-if="post_data.is_your_post"
+        @click="post_delete_click"
+      >
+        删除
+      </b-button>
+      <b-button
+        size="sm"
+        variant="info"
+        v-if="!post_data.is_your_post"
+        @click="reward_click"
+        >打赏</b-button
+      >
+      <b-button size="sm" variant="success" @click="quote_click">
+        回复
+      </b-button>
     </div>
-    <div class="post_content my-2" ref="post_centent">
+    <div>
+      <b-img
+        :src="random_head_add"
+        :class="'head_' + post_data.random_head"
+      ></b-img>
+    </div>
+
+    <div class="post_content mt-4 mb-2" ref="post_centent">
       <span
         v-html="post_data.content.replace(/\n/g, '<br>')"
         v-show="post_content_show"
