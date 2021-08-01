@@ -50,7 +50,7 @@ export default {
   computed: {
     emojis_data() {
       var emojis = [];
-      if (this.$store.state.User.Emojis > 0) {
+      if (this.$store.state.User.Emojis.length > 0) {
         for (var i = 0; i < this.$store.state.User.Emojis.length; i++) {
           if (
             this.$store.state.User.Emojis[i].heads_id == this.heads_id ||
