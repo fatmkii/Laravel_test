@@ -33,7 +33,10 @@
       placeholder="标题，必填"
       v-model="title_input"
     ></b-form-input>
-    <Emoji @emoji_append="emoji_append"></Emoji>
+    <Emoji
+      :heads_id="random_heads_group_selected"
+      @emoji_append="emoji_append"
+    ></Emoji>
     <div class="h6 my-2">内容</div>
     <b-form-textarea
       id="content_input"

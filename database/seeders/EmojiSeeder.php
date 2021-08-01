@@ -437,6 +437,7 @@ class EmojiSeeder extends Seeder
 
         DB::table('emoji')->insert([
             'name' => '咒岛专属A',
+            'heads_id' => 1,
             'emojis' => json_encode(array(
                 'https://z3.ax1x.com/2021/04/28/giO62j.jpg',
                 'https://z3.ax1x.com/2021/04/28/giOcxs.jpg',
@@ -518,6 +519,7 @@ class EmojiSeeder extends Seeder
 
         DB::table('emoji')->insert([
             'name' => '咒岛专属B',
+            'heads_id' => 1,
             'emojis' => json_encode(array(
                 'https://z3.ax1x.com/2021/04/28/giOBa8.jpg',
                 'https://z3.ax1x.com/2021/04/28/giO2Mn.jpg',

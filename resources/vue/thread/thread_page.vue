@@ -81,7 +81,7 @@
       </div>
     </div>
     <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
-    <Emoji @emoji_append="emoji_append"></Emoji>
+    <Emoji :heads_id="thread_heads_id" @emoji_append="emoji_append"></Emoji>
     <div class="h6 my-2">内容</div>
     <b-form-textarea
       id="content_input"
@@ -323,6 +323,8 @@ export default {
         state.Forums.CurrentForumData.id ? state.Forums.CurrentForumData.id : 0,
       thread_title: (state) => state.Threads.CurrentThreadData.title,
       thread_sub_id: (state) => state.Threads.CurrentThreadData.sub_id,
+      thread_heads_id: (state) =>
+        state.Threads.CurrentThreadData.random_heads_group,
       thread_anti_jingfen: (state) =>
         state.Threads.CurrentThreadData.anti_jingfen,
       random_heads_group: (state) =>

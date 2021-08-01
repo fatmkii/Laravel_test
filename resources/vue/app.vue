@@ -62,6 +62,7 @@ export default {
                 );
               }
               this.$store.commit("MyEmoji_set", response.data.data.my_emoji);
+              this.$store.commit("Emojis_set", response.data.data.emojis);
             } else {
               localStorage.clear("Binggan");
               localStorage.clear("Token");

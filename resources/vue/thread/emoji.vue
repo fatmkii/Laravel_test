@@ -35,13 +35,35 @@
 <script>
 export default {
   components: {},
-  props: {},
+  props: {
+    heads_id: {
+      type: Number,
+      default: 0,
+    },
+  },
   data: function () {
     return {
       name: "emoji",
-      emojis_data: "",
       emoji_show: false,
     };
+  },
+  computed: {
+    emojis_data() {
+      var emojis = [];
+      if (this.$store.state.User.Emojis > 0) {
+        for (var i = 0; i < this.$store.state.User.Emojis.length; i++) {
+          if (
+            this.$store.state.User.Emojis[i].heads_id == this.heads_id ||
+            this.$store.state.User.Emojis[i].heads_id == 0
+          )
+            emojis.push(this.$store.state.User.Emojis[i]);
+        }
+      }
+      if (this.$store.state.User.MyEmoji.length > 0) {
+        emojis.push(this.$store.state.User.MyEmoji);
+      }
+      return emojis;
+    },
   },
   methods: {
     emoji_click(emoji_src) {
@@ -51,24 +73,7 @@ export default {
       this.emoji_show = true;
     },
   },
-  created() {
-    const config = {
-      method: "get",
-      url: "/api/emoji",
-    };
-    axios(config)
-      .then((response) => {
-        if (response.data.code == 200) {
-          this.emojis_data = response.data.data;
-          if (this.$store.state.User.MyEmoji != null) {
-            this.emojis_data.push(this.$store.state.User.MyEmoji);
-          }
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      }); // Todo:写异常返回代码
-  },
+  created() {},
 };
 </script>
 

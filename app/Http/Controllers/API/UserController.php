@@ -15,6 +15,7 @@ use App\Models\MyEmoji;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -71,6 +72,11 @@ class UserController extends Controller
             );
         }
 
+        //用redis缓存所有emoji
+        $emojis = Cache::remember('emoji_cache',  24 * 3600, function () {
+            return DB::table('emoji')->get();
+        });
+
         if ($user->binggan == $request->get('binggan')) {
             return response()->json(
                 [
@@ -80,6 +86,7 @@ class UserController extends Controller
                         'binggan' => $user,
                         'pingbici' => $user->pingbici,
                         'my_emoji' => $user->MyEmoji,
+                        'emojis' => $emojis,
                     ],
                 ],
             );
