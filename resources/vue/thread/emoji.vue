@@ -60,6 +60,9 @@ export default {
       .then((response) => {
         if (response.data.code == 200) {
           this.emojis_data = response.data.data;
+          if (this.$store.state.User.MyEmoji != null) {
+            this.emojis_data.push(this.$store.state.User.MyEmoji);
+          }
         }
       })
       .catch((error) => {

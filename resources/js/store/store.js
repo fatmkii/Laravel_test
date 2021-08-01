@@ -12,6 +12,7 @@ const module_user = {
         UsePingbici: false,
         TitlePingbici: [],
         ContentPingbici:[],
+        MyEmoji:[],
     }),
     mutations: {
         Token_set(state, payload) {
@@ -37,6 +38,9 @@ const module_user = {
         },
         ContentPingbici_set(state, payload) {
             state.ContentPingbici = payload
+        },
+        MyEmoji_set(state, payload) {
+            state.MyEmoji = payload
         },
     },
     actions: {},

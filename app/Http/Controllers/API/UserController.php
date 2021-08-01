@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redis;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Pingbici;
+use App\Models\MyEmoji;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,7 @@ class UserController extends Controller
                     'data' => [
                         'binggan' => $user,
                         'pingbici' => $user->pingbici,
+                        'my_emoji' => $user->MyEmoji,
                     ],
                 ],
             );
@@ -327,6 +329,54 @@ class UserController extends Controller
                 'data' => [
                     'user' => $user,
                     'pingbici' => $pingbici,
+                ]
+            ],
+        );
+    }
+
+    public function my_emoji_set(Request $request)
+    {
+        $request->validate([
+            'binggan' => 'required|string',
+            'my_emoji' => 'json|max:5000',
+        ]);
+
+        $user = User::where('binggan', $request->binggan)->first();
+        if (!$user) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => ResponseCode::$codeMap[ResponseCode::USER_NOT_FOUND],
+                ],
+            );
+        }
+
+        if ($user->MyEmoji) {
+            $my_emoji = $user->MyEmoji;
+        } else {
+            $my_emoji = new MyEmoji();
+        }
+        try {
+            DB::beginTransaction();
+            $my_emoji->user_id = $user->id;
+            $my_emoji->emojis = $request->my_emoji;
+            $my_emoji->save();
+            DB::commit();
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json([
+                'code' => ResponseCode::DATABASE_FAILED,
+                'message' => ResponseCode::$codeMap[ResponseCode::DATABASE_FAILED] . '，请重试',
+            ]);
+        }
+
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '已设定我的表情包',
+                'data' => [
+                    'user' => $user,
+                    'my_emoji' => $my_emoji,
                 ]
             ],
         );

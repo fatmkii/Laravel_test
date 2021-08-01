@@ -55,8 +55,30 @@
           </div>
         </div>
       </b-tab>
-      <b-tab title="自定表情包">还没做好啦</b-tab>
-      <b-tab title="切换皮肤">也还没做好啦</b-tab>
+      <b-tab title="我的表情包">
+        <div class="mx-2 my-2">
+          <p class="my-2">
+            我的表情包：（请参考下述JSON格式。前后有[]，最后一个不要有,逗号）
+          </p>
+          <b-form-textarea
+            id="my_emoji_input"
+            v-model="my_emoji_input"
+            rows="3"
+            max-rows="20"
+          ></b-form-textarea>
+          <div class="row align-items-center mt-2">
+            <div class="col-auto">
+              <b-button
+                variant="success"
+                :disabled="my_emoji_set_handling"
+                @click="my_emoji_set_handle"
+                >提交
+              </b-button>
+            </div>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab title="切换皮肤">还没做好啦</b-tab>
     </b-tabs>
   </div>
 </template>
@@ -76,6 +98,9 @@ export default {
       content_pingbici_input: '["屏蔽词#1","屏蔽词#2"]',
       use_pingbici_input: false,
       pingbici_set_handling: false,
+      my_emoji_input:
+        '[\n"https://z3.ax1x.com/2021/04/29/gkKXSe.jpg",\n"https://z3.ax1x.com/2021/04/29/gkMnwq.jpg"\n]',
+      my_emoji_set_handling: false,
     };
   },
   computed: {
@@ -153,6 +178,42 @@ export default {
           alert(Object.values(error.response.data.errors)[0]);
         });
     },
+    my_emoji_set_handle() {
+      try {
+        //转换并确认用户输入是否满足JSON格式
+        var my_emoji = JSON.stringify(JSON.parse(this.my_emoji_input));
+      } catch (e) {
+        alert("表情包格式输入有误，请检查");
+        return;
+      }
+      this.my_emoji_set_handling = true;
+      const config = {
+        method: "post",
+        url: "/api/user/my_emoji_set",
+        data: {
+          binggan: this.$store.state.User.Binggan,
+          my_emoji: my_emoji,
+        },
+      };
+      axios(config)
+        .then((response) => {
+          if (response.data.code == 200) {
+            this.$bvToast.toast(response.data.message, {
+              title: "Done.",
+              autoHideDelay: 1500,
+              appendToast: true,
+            });
+            this.my_emoji_set_handling = false;
+          } else {
+            this.my_emoji_set_handling = false;
+            alert(response.data.message);
+          }
+        })
+        .catch((error) => {
+          this.my_emoji_set_handling = false;
+          alert(Object.values(error.response.data.errors)[0]);
+        });
+    },
   },
   created() {
     document.title = "个人中心";
@@ -177,6 +238,13 @@ export default {
               response.data.data.pingbici.title_pingbici;
             this.content_pingbici_input =
               response.data.data.pingbici.content_pingbici;
+          }
+          //设定表情包相关状态
+          if (response.data.data.my_emoji) {
+            this.my_emoji_input = response.data.data.my_emoji.emojis;
+            this.my_emoji_input = this.my_emoji_input.replace(/,/g, ",\n"); //把,改成换行，方便看
+            this.my_emoji_input = this.my_emoji_input.replace(/\[/g, "[\n");
+            this.my_emoji_input = this.my_emoji_input.replace(/]/g, "\n]");
           }
         })
         .catch((error) => {

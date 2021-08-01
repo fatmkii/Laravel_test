@@ -61,6 +61,7 @@ export default {
                   response.data.data.pingbici.content_pingbici
                 );
               }
+              this.$store.commit("MyEmoji_set", response.data.data.my_emoji);
             } else {
               localStorage.clear("Binggan");
               localStorage.clear("Token");
