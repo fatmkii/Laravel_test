@@ -99,7 +99,7 @@ export default {
       use_pingbici_input: false,
       pingbici_set_handling: false,
       my_emoji_input:
-        '[\n"https://z3.ax1x.com/2021/04/29/gkKXSe.jpg",\n"https://z3.ax1x.com/2021/04/29/gkMnwq.jpg"\n]',
+        '[\n"https://z3.ax1x.com/2021/08/01/Wznvbq.jpg",\n"https://z3.ax1x.com/2021/08/01/Wznjrn.jpg"\n]',
       my_emoji_set_handling: false,
     };
   },
