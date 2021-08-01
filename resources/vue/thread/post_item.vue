@@ -63,7 +63,7 @@
       ></b-img>
     </div>
 
-    <div class="post_content mt-4 mb-2" ref="post_centent">
+    <div class="post_content mb-2" style="margin-top: 2rem" ref="post_centent">
       <span
         v-html="post_data.content.replace(/\n/g, '<br>')"
         v-show="post_content_show"
