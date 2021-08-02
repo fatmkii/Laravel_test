@@ -135,7 +135,6 @@ export default {
   components: {},
   props: {
     post_data: Object,
-    binggan_hash: String,
     thread_anti_jingfen: Number,
     random_head_add: String,
     admin_button_show: Boolean,

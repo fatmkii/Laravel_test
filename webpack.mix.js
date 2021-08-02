@@ -21,8 +21,14 @@ mix.js('resources/js/app.js', 'public/js')
         //
     ]);
 
+if(process.env.MIX_ENV=='local')    
 mix.alias({
     vue$: path.join(__dirname, 'node_modules/vue/dist/vue.js')
+});
+
+if(process.env.MIX_ENV=='production')    
+mix.alias({
+    vue$: path.join(__dirname, 'node_modules/vue/dist/vue.min.js')
 });
 
 mix.options({ uglify: {} });

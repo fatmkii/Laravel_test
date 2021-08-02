@@ -28,7 +28,9 @@ class Post extends myModel
         'created_IP',
         'created_binggan',
         'is_anonymous',
-        'is_delete',
+        'is_deleted',
+        'updated_at',
+        'forum_id',
     ];
 
     protected $appends = [

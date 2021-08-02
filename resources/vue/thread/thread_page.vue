@@ -56,7 +56,6 @@
       <div v-for="post_data in posts_data" :key="post_data.id">
         <PostItem
           :post_data="post_data"
-          :binggan_hash="binggan_hash"
           :thread_anti_jingfen="thread_anti_jingfen"
           :random_head_add="random_heads_data[post_data.random_head]"
           :admin_button_show="admin_button_show"
@@ -291,9 +290,6 @@ export default {
     };
   },
   computed: {
-    binggan_hash() {
-      return sha256(this.$store.state.User.Binggan);
-    },
     nissin_TTL() {
       const seconds =
         (Date.parse(this.$store.state.Threads.CurrentThreadData.nissin_date) -
