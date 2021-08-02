@@ -171,7 +171,7 @@ export default {
         url: "/api/user/reward",
         data: {
           binggan: this.$store.state.User.Binggan,
-          forum_id: this.post_data.forum_id,
+          forum_id: this.$store.state.Forums.CurrentForumData.id,
           thread_id: this.post_data.thread_id,
           post_id: this.post_data.id,
           content: this.content_reward_input,

@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 
@@ -69,7 +70,7 @@ class AdminController extends Controller
             ]);
         }
 
-        $thread->sub_id = 10; 
+        $thread->sub_id = 10;
         $thread->save();
         return response()->json([
             'code' => ResponseCode::SUCCESS,
@@ -102,7 +103,7 @@ class AdminController extends Controller
             ]);
         }
 
-        $thread->sub_id = 0; 
+        $thread->sub_id = 0;
         $thread->save();
         return response()->json([
             'code' => ResponseCode::SUCCESS,
@@ -138,6 +139,12 @@ class AdminController extends Controller
 
         $post->is_deleted = 2;
         $post->save();
+
+        //清除redis的posts缓存
+        $thread = $post->thread;
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        }
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'message' => '该帖子已删除。',
@@ -176,6 +183,12 @@ class AdminController extends Controller
         foreach ($posts_to_delete as $post_to_delete) {
             $post_to_delete->is_deleted = 2;
             $post_to_delete->save();
+        }
+
+        //清除redis的posts缓存
+        $thread = $post->thread;
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
         }
         return response()->json([
             'code' => ResponseCode::SUCCESS,

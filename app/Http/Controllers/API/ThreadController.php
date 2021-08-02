@@ -218,7 +218,13 @@ class ThreadController extends Controller
         }
 
         // $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
-        $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc');
+        $page = $request->query('page') == 'NaN' ? 1 : $request->query('page');
+        $posts = Cache::remember('threads_cache_' . $CurrentThread->id . '_' . $page, 3600, function () use ($CurrentThread) {
+            return $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        });
+
 
         //如果有提供binggan，为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
         if ($request->query('binggan')) {

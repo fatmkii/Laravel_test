@@ -11,6 +11,7 @@ use App\Models\Thread;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class PostController extends Controller
@@ -134,6 +135,11 @@ class PostController extends Controller
             Redis::setex('new_post_record_' . $request->binggan,  60, 1);
         }
 
+        //清除redis的posts缓存
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        }
+
         $post_id = $post->id;
         return response()->json(
             [
@@ -234,6 +240,13 @@ class PostController extends Controller
         $post->save();
         $user->coin -= 300; //删除帖子扣除300奥利奥
         $user->save();
+
+        //清除redis的posts缓存
+        $thread = $post->thread;
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        }
+
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -342,7 +355,11 @@ class PostController extends Controller
             ]);
         }
 
-        $post_id = $post->id;
+        //清除redis的posts缓存
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        }
+        
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -350,7 +367,7 @@ class PostController extends Controller
                 'data' => [
                     'forum_id' => $request->forum_id,
                     'thread_id' => $request->thread_id,
-                    'post_id' => $post_id,
+                    'post_id' => $post->id,
                 ]
             ],
         );

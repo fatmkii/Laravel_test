@@ -275,6 +275,11 @@ class UserController extends Controller
             );
         }
 
+        //清除redis的posts缓存
+        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        }
+
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
