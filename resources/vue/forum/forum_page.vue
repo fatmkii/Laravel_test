@@ -64,7 +64,10 @@ export default {
   },
   watch: {
     // 如果路由有变化，再次获得数据
-    $route: "get_threads_data",
+    $route(to) {
+      this.get_threads_data();
+      this.$store.commit("ThreadsLoadStatus_set", 0);
+    },
     new_window_to_post: function () {
       localStorage.setItem(
         "new_window_to_post",
@@ -114,6 +117,7 @@ export default {
   },
   created() {
     this.get_threads_data();
+    this.$store.commit("ThreadsLoadStatus_set", 0);
     if (localStorage.getItem("new_window_to_post") == null) {
       localStorage.new_window_to_post = false;
       this.new_window_to_post = false;

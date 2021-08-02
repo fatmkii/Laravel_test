@@ -23,7 +23,7 @@ class PostFactory extends Factory
     {
         return [
             'forum_id' => $this->faker->randomElement(array('1', '12', '40')),
-            'thread_id' => $this->faker->randomNumber($nbDigits = 2)+100000,
+            'thread_id' => $this->faker->randomNumber($nbDigits = 1)+100000,
             'floor' => $this->faker->randomNumber($nbDigits = 2),
             'random_head' => $this->faker->randomDigit(),
             'content' => $this->faker->text(200),

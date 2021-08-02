@@ -4,7 +4,7 @@
     <div class="threads_table_header my-2 py-1 text-center">
       <span style="font-size: 1.25rem">主题</span>
     </div>
-    <div v-if="threads_load_status">
+    <div v-show="threads_load_status">
       <div
         class="threads_container"
         v-for="thread in threads_data"
@@ -36,6 +36,13 @@
         </div>
       </div>
     </div>
+    <b-spinner
+      id="spinner"
+      v-show="!threads_load_status"
+      variant="success"
+      label="读取中"
+    >
+    </b-spinner>
   </div>
 </template>
 
@@ -60,19 +67,23 @@ export default {
       return this.new_window_to_post ? "_blank" : "false";
     },
     threads_data() {
-      if (this.$store.state.User.UsePingbici) {
-        const title_pingbici = JSON.parse(this.$store.state.User.TitlePingbici);
-        return this.$store.state.Threads.ThreadsData.data.filter((thread) => {
-          for (var i = 0; i < title_pingbici.length; i++) {
-            var reg = new RegExp(title_pingbici[i], "g");
-            if (reg.test(thread.title)) {
-              return false;
+      if (this.threads_load_status) {
+        if (this.$store.state.User.UsePingbici) {
+          const title_pingbici = JSON.parse(
+            this.$store.state.User.TitlePingbici
+          );
+          return this.$store.state.Threads.ThreadsData.data.filter((thread) => {
+            for (var i = 0; i < title_pingbici.length; i++) {
+              var reg = new RegExp(title_pingbici[i], "g");
+              if (reg.test(thread.title)) {
+                return false;
+              }
             }
-          }
-          return true;
-        }); // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
-      } else {
-        return this.$store.state.Threads.ThreadsData.data;
+            return true;
+          });
+        } else {
+          return this.$store.state.Threads.ThreadsData.data; // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
+        }
       }
     },
     ...mapState({
@@ -100,6 +111,14 @@ export default {
 }
 .threads_container {
   border-bottom: 1px solid #111;
+}
+#spinner {
+  position: fixed;
+  z-index: 999;
+  width: 3rem;
+  height: 3rem;
+  right: 50%;
+  top: 40%;
 }
 </style>>
 
