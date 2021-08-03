@@ -46,6 +46,7 @@ class ThreadController extends Controller
             'nissin_time' => 'integer',
             'random_heads_group' => 'integer',
             'post_with_admin' => 'boolean',
+            'locked_by_coin' => 'integer|max:1000000',
         ]);
 
 
@@ -61,7 +62,7 @@ class ThreadController extends Controller
 
         //如果发帖频率过高，返回错误
         if (Redis::exists('new_thread_record_' . $request->binggan) &&  $user->admin == 0) {
-            $limted_minutes = intval(Redis::TTL('new_thread_record_' . $request->binggan) / 60) + 1;
+            $limted_minutes = ceil(Redis::TTL('new_thread_record_' . $request->binggan) / 60);
             return response()->json([
                 'code' => ResponseCode::THREAD_TOO_MANY,
                 'message' => ResponseCode::$codeMap[ResponseCode::THREAD_TOO_MANY] . '，你只能在'
@@ -110,22 +111,21 @@ class ThreadController extends Controller
         //执行追加新主题流程
         try {
             DB::beginTransaction();
-            if ($request->title_color) {
-                $user = User::where('binggan', $request->binggan)->first();
-                $user->coin -= 500; //设置标题颜色减500奥利奥   
-                $user->save();
-                if ($user->coin < 0) {
-                    throw new CoinException();
-                }
-            }
             //发主题帖（Thread）
             $thread = new Thread;
+            if ($request->title_color) {
+                $user->coin -= 500; //设置标题颜色减500奥利奥   
+                $thread->title_color = $request->title_color;
+            }
+            if ($request->locked_by_coin > 0) {
+                $user->coin -= 500; //设置奥利奥权限贴减500奥利奥  
+                $thread->locked_by_coin = $request->locked_by_coin;
+            }
             $thread->created_binggan = $request->binggan;
             $thread->forum_id = $request->forum_id;
             if ($request->subtitle == '[公告]') {
                 $thread->sub_id = $request->admin_subtitle ?   10 : 99; //$request->admin_subtitle == 0是全岛公告。把sub_id=99
             }
-            $thread->title = $request->title;
             $thread->nickname = $request->nickname;
             $thread->created_ip = $request->ip();
             $thread->sub_title = $request->subtitle;
@@ -133,7 +133,7 @@ class ThreadController extends Controller
             if ($request->nissin_time > 0) { //如果请求中带有nissin_time，才设定nissin_date
                 $thread->nissin_date = Carbon::now()->addSeconds($request->nissin_time);
             }
-            $thread->title_color = $request->title_color;
+            $thread->title = $request->title;
             $thread->anti_jingfen = $request->anti_jingfen;
             $thread->save();
             //发主题帖的第0楼（Post）
@@ -149,6 +149,11 @@ class ThreadController extends Controller
             $post->random_head = random_int(1, 40);
             $post->floor = 0;
             $post->save();
+            //统一判断奥利奥是否足够
+            if ($user->coin < 0) {
+                throw new CoinException();
+            }
+            $user->save();
             DB::commit();
         } catch (QueryException $e) {
             DB::rollback();
@@ -215,6 +220,22 @@ class ThreadController extends Controller
                 'code' => ResponseCode::THREAD_WAS_NISSINED,
                 'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
             ]);
+        }
+
+        if ($CurrentThread->locked_by_coin > 0) {
+            $user = User::where('binggan', $request->query('binggan'))->first();
+            if (!$user) {
+                return response()->json([
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => '本贴需要饼干才能查看喔',
+                ]);
+            }
+            if ($user->coin < $CurrentThread->locked_by_coin && $user->admin == 0) {
+                return response()->json([
+                    'code' => ResponseCode::THREAD_UNAUTHORIZED,
+                    'message' => sprintf("本贴需要拥有大于%u奥利奥才能查看喔", $CurrentThread->locked_by_coin),
+                ]);
+            }
         }
 
         // $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);

@@ -20,6 +20,9 @@
           >
             {{ thread.title }}&nbsp;&nbsp;
           </router-link>
+          <span v-if="thread.locked_by_coin > 0"
+            >🔒-{{ thread.locked_by_coin }}</span
+          >
           <router-link
             :to="
               '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 200)

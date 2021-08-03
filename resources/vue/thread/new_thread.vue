@@ -96,18 +96,16 @@
     <hr />
     <div class="row align-items-center mt-3">
       <div class="col-4">
+        <span class="h6 my-2">选择随机头像组</span>
+      </div>
+      <div class="col-4">
         <span class="h6 my-2">给标题换个颜色吗？（收费500奥利奥）</span>
       </div>
-      <div class="col-4"><span class="h6 my-2">选择随机头像组</span></div>
-      <div class="col-4"><span class="h6 my-2"></span></div>
+      <div class="col-4">
+        <span class="h6 my-2">设定看帖权限（收费500奥利奥）</span>
+      </div>
     </div>
     <div class="row align-items-center mt-3">
-      <div class="col-4">
-        <b-form-input
-          placeholder="#212529"
-          v-model="title_color_input"
-        ></b-form-input>
-      </div>
       <div class="col-4">
         <b-form-select
           v-model="random_heads_group_selected"
@@ -116,7 +114,18 @@
           text-field="name"
         ></b-form-select>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4">
+        <b-form-input
+          placeholder="#212529"
+          v-model="title_color_input"
+        ></b-form-input>
+      </div>
+      <div class="col-4">
+        <b-form-input
+          placeholder="大于多少奥利奥才能看帖"
+          v-model="locked_by_coin_input"
+        ></b-form-input>
+      </div>
     </div>
     <div v-if="this.$store.state.User.AdminStatus">
       <hr />
@@ -225,6 +234,7 @@ export default {
           anti_jingfen: this.anti_jingfen_selected,
           admin_subtitle: this.admin_subtitles_selected,
           post_with_admin: this.post_with_admin,
+          locked_by_coin: this.locked_by_coin_input,
         },
       };
       axios(config)

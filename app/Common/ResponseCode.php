@@ -32,6 +32,8 @@ class ResponseCode
 
     const THREAD_TOO_MANY = 23429;
 
+    const THREAD_UNAUTHORIZED =23401;
+
     const POST_NOT_FOUND = 24404;
 
     const POST_TOO_MANY = 24429;
