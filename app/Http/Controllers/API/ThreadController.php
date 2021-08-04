@@ -72,8 +72,8 @@ class ThreadController extends Controller
 
         //确认是否冒认管理员发公告或者管理员帖
         if (
-            $user->admin == 0 &&
-            ($request->subtitle == "[公告]" || $request->post_with_admin == true)
+            ($request->subtitle == "[公告]" || $request->post_with_admin == true) &&
+            !in_array($request->forum_id, json_decode($user->AdminPermissions->forums))
         ) {
             return response()->json(
                 [

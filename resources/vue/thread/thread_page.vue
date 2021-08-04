@@ -15,10 +15,12 @@
       </div>
       <div class="post_container">
         <div class="post_title px-2 py-3 h4">
-          <span>标题：{{ thread_title }}</span>
+          <span style="word-wrap: break-word; white-space: normal"
+            >标题：{{ thread_title }}</span
+          >
         </div>
         <div
-          v-if="this.$store.state.User.AdminStatus"
+          v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
           class="d-flex align-items-center"
         >
           <b-form-checkbox class="mr-auto" v-model="admin_button_show" switch>
@@ -48,7 +50,7 @@
             class="ml-1"
             size="sm"
             variant="warning"
-            v-if="this.$store.state.User.AdminStatus"
+            v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
             @click="thread_delete_click_admin"
           >
             删主题
@@ -71,7 +73,7 @@
         <div class="col-auto">
           <b-form-checkbox
             class="mr-auto"
-            v-if="this.$store.state.User.AdminStatus"
+            v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
             v-model="post_with_admin"
             v-b-popover.hover.left="'名字会显示红色'"
             switch

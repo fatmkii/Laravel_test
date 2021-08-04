@@ -4,7 +4,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="ban_cookie_click_admin"
       >
@@ -13,7 +13,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="lock_cookie_click_admin"
       >
@@ -22,7 +22,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="post_delete_all_click_admin"
       >
@@ -31,7 +31,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="post_delete_click_admin"
       >
@@ -148,6 +148,11 @@ export default {
       author_color: ["", "#DD0000", "#5fb878"],
       post_content_show: true,
     };
+  },
+  computed: {
+    forum_id() {
+      return this.$store.state.Forums.CurrentForumData.id;
+    },
   },
   created() {
     if (this.$store.state.User.UsePingbici) {

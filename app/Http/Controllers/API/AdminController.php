@@ -37,6 +37,19 @@ class AdminController extends Controller
             ]);
         }
 
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($thread->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
+
         $thread->is_deleted = 2;
         $thread->save();
         return response()->json([
@@ -70,6 +83,19 @@ class AdminController extends Controller
             ]);
         }
 
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($thread->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
+
         $thread->sub_id = 10;
         $thread->save();
         return response()->json([
@@ -101,6 +127,18 @@ class AdminController extends Controller
                 'code' => ResponseCode::THREAD_NOT_FOUND,
                 'message' => ResponseCode::$codeMap[ResponseCode::THREAD_NOT_FOUND],
             ]);
+        }
+
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($thread->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
         }
 
         $thread->sub_id = 0;
@@ -137,9 +175,20 @@ class AdminController extends Controller
             ]);
         }
 
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($post->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
         $post->is_deleted = 2;
         $post->save();
-
         //清除redis的posts缓存
         $thread = $post->thread;
         for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
@@ -175,6 +224,18 @@ class AdminController extends Controller
                 'code' => ResponseCode::POST_NOT_FOUND,
                 'message' => ResponseCode::$codeMap[ResponseCode::POST_NOT_FOUND],
             ]);
+        }
+
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($post->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
         }
 
         $user_to_delete_all = User::where('binggan', $post->created_binggan)->first();
@@ -222,6 +283,18 @@ class AdminController extends Controller
             ]);
         }
 
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($post->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
         $user_to_ban = User::where('binggan', $post->created_binggan)->first();
         if (!$user_to_ban) {
             return response()->json([
@@ -259,6 +332,18 @@ class AdminController extends Controller
                 'code' => ResponseCode::POST_NOT_FOUND,
                 'message' => ResponseCode::$codeMap[ResponseCode::POST_NOT_FOUND],
             ]);
+        }
+
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($post->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
         }
 
         $user_to_lock = User::where('binggan', $post->created_binggan)->first();

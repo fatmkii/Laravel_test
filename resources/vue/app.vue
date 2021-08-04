@@ -43,6 +43,12 @@ export default {
                 "AdminStatus_set",
                 response.data.data.binggan.admin
               );
+              if (response.data.data.binggan.admin != 0) {
+                this.$store.commit(
+                  "AdminForums_set",
+                  JSON.parse(response.data.data.binggan.admin_forums)
+                );
+              }
               this.$store.commit(
                 "LockedTTL_set",
                 response.data.data.binggan.locked_TTL

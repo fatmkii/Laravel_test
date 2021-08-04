@@ -81,6 +81,12 @@ export default {
             this.$store.commit("Binggan_set", response.data.data.binggan);
             this.$store.commit("LoginStatus_set", true);
             this.$store.commit("AdminStatus_set", response.data.data.admin);
+            if (response.data.data.binggan.admin != 0) {
+              this.$store.commit(
+                "AdminForums_set",
+                JSON.parse(response.data.data.binggan.admin_forums)
+              );
+            }
             if (window.localStorage) {
               localStorage.Token = response.data.data.token;
               localStorage.Binggan = response.data.data.binggan;
@@ -109,7 +115,12 @@ export default {
             this.$store.commit("Binggan_set", response.data.data.binggan);
             this.$store.commit("LoginStatus_set", true);
             this.$store.commit("AdminStatus_set", response.data.data.admin);
-
+            if (response.data.data.binggan.admin != 0) {
+              this.$store.commit(
+                "AdminForums_set",
+                JSON.parse(response.data.data.binggan.admin_forums)
+              );
+            }
             if (window.localStorage) {
               localStorage.Token = response.data.data.token;
               localStorage.Binggan = response.data.data.binggan;

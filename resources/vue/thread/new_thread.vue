@@ -17,7 +17,7 @@
       <div class="col-auto">
         <b-form-checkbox
           class="mr-auto"
-          v-if="this.$store.state.User.AdminStatus"
+          v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
           v-model="post_with_admin"
           v-b-popover.hover.left="'名字会显示红色'"
           switch
@@ -127,7 +127,7 @@
         ></b-form-input>
       </div>
     </div>
-    <div v-if="this.$store.state.User.AdminStatus">
+    <div v-if="this.$store.state.User.AdminForums.includes(this.forum_id)">
       <hr />
       <div class="row align-items-center mt-3">
         <div class="col-4"><span class="h6 my-2">管理员选项</span></div>
@@ -187,6 +187,7 @@ export default {
       nissin_time_selected: 86400,
       title_color_input: "",
       post_with_admin: false,
+      locked_by_coin_input: Number,
     };
   },
   watch: {
@@ -272,7 +273,7 @@ export default {
         .then((response) => {
           this.subtitles_options = response.data.data;
           // 如果不是管理员，就删除部分管理员专用选项
-          if (!this.$store.state.User.AdminStatus) {
+          if (!this.$store.state.User.AdminForums.includes(this.forum_id)) {
             this.subtitles_options.forEach((subtitles_option, index) => {
               if (subtitles_option.for_admin == 1) {
                 this.subtitles_options.splice(index, 1);

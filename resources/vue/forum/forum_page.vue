@@ -7,10 +7,14 @@
       :interval="10000"
       img-width="825"
       img-height="224"
-      v-if="forum_banners"
+      v-if="forum_banners && threads_load_status"
     >
       <b-carousel-slide
-        v-for="banner in JSON.parse(forum_banners)"
+        v-for="banner in JSON.parse(
+          this.$store.state.Forums.CurrentForumData.banners
+        ).sort(function () {
+          return 0.5 - Math.random();
+        })"
         :key="banner.id"
         :img-src="banner"
       ></b-carousel-slide>
@@ -168,6 +172,7 @@ export default {
           ? state.Forums.CurrentForumData.name
           : "",
       forum_banners: (state) => state.Forums.CurrentForumData.banners,
+      threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
     }),
   },
   methods: {

@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Common\ResponseCode;
 use App\Models\Pingbici;
 use App\Models\MyEmoji;
+use App\Models\Admin;
 use Carbon\Carbon;
 
 use function Symfony\Component\VarDumper\Dumper\esc;
@@ -42,6 +43,9 @@ class User extends Authenticatable
         'updated_at',
         'is_banned',
         'locked_until',
+        'AdminPermissions',
+        'pingbici',
+        'MyEmoji',
     ];
 
     /**
@@ -58,6 +62,16 @@ class User extends Authenticatable
         'locked_TTL',
     ];
 
+    protected static function booted()
+    {
+        static::retrieved(function ($user) {
+            if ($user->admin != 0) {
+                $user->append('admin_forums');
+            }
+        });
+    }
+
+
     public function Pingbici()
     {
         return $this->hasOne(Pingbici::class);
@@ -67,6 +81,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(MyEmoji::class);
     }
+
+    public function AdminPermissions()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+
+
+    public function getAdminForumsAttribute()
+    {
+        return $this->AdminPermissions->forums;
+    }
+
 
     public function getLockedTTLAttribute()
     {

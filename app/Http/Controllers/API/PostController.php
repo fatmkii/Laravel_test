@@ -88,7 +88,10 @@ class PostController extends Controller
         }
 
         //确认是否冒充管理员发帖
-        if ($user->admin == 0 && $request->post_with_admin == true) {
+        if (
+            $request->post_with_admin == true &&
+            !in_array($request->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
             return response()->json(
                 [
                     'code' => ResponseCode::ADMIN_UNAUTHORIZED,
@@ -359,7 +362,7 @@ class PostController extends Controller
         for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
             Cache::forget('threads_cache_' . $thread->id . '_' . $i);
         }
-        
+
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,

@@ -5,6 +5,7 @@
       v-show="threads_load_status"
       hover
       small
+      fixed
       caption-top
       responsive
       class="threads_table table-striped"
@@ -24,6 +25,7 @@
             <span class="thread_sub_title"> {{ thread.sub_title }}&nbsp; </span>
             <router-link
               class="thread_title"
+              style="word-wrap: break-word; white-space: normal"
               :to="'/thread/' + thread.id"
               :style="{ color: thread.title_color }"
               :target="router_target"

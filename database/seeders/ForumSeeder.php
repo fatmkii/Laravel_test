@@ -27,7 +27,7 @@ class ForumSeeder extends Seeder
             'description' => '新来的朋友请看此处，饼干验证，杂物和无法分类的请来此岛',
         ]);
         Forum::create([
-            'id' =>  40,
+            'id' =>  419,
             'name' => '发春大舞厅',
             'is_nissin' => 1,
             'description' => '发春大舞台，想发春你就来，24小时锁贴制，第二天不带走一片云彩',
