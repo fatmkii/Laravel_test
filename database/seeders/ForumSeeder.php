@@ -28,9 +28,15 @@ class ForumSeeder extends Seeder
         ]);
         Forum::create([
             'id' =>  40,
-            'name' => '——大舞厅',
+            'name' => '发春大舞厅',
             'is_nissin' => 1,
-            'description' => '——大舞台，想发春你就来，24小时锁贴制，第二天不带走一片云彩',
+            'description' => '发春大舞台，想发春你就来，24小时锁贴制，第二天不带走一片云彩',
+            'banners' => json_encode(array(
+                'https://i.loli.net/2021/05/05/aJEPC2RMbWoYVpL.jpg',
+                'https://i.loli.net/2021/05/05/9mk3s2WOlMZxGYz.gif',
+                'https://ftp.bmp.ovh/imgs/2021/06/5481dfe13988a764.jpg',
+                'https://s3.jpg.cm/2021/06/30/IWjLSG.jpg',
+            ))
         ]);
     }
 }

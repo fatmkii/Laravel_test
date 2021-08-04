@@ -66,7 +66,7 @@ class ForumController extends Controller
         return response()->json([
             'code' => ResponseCode::SUCCESS,
             'message' => ResponseCode::$codeMap[ResponseCode::SUCCESS],
-            'forum_data' => $CurrentForum,
+            'forum_data' => $CurrentForum->makeVisible('banners'),
             'threads_data' => $threads->paginate(30),
         ]);
     }

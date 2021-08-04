@@ -24,7 +24,9 @@ class Forum extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'banner',
+    ];
 
     /**
      * The attributes that should be cast to native types.

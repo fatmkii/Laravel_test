@@ -592,10 +592,15 @@ export default {
 .z-sidebar > div + div {
   margin-top: 10px;
 }
+
+.z-sidebar > .icon-roll {
+  cursor: pointer;
+}
 .z-sidebar > .icon-top,
 .z-sidebar > .icon-down,
 .z-sidebar .icon-reload {
   width: 30px;
   left: 4px;
+  cursor: pointer;
 }
 </style>
