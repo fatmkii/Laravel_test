@@ -13,6 +13,7 @@ use App\Common\ResponseCode;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use App\Jobs\ProcessUserActive;
 
 class PostController extends Controller
 {
@@ -139,11 +140,18 @@ class PostController extends Controller
         }
 
         //清除redis的posts缓存
-        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-        }
-
-        $post_id = $post->id;
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户发表了新回帖',
+                'thread_id' => $thread->id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -151,7 +159,7 @@ class PostController extends Controller
                 'data' => [
                     'forum_id' => $request->forum_id,
                     'thread_id' => $request->thread_id,
-                    'post_id' => $post_id,
+                    'post_id' => $post->id,
                 ]
             ],
         );
@@ -245,11 +253,19 @@ class PostController extends Controller
         $user->save();
 
         //清除redis的posts缓存
-        $thread = $post->thread;
-        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-        }
-
+        // $thread = $post->thread;
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户删除了回帖',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -359,10 +375,18 @@ class PostController extends Controller
         }
 
         //清除redis的posts缓存
-        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-        }
-
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户roll点了',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,

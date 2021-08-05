@@ -14,9 +14,9 @@ use App\Models\Pingbici;
 use App\Models\MyEmoji;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use App\Jobs\ProcessUserActive;
 
 class UserController extends Controller
 {
@@ -276,9 +276,18 @@ class UserController extends Controller
         }
 
         //清除redis的posts缓存
-        for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-            Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-        }
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户打赏了',
+                'binggan_target' => $user_target->binggan,
+                'content' => $request->coin . '个饼干',
+            ]
+        );
 
         return response()->json(
             [

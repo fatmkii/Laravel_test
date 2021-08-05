@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\myModel;
 use App\Models\Thread;
+use Illuminate\Support\Facades\Cache;
 
 class Post extends myModel
 {
@@ -40,6 +41,16 @@ class Post extends myModel
     protected $casts = [];
 
     protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::saving(function ($post) {
+            $thread = $post->thread;
+            for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+                Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+            }
+        });
+    }
 
     public function Thread()
     {

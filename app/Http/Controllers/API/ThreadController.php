@@ -15,8 +15,7 @@ use Carbon\Carbon;
 use App\Exceptions\CoinException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
-
-use function Symfony\Component\VarDumper\Dumper\esc;
+use App\Jobs\ProcessUserActive;
 
 class ThreadController extends Controller
 {
@@ -173,6 +172,14 @@ class ThreadController extends Controller
         //用redis记录发帖频率。限定5分钟内只能发帖1次。
         Redis::setex('new_thread_record_' . $request->binggan, 5 * 60, 1);
 
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户发表了新主题',
+                'thread_id' => $thread->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,

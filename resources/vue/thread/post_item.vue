@@ -229,14 +229,15 @@ export default {
       }
     },
     post_delete_click_admin() {
-      var isdelete = confirm("要用管理员权限删除这个回复吗？");
-      if (isdelete == true) {
+      var content = prompt("要用管理员权限删除这个回复吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/post_delete/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -252,14 +253,15 @@ export default {
       }
     },
     post_delete_all_click_admin() {
-      var isdelete = confirm("要用管理员权限删除该饼干全部回复吗？");
-      if (isdelete == true) {
+      var content = prompt("要用管理员权限删除该饼干全部回复吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/post_delete_all/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -275,14 +277,15 @@ export default {
       }
     },
     ban_cookie_click_admin() {
-      var isban = confirm("你要永久粉碎这个饼干吗？");
-      if (isban == true) {
+      var content = prompt("你要永久粉碎这个饼干吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/user_ban/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -298,14 +301,15 @@ export default {
       }
     },
     lock_cookie_click_admin() {
-      var isban = confirm("你要封禁这个饼干吗？（默认3天）");
-      if (isban == true) {
+      var content = prompt("你要封禁这个饼干吗？（默认3天）请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/user_lock/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)

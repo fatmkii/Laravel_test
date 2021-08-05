@@ -390,13 +390,17 @@ export default {
         .catch((error) => alert(error)); // Todo:写异常返回代码;
     },
     thread_delete_click_admin() {
-      var user_confirm = confirm("要用管理员权限删除这个主题吗？");
-      if (user_confirm == true) {
+      var content = prompt(
+        "要用管理员权限删除这个主题吗？请输入理由",
+        "请输入理由"
+      );
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/thread_delete/",
           data: {
             thread_id: this.thread_id,
+            content: content,
           },
         };
         axios(config)

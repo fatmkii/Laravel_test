@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Common\ResponseCode;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Jobs\ProcessUserActive;
 
 
 class AuthController extends Controller
@@ -56,6 +56,14 @@ class AuthController extends Controller
                 200
             );
         }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户导入了饼干',
+                'content' => $request->ip(),
+            ]
+        );
     }
 
     public function logout(Request $request)

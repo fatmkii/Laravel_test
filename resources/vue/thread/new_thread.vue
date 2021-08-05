@@ -187,7 +187,7 @@ export default {
       nissin_time_selected: 86400,
       title_color_input: "",
       post_with_admin: false,
-      locked_by_coin_input: Number,
+      locked_by_coin_input: undefined,
     };
   },
   watch: {

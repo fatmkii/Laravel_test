@@ -29,7 +29,7 @@ class CreateThreadsTable extends Migration
             $table->timestamp('nissin_date')->nullable();
             $table->tinyInteger('is_deleted')->default(0); //0=正常；1=被用户删除；2=被管理员删除
             $table->boolean('is_anonymous')->default(0);
-            $table->mediumint('locked_by_coin')->unsigned()->default(0);
+            $table->mediumInteger('locked_by_coin')->unsigned()->default(0);
             $table->timestamps();
         });
     }

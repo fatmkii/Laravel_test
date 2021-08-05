@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 class myModel extends EloquentModel
 {
     protected $suffix = null;
-    protected $binggan = '';
 
     // 设置表后缀
     public function setSuffix($suffix)
@@ -27,18 +26,4 @@ class myModel extends EloquentModel
 
         return $instance->newQuery();
     }
-
-    public function setBinggan($binggan)
-    {
-        $this->binggan = $binggan;
-    }
-
-    public static function Binggan($binggan)
-    {
-        $instance = new static;
-        $instance->setBinggan($binggan);
-
-        return $instance->newQuery();
-    }
-
 }
