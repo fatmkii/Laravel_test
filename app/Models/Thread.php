@@ -19,6 +19,8 @@ class Thread extends myModel
         'created_binggan',
         'created_IP',
         'is_anonymous',
+        'is_deleted',
+        'forum',
     ];
     protected $fillable = [
         'forum_id', 'title', 'content', 'created_binggan', 'created_IP',
@@ -52,8 +54,4 @@ class Thread extends myModel
         return $date->format('Y-m-d H:i');
     }
 
-    public function getCreatedBingganAttribute($binggan)
-    {
-        return hash('sha256', $binggan);
-    }
 }

@@ -21,8 +21,14 @@ mix.js('resources/js/app.js', 'public/js')
         //
     ]);
 
-mix.alias({
-    vue$: path.join(__dirname, 'node_modules/vue/dist/vue.js')
-});
+if (process.env.MIX_ENV == 'local')
+    mix.alias({
+        vue$: path.join(__dirname, 'node_modules/vue/dist/vue.js')
+    });
+
+if (process.env.MIX_ENV == 'production')
+    mix.alias({
+        vue$: path.join(__dirname, 'node_modules/vue/dist/vue.esm.js')
+    });
 
 mix.options({ uglify: {} });

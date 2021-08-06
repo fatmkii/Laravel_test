@@ -17,7 +17,9 @@
           class="my-1 my-sm-0 d-lg-none"
           variant="outline-dark"
           to="/user-center"
-          >个人中心</b-button
+        >
+          <b-icon icon="gear-fill"></b-icon>
+          个人中心</b-button
         >
         <b-button
           v-else
@@ -33,7 +35,9 @@
           class="my-1 my-sm-0 d-none d-lg-block"
           variant="outline-dark"
           to="/user-center"
-          >个人中心</b-button
+        >
+          <b-icon icon="gear-fill"></b-icon>
+          个人中心</b-button
         >
         <b-button
           v-else

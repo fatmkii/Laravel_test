@@ -17,7 +17,7 @@
       <div class="col-auto">
         <b-form-checkbox
           class="mr-auto"
-          v-if="this.$store.state.User.AdminStatus"
+          v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
           v-model="post_with_admin"
           v-b-popover.hover.left="'名字会显示红色'"
           switch
@@ -96,18 +96,16 @@
     <hr />
     <div class="row align-items-center mt-3">
       <div class="col-4">
+        <span class="h6 my-2">选择随机头像组</span>
+      </div>
+      <div class="col-4">
         <span class="h6 my-2">给标题换个颜色吗？（收费500奥利奥）</span>
       </div>
-      <div class="col-4"><span class="h6 my-2">选择随机头像组</span></div>
-      <div class="col-4"><span class="h6 my-2"></span></div>
+      <div class="col-4">
+        <span class="h6 my-2">设定看帖权限（收费500奥利奥）</span>
+      </div>
     </div>
     <div class="row align-items-center mt-3">
-      <div class="col-4">
-        <b-form-input
-          placeholder="#212529"
-          v-model="title_color_input"
-        ></b-form-input>
-      </div>
       <div class="col-4">
         <b-form-select
           v-model="random_heads_group_selected"
@@ -116,9 +114,20 @@
           text-field="name"
         ></b-form-select>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4">
+        <b-form-input
+          placeholder="#212529"
+          v-model="title_color_input"
+        ></b-form-input>
+      </div>
+      <div class="col-4">
+        <b-form-input
+          placeholder="大于多少奥利奥才能看帖"
+          v-model="locked_by_coin_input"
+        ></b-form-input>
+      </div>
     </div>
-    <div v-if="this.$store.state.User.AdminStatus">
+    <div v-if="this.$store.state.User.AdminForums.includes(this.forum_id)">
       <hr />
       <div class="row align-items-center mt-3">
         <div class="col-4"><span class="h6 my-2">管理员选项</span></div>
@@ -178,6 +187,7 @@ export default {
       nissin_time_selected: 86400,
       title_color_input: "",
       post_with_admin: false,
+      locked_by_coin_input: undefined,
     };
   },
   watch: {
@@ -225,6 +235,7 @@ export default {
           anti_jingfen: this.anti_jingfen_selected,
           admin_subtitle: this.admin_subtitles_selected,
           post_with_admin: this.post_with_admin,
+          locked_by_coin: this.locked_by_coin_input,
         },
       };
       axios(config)
@@ -262,7 +273,7 @@ export default {
         .then((response) => {
           this.subtitles_options = response.data.data;
           // 如果不是管理员，就删除部分管理员专用选项
-          if (!this.$store.state.User.AdminStatus) {
+          if (!this.$store.state.User.AdminForums.includes(this.forum_id)) {
             this.subtitles_options.forEach((subtitles_option, index) => {
               if (subtitles_option.for_admin == 1) {
                 this.subtitles_options.splice(index, 1);

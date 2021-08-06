@@ -18,8 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('binggan')->unique()->index();
             $table->string('nickname')->nullable(); //自定义昵称
             $table->string('password')->nullable();
-            $table->timestamp('binggan_verified_at')->nullable();
-            $table->boolean('is_temp')->default(1);  //认证后转为非临时饼干
             $table->boolean('is_banned')->default(0); //0=正常；1=banned；
             $table->timestamp('locked_until')->nullable(); //被暂时锁定直到某时间
             $table->tinyInteger('admin')->default(0); //1=一般管理员，99=超管

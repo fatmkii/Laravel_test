@@ -15,8 +15,7 @@ use Carbon\Carbon;
 use App\Exceptions\CoinException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
-
-use function Symfony\Component\VarDumper\Dumper\esc;
+use App\Jobs\ProcessUserActive;
 
 class ThreadController extends Controller
 {
@@ -46,6 +45,7 @@ class ThreadController extends Controller
             'nissin_time' => 'integer',
             'random_heads_group' => 'integer',
             'post_with_admin' => 'boolean',
+            'locked_by_coin' => 'integer|max:1000000',
         ]);
 
 
@@ -61,7 +61,7 @@ class ThreadController extends Controller
 
         //如果发帖频率过高，返回错误
         if (Redis::exists('new_thread_record_' . $request->binggan) &&  $user->admin == 0) {
-            $limted_minutes = intval(Redis::TTL('new_thread_record_' . $request->binggan) / 60) + 1;
+            $limted_minutes = ceil(Redis::TTL('new_thread_record_' . $request->binggan) / 60);
             return response()->json([
                 'code' => ResponseCode::THREAD_TOO_MANY,
                 'message' => ResponseCode::$codeMap[ResponseCode::THREAD_TOO_MANY] . '，你只能在'
@@ -71,8 +71,8 @@ class ThreadController extends Controller
 
         //确认是否冒认管理员发公告或者管理员帖
         if (
-            $user->admin == 0 &&
-            ($request->subtitle == "[公告]" || $request->post_with_admin == true)
+            ($request->subtitle == "[公告]" || $request->post_with_admin == true) &&
+            !in_array($request->forum_id, json_decode($user->AdminPermissions->forums))
         ) {
             return response()->json(
                 [
@@ -110,22 +110,21 @@ class ThreadController extends Controller
         //执行追加新主题流程
         try {
             DB::beginTransaction();
-            if ($request->title_color) {
-                $user = User::where('binggan', $request->binggan)->first();
-                $user->coin -= 500; //设置标题颜色减500奥利奥   
-                $user->save();
-                if ($user->coin < 0) {
-                    throw new CoinException();
-                }
-            }
             //发主题帖（Thread）
             $thread = new Thread;
+            if ($request->title_color) {
+                $user->coin -= 500; //设置标题颜色减500奥利奥   
+                $thread->title_color = $request->title_color;
+            }
+            if ($request->locked_by_coin > 0) {
+                $user->coin -= 500; //设置奥利奥权限贴减500奥利奥  
+                $thread->locked_by_coin = $request->locked_by_coin;
+            }
             $thread->created_binggan = $request->binggan;
             $thread->forum_id = $request->forum_id;
             if ($request->subtitle == '[公告]') {
                 $thread->sub_id = $request->admin_subtitle ?   10 : 99; //$request->admin_subtitle == 0是全岛公告。把sub_id=99
             }
-            $thread->title = $request->title;
             $thread->nickname = $request->nickname;
             $thread->created_ip = $request->ip();
             $thread->sub_title = $request->subtitle;
@@ -133,7 +132,7 @@ class ThreadController extends Controller
             if ($request->nissin_time > 0) { //如果请求中带有nissin_time，才设定nissin_date
                 $thread->nissin_date = Carbon::now()->addSeconds($request->nissin_time);
             }
-            $thread->title_color = $request->title_color;
+            $thread->title = $request->title;
             $thread->anti_jingfen = $request->anti_jingfen;
             $thread->save();
             //发主题帖的第0楼（Post）
@@ -149,6 +148,11 @@ class ThreadController extends Controller
             $post->random_head = random_int(1, 40);
             $post->floor = 0;
             $post->save();
+            //统一判断奥利奥是否足够
+            if ($user->coin < 0) {
+                throw new CoinException();
+            }
+            $user->save();
             DB::commit();
         } catch (QueryException $e) {
             DB::rollback();
@@ -168,6 +172,14 @@ class ThreadController extends Controller
         //用redis记录发帖频率。限定5分钟内只能发帖1次。
         Redis::setex('new_thread_record_' . $request->binggan, 5 * 60, 1);
 
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户发表了新主题',
+                'thread_id' => $thread->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -217,8 +229,30 @@ class ThreadController extends Controller
             ]);
         }
 
+        if ($CurrentThread->locked_by_coin > 0) {
+            $user = User::where('binggan', $request->query('binggan'))->first();
+            if (!$user) {
+                return response()->json([
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => '本贴需要饼干才能查看喔',
+                ]);
+            }
+            if ($user->coin < $CurrentThread->locked_by_coin && $user->admin == 0) {
+                return response()->json([
+                    'code' => ResponseCode::THREAD_UNAUTHORIZED,
+                    'message' => sprintf("本贴需要拥有大于%u奥利奥才能查看喔", $CurrentThread->locked_by_coin),
+                ]);
+            }
+        }
+
         // $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
-        $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc');
+        $page = $request->query('page') == 'NaN' ? 1 : $request->query('page');
+        $posts = Cache::remember('threads_cache_' . $CurrentThread->id . '_' . $page, 3600, function () use ($CurrentThread) {
+            return $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
+        });
+
 
         //如果有提供binggan，为每个post输入binggan，用来判断is_your_post（为前端提供是否是用户自己帖子的判据）
         if ($request->query('binggan')) {

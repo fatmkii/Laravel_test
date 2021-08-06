@@ -59,7 +59,7 @@ export default {
             emojis.push(this.$store.state.User.Emojis[i]);
         }
       }
-      if (this.$store.state.User.MyEmoji.length > 0) {
+      if (this.$store.state.User.MyEmoji) {
         emojis.push(this.$store.state.User.MyEmoji);
       }
       return emojis;

@@ -1,9 +1,11 @@
 
 <template>
-  <div v-if="threads_load_status" class="d-none d-lg-block d-xl-block">
+  <div class="d-none d-lg-block d-xl-block">
     <b-table-simple
+      v-show="threads_load_status"
       hover
       small
+      fixed
       caption-top
       responsive
       class="threads_table table-striped"
@@ -23,12 +25,16 @@
             <span class="thread_sub_title"> {{ thread.sub_title }}&nbsp; </span>
             <router-link
               class="thread_title"
+              style="word-wrap: break-word; white-space: normal"
               :to="'/thread/' + thread.id"
               :style="{ color: thread.title_color }"
               :target="router_target"
             >
               {{ thread.title }}&nbsp;&nbsp;
             </router-link>
+            <span v-if="thread.locked_by_coin > 0"
+              >🔒{{ thread.locked_by_coin }}</span
+            >
             <router-link
               :to="
                 '/thread/' + thread.id + '/' + Math.ceil(thread.posts_num / 200)
@@ -45,6 +51,13 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
+    <b-spinner
+      id="spinner"
+      v-show="!threads_load_status"
+      variant="success"
+      label="读取中"
+    >
+    </b-spinner>
   </div>
 </template>
 
@@ -69,19 +82,23 @@ export default {
       return this.new_window_to_post == true ? "_blank" : "false";
     },
     threads_data() {
-      if (this.$store.state.User.UsePingbici) {
-        const title_pingbici = JSON.parse(this.$store.state.User.TitlePingbici);
-        return this.$store.state.Threads.ThreadsData.data.filter((thread) => {
-          for (var i = 0; i < title_pingbici.length; i++) {
-            var reg = new RegExp(title_pingbici[i], "g");
-            if (reg.test(thread.title)) {
-              return false;
+      if (this.threads_load_status) {
+        if (this.$store.state.User.UsePingbici) {
+          const title_pingbici = JSON.parse(
+            this.$store.state.User.TitlePingbici
+          );
+          return this.$store.state.Threads.ThreadsData.data.filter((thread) => {
+            for (var i = 0; i < title_pingbici.length; i++) {
+              var reg = new RegExp(title_pingbici[i], "g");
+              if (reg.test(thread.title)) {
+                return false;
+              }
             }
-          }
-          return true;
-        }); // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
-      } else {
-        return this.$store.state.Threads.ThreadsData.data;
+            return true;
+          });
+        } else {
+          return this.$store.state.Threads.ThreadsData.data; // 记得ThreadsData要比ForumsData多.threads_data，因为多了分页数据
+        }
       }
     },
     ...mapState({
@@ -96,12 +113,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .thread_title {
-//   cursor: pointer;
-//   color: #0000ee;
-// }
 .threads_table {
   background-color: white;
+}
+#spinner {
+  position: fixed;
+  z-index: 999;
+  width: 3rem;
+  height: 3rem;
+  right: 50%;
+  top: 40%;
 }
 </style>>
 

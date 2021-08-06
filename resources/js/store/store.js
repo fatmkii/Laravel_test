@@ -8,12 +8,13 @@ const module_user = {
         Binggan: '',
         LoginStatus: false,
         AdminStatus: 0,
+        AdminForums: [],
         LockedTTL: 0,
         UsePingbici: false,
         TitlePingbici: [],
-        ContentPingbici:[],
-        MyEmoji:[],
-        Emojis:[],
+        ContentPingbici: [],
+        MyEmoji: "",
+        Emojis: [],
     }),
     mutations: {
         Token_set(state, payload) {
@@ -27,6 +28,9 @@ const module_user = {
         },
         AdminStatus_set(state, payload) {
             state.AdminStatus = payload
+        },
+        AdminForums_set(state, payload) {
+            state.AdminForums = payload
         },
         LockedTTL_set(state, payload) {
             state.LockedTTL = payload

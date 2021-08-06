@@ -4,6 +4,9 @@
     <p>你好！别来无恙。</p>
     <p>你的饼干是：{{ binggan }}</p>
     <p>你的奥利奥：{{ user_coin }} 个</p>
+    <p v-if="this.$store.state.User.AdminStatus">
+      管理的板块：{{ this.$store.state.User.AdminForums }}
+    </p>
     <b-button
       size="md"
       class="my-1 my-sm-0"
@@ -124,6 +127,8 @@ export default {
           this.$store.commit("Binggan_set", "");
           this.$store.commit("LoginStatus_set", false);
           this.$store.commit("AdminStatus_set", 0);
+          this.$store.commit("AdminForums_set", []);
+
           if (window.localStorage) {
             localStorage.removeItem("Token");
             localStorage.removeItem("Binggan");

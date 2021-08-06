@@ -20,6 +20,7 @@ class CreateForumsTable extends Migration
             $table->tinyInteger('status')->default('1');
             $table->boolean('is_anonymous')->default(0);
             $table->boolean('is_nissin')->default(0);
+            $table->json('banners')->nullable();
             $table->softDeletes();
         });
     }

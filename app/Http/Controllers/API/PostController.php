@@ -11,7 +11,9 @@ use App\Models\Thread;
 use Illuminate\Database\QueryException;
 use App\Common\ResponseCode;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use App\Jobs\ProcessUserActive;
 
 class PostController extends Controller
 {
@@ -87,7 +89,10 @@ class PostController extends Controller
         }
 
         //确认是否冒充管理员发帖
-        if ($user->admin == 0 && $request->post_with_admin == true) {
+        if (
+            $request->post_with_admin == true &&
+            !in_array($request->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
             return response()->json(
                 [
                     'code' => ResponseCode::ADMIN_UNAUTHORIZED,
@@ -134,7 +139,19 @@ class PostController extends Controller
             Redis::setex('new_post_record_' . $request->binggan,  60, 1);
         }
 
-        $post_id = $post->id;
+        //清除redis的posts缓存
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户发表了新回帖',
+                'thread_id' => $thread->id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -142,7 +159,7 @@ class PostController extends Controller
                 'data' => [
                     'forum_id' => $request->forum_id,
                     'thread_id' => $request->thread_id,
-                    'post_id' => $post_id,
+                    'post_id' => $post->id,
                 ]
             ],
         );
@@ -234,6 +251,21 @@ class PostController extends Controller
         $post->save();
         $user->coin -= 300; //删除帖子扣除300奥利奥
         $user->save();
+
+        //清除redis的posts缓存
+        // $thread = $post->thread;
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户删除了回帖',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -342,7 +374,19 @@ class PostController extends Controller
             ]);
         }
 
-        $post_id = $post->id;
+        //清除redis的posts缓存
+        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
+        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+        // }
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户roll点了',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+            ]
+        );
         return response()->json(
             [
                 'code' => ResponseCode::SUCCESS,
@@ -350,7 +394,7 @@ class PostController extends Controller
                 'data' => [
                     'forum_id' => $request->forum_id,
                     'thread_id' => $request->thread_id,
-                    'post_id' => $post_id,
+                    'post_id' => $post->id,
                 ]
             ],
         );

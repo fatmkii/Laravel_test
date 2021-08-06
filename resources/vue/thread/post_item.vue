@@ -4,7 +4,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="ban_cookie_click_admin"
       >
@@ -13,7 +13,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="lock_cookie_click_admin"
       >
@@ -22,7 +22,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="post_delete_all_click_admin"
       >
@@ -31,7 +31,7 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminStatus"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
         v-show="admin_button_show"
         @click="post_delete_click_admin"
       >
@@ -135,7 +135,6 @@ export default {
   components: {},
   props: {
     post_data: Object,
-    binggan_hash: String,
     thread_anti_jingfen: Number,
     random_head_add: String,
     admin_button_show: Boolean,
@@ -149,6 +148,11 @@ export default {
       author_color: ["", "#DD0000", "#5fb878"],
       post_content_show: true,
     };
+  },
+  computed: {
+    forum_id() {
+      return this.$store.state.Forums.CurrentForumData.id;
+    },
   },
   created() {
     if (this.$store.state.User.UsePingbici) {
@@ -172,7 +176,7 @@ export default {
         url: "/api/user/reward",
         data: {
           binggan: this.$store.state.User.Binggan,
-          forum_id: this.post_data.forum_id,
+          forum_id: this.$store.state.Forums.CurrentForumData.id,
           thread_id: this.post_data.thread_id,
           post_id: this.post_data.id,
           content: this.content_reward_input,
@@ -225,14 +229,15 @@ export default {
       }
     },
     post_delete_click_admin() {
-      var isdelete = confirm("要用管理员权限删除这个回复吗？");
-      if (isdelete == true) {
+      var content = prompt("要用管理员权限删除这个回复吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/post_delete/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -248,14 +253,15 @@ export default {
       }
     },
     post_delete_all_click_admin() {
-      var isdelete = confirm("要用管理员权限删除该饼干全部回复吗？");
-      if (isdelete == true) {
+      var content = prompt("要用管理员权限删除该饼干全部回复吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/post_delete_all/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -271,14 +277,15 @@ export default {
       }
     },
     ban_cookie_click_admin() {
-      var isban = confirm("你要永久粉碎这个饼干吗？");
-      if (isban == true) {
+      var content = prompt("你要永久粉碎这个饼干吗？请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/user_ban/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
@@ -294,14 +301,15 @@ export default {
       }
     },
     lock_cookie_click_admin() {
-      var isban = confirm("你要封禁这个饼干吗？（默认3天）");
-      if (isban == true) {
+      var content = prompt("你要封禁这个饼干吗？（默认3天）请输入理由");
+      if (content != null) {
         const config = {
           method: "post",
           url: "/api/admin/user_lock/",
           data: {
             post_id: this.post_data.id,
             thread_id: this.post_data.thread_id,
+            content: content,
           },
         };
         axios(config)
