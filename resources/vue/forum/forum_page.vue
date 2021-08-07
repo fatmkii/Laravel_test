@@ -8,6 +8,7 @@
       img-width="825"
       img-height="224"
       v-if="forum_banners && threads_load_status"
+      v-show="!banner_hiden"
     >
       <b-carousel-slide
         v-for="banner in JSON.parse(
@@ -26,9 +27,12 @@
         </b-badge>
         <span id="forum_name">{{ forum_name }}</span>
       </div>
-      <div class="col-auto">
-        <b-form-checkbox v-model="new_window_to_post" switch>
+      <div class="col-auto d-inline-flex">
+        <b-form-checkbox v-model="new_window_to_post" switch class="ml-2">
           新窗口打开
+        </b-form-checkbox>
+        <b-form-checkbox v-model="banner_hiden" switch class="ml-2">
+          隐藏版头
         </b-form-checkbox>
       </div>
       <div class="col-auto my-2 ml-auto">
@@ -158,11 +162,15 @@ export default {
         this.new_window_to_post ? "true" : ""
       );
     },
+    banner_hiden: function () {
+      localStorage.setItem("banner_hiden", this.banner_hiden ? "true" : "");
+    },
   },
   data: function () {
     return {
       name: "forum_page",
       new_window_to_post: false,
+      banner_hiden: false,
     };
   },
   computed: {
@@ -218,9 +226,13 @@ export default {
     this.$store.commit("ThreadsLoadStatus_set", 0);
     if (localStorage.getItem("new_window_to_post") == null) {
       localStorage.new_window_to_post = "";
-      this.new_window_to_post = false;
     } else {
       this.new_window_to_post = Boolean(localStorage.new_window_to_post);
+    }
+    if (localStorage.getItem("banner_hiden") == null) {
+      localStorage.banner_hiden = "";
+    } else {
+      this.banner_hiden = Boolean(localStorage.new_window_to_post);
     }
   },
 };

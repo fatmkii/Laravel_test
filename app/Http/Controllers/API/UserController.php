@@ -126,10 +126,10 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
-        if (env('NEW_BINGGAN', 0) == 0) {
+        if (!config('app.new_binggan')) {
             return response()->json([
                 'code' => ResponseCode::USER_NEW_CLOSED,
-                'message' => ResponseCode::$codeMap[ResponseCode::USER_NEW_CLOSED]
+                'message' => ResponseCode::$codeMap[ResponseCode::USER_NEW_CLOSED],
             ]);
         }
 

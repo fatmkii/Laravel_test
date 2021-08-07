@@ -99,8 +99,10 @@
         <p>
           友情提示：您在打赏回贴作者以后，将会扣除7%的手续费。
           <br />
-          例如您打赏1000块奥利奥，则对方将获得
-          <span style="color: red">930 </span>块奥利奥。
+          对方将获得：
+          <span style="color: red"
+            >{{ Math.ceil(coin_reward_input * 0.93) }} </span
+          >块奥利奥。
         </p>
         <b-input-group prepend="打赏：">
           <b-form-input
