@@ -1,5 +1,11 @@
 <template>
-  <b-tabs class="emoji_tabs my-2" content-class="py-2 px2 " no-fade pills>
+  <b-tabs
+    class="emoji_tabs my-2"
+    content-class="py-2 px2 "
+    style="font-size: 0.875rem"
+    no-fade
+    pills
+  >
     <b-tab
       id="placeholder"
       title-link-class="placeholder"
@@ -81,13 +87,16 @@ export default {
 .nav {
   background-color: #eefaee;
 }
+.nav-link {
+  padding: 0.5rem 0.75rem;
+}
 .nav-link.active {
   background-color: #28a745 !important;
 }
 
 .emoji_box {
-  max-width: 60px;
-  max-height: 60px;
+  max-width: 48px;
+  max-height: 48px;
 }
 .emoji_container {
   max-height: 250px;

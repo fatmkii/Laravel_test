@@ -10,11 +10,11 @@
           <span id="forum_name" @click="back_to_forum">{{ forum_name }}</span>
         </div>
         <div class="col-6">
-          <ThreadPaginator :thread_id="thread_id"></ThreadPaginator>
+          <ThreadPaginator :thread_id="thread_id" align="right"></ThreadPaginator>
         </div>
       </div>
       <div class="post_container">
-        <div class="post_title px-2 py-3 h4">
+        <div class="post_title px-1 py-2 h5">
           <span style="word-wrap: break-word; white-space: normal"
             >标题：{{ thread_title }}</span
           >
@@ -67,9 +67,9 @@
           ></PostItem>
         </div>
       </div>
-      <ThreadPaginator :thread_id="thread_id"></ThreadPaginator>
+      <ThreadPaginator :thread_id="thread_id" align="left"></ThreadPaginator>
       <div class="h6 my-2 row d-inline-flex">
-        <div class="col-auto pr-0">昵称</div>
+        <div class="col-auto pr-0" style="font-size: 0.875rem">昵称</div>
         <div class="col-auto">
           <b-form-checkbox
             class="mr-auto"
@@ -84,7 +84,7 @@
       </div>
       <b-form-input id="nickname_input" v-model="nickname_input"></b-form-input>
       <Emoji :heads_id="thread_heads_id" @emoji_append="emoji_append"></Emoji>
-      <div class="h6 my-2">内容</div>
+      <div class="h6 my-2" style="font-size: 0.875rem">内容</div>
       <b-form-textarea
         id="content_input"
         v-model="content_input"
@@ -98,6 +98,7 @@
         <div class="col-auto">
           <b-button
             variant="success"
+            size="sm"
             :disabled="
               !this.$store.state.User.LoginStatus || Boolean(locked_TTL)
             "

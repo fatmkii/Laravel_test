@@ -37,24 +37,54 @@
       >
         删帖
       </b-button>
-      <b-button
-        size="sm"
-        variant="light"
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="svg-light bi bi-trash"
+        viewBox="0 0 16 16"
         v-if="post_data.is_your_post"
         @click="post_delete_click"
       >
-        删除
-      </b-button>
-      <b-button
-        size="sm"
-        variant="info"
+        <!-- 删除按钮 -->
+        <path
+          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+        />
+        <path
+          fill-rule="evenodd"
+          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="svg-success bi bi-gift-fill"
+        viewBox="0 0 16 16"
         v-if="!post_data.is_your_post"
         @click="reward_click"
-        >打赏</b-button
       >
-      <b-button size="sm" variant="success" @click="quote_click">
-        回复
-      </b-button>
+        <!-- 打赏按钮 -->
+        <path
+          d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7h6zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9H2.5z"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="svg-success bi bi-chat-square-dots-fill"
+        viewBox="0 0 16 16"
+        @click="quote_click"
+      >
+        <!-- 回复按钮 -->
+        <path
+          d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+        />
+      </svg>
     </div>
     <div>
       <b-img
@@ -367,7 +397,7 @@ export default {
   font-size: calc(0.8rem + 0.2vw);
 }
 .post_item {
-  border-bottom: 1px solid #111;
+  border-bottom: 1px solid #5fb878;
 }
 .emoji_img {
   max-height: 67px;
@@ -375,5 +405,13 @@ export default {
 }
 .quote_content {
   color: #777777;
+}
+.svg-success {
+  color: #5fb878;
+  cursor: pointer;
+}
+.svg-light {
+  color: #666;
+  cursor: pointer;
 }
 </style>

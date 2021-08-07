@@ -8,6 +8,7 @@
       use-router
       first-number
       last-number
+      size="sm"
     ></b-pagination-nav>
   </div>
 </template>

@@ -2,7 +2,7 @@
   <div>
     <b-card no-body class="mt-4">
       <template v-slot:header>
-        <h4 class="mb-0">版面列表</h4>
+        <h5 class="mb-0">版面列表</h5>
       </template>
 
       <b-list-group
@@ -11,8 +11,8 @@
         :key="forum.id"
         @click="forum_view(forum.id)"
       >
-        <b-card-body>
-          <b-card-title>
+        <b-card-body class="py-2">
+          <b-card-title title-tag="h5">
             {{ forum.name }}
             <b-badge variant="secondary" pill class="float-right">{{
               forum.id
@@ -55,3 +55,9 @@ export default {
 }
 </style>>
 
+
+<style lang="scss">
+.card-text {
+  font-size: 0.875rem;
+}
+</style>

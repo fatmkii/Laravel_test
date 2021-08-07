@@ -7,8 +7,9 @@
     use-router
     first-number
     last-number
-    align="right"
+    :align="align"
     class="my-2"
+    size="sm"
   ></b-pagination-nav>
 </template>
 
@@ -18,6 +19,7 @@ export default {
   components: {},
   props: {
     thread_id: Number,
+    align: String,
   },
   data: function () {
     return {
