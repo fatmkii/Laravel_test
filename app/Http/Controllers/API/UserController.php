@@ -226,17 +226,10 @@ class UserController extends Controller
                 'message' => '给自己打赏是想给税收做贡献吗？',
             ]);
         }
-        //判断奥利奥是否够
-        if ($user->coin < $request->coin) {
-            return response()->json([
-                'code' => ResponseCode::COIN_NOT_ENOUGH,
-                'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
-            ]);
-        }
 
         try {
             DB::beginTransaction();
-            $tax = intval($request->coin * 0.07); //税率0.07
+            $tax = ceil($request->coin * 0.07); //税率0.07
             $coin_get = $request->coin - $tax;
             $user->coin -= $request->coin;
             $user_target->coin += $coin_get;

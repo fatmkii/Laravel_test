@@ -101,7 +101,7 @@
           <br />
           对方将获得：
           <span style="color: red"
-            >{{ Math.ceil(coin_reward_input * 0.93) }} </span
+            >{{ Math.floor(coin_reward_input * 0.93) }} </span
           >块奥利奥。
         </p>
         <b-input-group prepend="打赏：">
