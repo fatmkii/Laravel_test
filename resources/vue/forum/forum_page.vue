@@ -232,7 +232,7 @@ export default {
     if (localStorage.getItem("banner_hiden") == null) {
       localStorage.banner_hiden = "";
     } else {
-      this.banner_hiden = Boolean(localStorage.new_window_to_post);
+      this.banner_hiden = Boolean(localStorage.banner_hiden);
     }
   },
 };
