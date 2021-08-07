@@ -126,6 +126,13 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        if (env('NEW_BINGGAN', 0) == 0) {
+            return response()->json([
+                'code' => ResponseCode::USER_NEW_CLOSED,
+                'message' => ResponseCode::$codeMap[ResponseCode::USER_NEW_CLOSED]
+            ]);
+        }
+
         if (Redis::exists('reg_record_' . $request->ip())) {
             $limted_day = intval(Redis::TTL('reg_record_' . $request->ip()) / 86400) + 1;
             return response()->json([
@@ -143,7 +150,7 @@ class UserController extends Controller
             } while (!empty(User::where('binggan', $binggan)->first));
             $user->binggan = $binggan;
             $user->created_ip = $request->ip();
-            $user->coin = 0;
+            $user->coin = 1500;
             $user->save();
             DB::commit();
         } catch (QueryException $e) {
