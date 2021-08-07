@@ -67,6 +67,20 @@ class Post extends myModel
         return hash('sha256', $this->created_binggan);
     }
 
+    public function getNicknameAttribute($nickname)
+    {
+        switch ($this->is_deleted) {
+            case 0:
+                return $nickname;
+            case 1:
+                return '****';
+            case 2:
+                return '****';
+            default:
+                return $nickname;
+        }
+    }
+
     public function getContentAttribute($content)
     {
         switch ($this->is_deleted) {
@@ -76,6 +90,8 @@ class Post extends myModel
                 return '*此贴已被作者删除*';
             case 2:
                 return '*此贴已被管理员删除*';
+            default:
+                return $content;
         }
     }
 
