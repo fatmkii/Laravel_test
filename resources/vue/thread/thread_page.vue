@@ -10,10 +10,24 @@
           <span id="forum_name" @click="back_to_forum">{{ forum_name }}</span>
         </div>
         <div class="col-6">
-          <ThreadPaginator :thread_id="thread_id" align="right"></ThreadPaginator>
+          <ThreadPaginator
+            :thread_id="thread_id"
+            align="right"
+          ></ThreadPaginator>
         </div>
       </div>
       <div class="post_container">
+        <div
+          class="jump_page alert alert-success px-1 py-1"
+          v-if="jump_page_show"
+        >
+          <span style="font-size: 0.875rem"
+            >你上次已阅读到第{{ browse_current.page }}页，<router-link
+              :to="'/thread/' + thread_id + '/' + browse_current.page"
+              >点击这里跳转</router-link
+            >喔~</span
+          >
+        </div>
         <div class="post_title px-1 py-2 h5">
           <span style="word-wrap: break-word; white-space: normal"
             >标题：{{ thread_title }}</span
@@ -286,12 +300,17 @@ export default {
   watch: {
     // 如果路由有变化，再次获得数据
     $route(to) {
+      this.get_browse_current();
       this.get_posts_data();
       this.$store.commit("PostsLoadStatus_set", 0);
     },
     post_with_admin: function () {
       this.nickname_input = this.post_with_admin ? "管理员" : "= =";
     },
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.browse_record_handle(); //翻页时候记录浏览进度
+    next();
   },
   data: function () {
     return {
@@ -307,6 +326,12 @@ export default {
       random_heads_data: Object,
       admin_button_show: false,
       post_with_admin: false,
+      jump_page_show: false,
+      browse_current: {
+        expire_time: Date.now() + 86400000,
+        page: 1,
+        height: 0,
+      },
     };
   },
   computed: {
@@ -384,11 +409,44 @@ export default {
                 appendToast: true,
               });
             }
+            this.$nextTick(() => {
+              const page = isNaN(this.page) ? 1 : this.page;
+              if (
+                this.browse_current.page == page &&
+                typeof this.$store.state.User.BrowseLogger[
+                  this.thread_id.toString()
+                ] != "undefined"
+              ) {
+                this.scroll_to_lasttime();
+              }
+            });
           } else {
             alert(response.data.message);
           }
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
+    },
+    get_browse_current() {
+      if (
+        typeof this.$store.state.User.BrowseLogger[this.thread_id.toString()] !=
+        "undefined"
+      ) {
+        this.browse_current = JSON.parse(
+          JSON.stringify(
+            this.$store.state.User.BrowseLogger[this.thread_id.toString()]
+          )
+        );
+      }
+      const page = isNaN(this.page) ? 1 : this.page;
+      if (
+        this.browse_current.page > page &&
+        typeof this.$store.state.User.BrowseLogger[this.thread_id.toString()] !=
+          "undefined"
+      ) {
+        this.jump_page_show = true; //显示阅读进度页面跳转提示
+      } else {
+        this.jump_page_show = false;
+      }
     },
     thread_delete_click_admin() {
       var content = prompt(
@@ -555,10 +613,50 @@ export default {
           .catch((error) => alert(error));
       }
     },
+    scroll_to_lasttime() {
+      //不同浏览器可能支持不同，所以都用用
+      document.body.scrollTop = this.browse_current.height;
+      document.documentElement.scrollTop = this.browse_current.height;
+      window.scrollTop = this.browse_current.height;
+      this.$bvToast.toast("已滚动到上次阅读进度", {
+        title: "Done.",
+        autoHideDelay: 1500,
+        appendToast: true,
+      });
+    },
+    scroll_watch() {
+      const page = isNaN(this.page) ? 1 : this.page;
+      if (this.browse_current.page <= page) {
+        this.browse_current["height"] = document.documentElement.scrollTop;
+      }
+    },
+    browse_record_handle() {
+      //写入本次阅读进度
+      const page = isNaN(this.page) ? 1 : this.page;
+      if (this.browse_current.page <= page) {
+        this.browse_current.page = page;
+        this.$store.commit("BrowseLogger_set", {
+          suffix: this.thread_id.toString(),
+          browse_current: this.browse_current,
+        });
+        localStorage.browse_logger = JSON.stringify(
+          this.$store.state.User.BrowseLogger
+        );
+      }
+    },
   },
   created() {
     this.get_posts_data();
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData
+  },
+  mounted() {
+    this.get_browse_current();
+    window.addEventListener("beforeunload", this.browse_record_handle, true);
+    window.addEventListener("scroll", this.scroll_watch, true);
+  },
+  beforeDestroy() {
+    this.browse_record_handle();
+    window.removeEventListener("scroll", this.scroll_watch);
   },
 };
 </script>

@@ -93,6 +93,23 @@ export default {
   created() {
     this.get_forums_data();
     this.get_user_data();
+    if (localStorage.browse_logger != null) {
+      this.$store.commit(
+        "BrowseLogger_set_all",
+        JSON.parse(localStorage.browse_logger)
+      );
+    } else {
+      localStorage.browse_logger = JSON.stringify(
+        this.$store.state.User.BrowseLogger
+      );
+    }
   },
 };
 </script>
+
+<style lang="scss">
+html,
+body {
+  scroll-behavior: smooth;
+}
+</style>

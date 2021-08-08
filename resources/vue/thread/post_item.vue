@@ -1,5 +1,5 @@
 <template>
-  <div class="post_item my-2">
+  <div class="post_item my-2" :id="'f_' + post_data.floor">
     <div class="float-right" v-if="this.$store.state.User.LoginStatus">
       <b-button
         size="sm"
@@ -92,7 +92,6 @@
         :class="'head_' + post_data.random_head"
       ></b-img>
     </div>
-
     <div class="post_content mb-2" style="margin-top: 2rem" ref="post_centent">
       <span
         v-html="post_data.content.replace(/\n/g, '<br>')"

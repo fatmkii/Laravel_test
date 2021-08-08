@@ -15,6 +15,7 @@ const module_user = {
         ContentPingbici: [],
         MyEmoji: "",
         Emojis: [],
+        BrowseLogger: {}
     }),
     mutations: {
         Token_set(state, payload) {
@@ -50,6 +51,21 @@ const module_user = {
         Emojis_set(state, payload) {
             state.Emojis = payload
         },
+        BrowseLogger_set(state, payload) {
+            if (typeof state.BrowseLogger[payload.suffix] == "undefined") {
+                state.BrowseLogger[payload.suffix] = {}
+            }
+            state.BrowseLogger[payload.suffix] = JSON.parse(JSON.stringify(payload.browse_current))
+        },
+        BrowseLogger_set_all(state, payload) {
+            state.BrowseLogger = payload
+            //删除过期的浏览记录
+            for (var logger in state.BrowseLogger) {
+                if (state.BrowseLogger[logger].expire_time < Date.now()) {
+                    delete state.BrowseLogger[logger]
+                }
+            }
+        }
     },
     actions: {},
     getters: {}

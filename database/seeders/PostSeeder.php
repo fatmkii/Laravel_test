@@ -18,10 +18,10 @@ class PostSeeder extends Seeder
     {
         // Post::factory(5000)->create();
         $faker = Factory::create();
-        for ($i = 0; $i < 5000; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             DB::table('posts_1')->insert([
-                'forum_id' => $faker->randomElement(array('1', '12', '40')),
-                'thread_id' => $faker->randomNumber($nbDigits = 1) + 10000,
+                'forum_id' => 12,
+                'thread_id' => 10006,
                 'floor' => $faker->randomNumber($nbDigits = 2),
                 'random_head' => $faker->randomDigit(),
                 'content' => $faker->text(200),
