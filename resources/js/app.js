@@ -45,9 +45,9 @@ Vue.component('app', require('../vue/app.vue').default);
 Vue.component('footer_navi', require('../vue/footer_navi.vue').default);
 
 
-router.afterEach((to, from) => {
-    window.scrollTo(0, 0);
-})
+// router.afterEach((to, from) => {
+//     window.scrollTo(0, 0);
+// })
 
 const app = new Vue({
     router,

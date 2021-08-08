@@ -15,7 +15,7 @@
           <router-link
             class="thread_title"
             style="word-wrap: break-word; white-space: normal"
-            :to="'/thread/' + thread.id"
+            :to="'/thread/' + thread.id + '/1'"
             :style="{ color: thread.title_color }"
             :target="router_target"
           >

@@ -205,6 +205,18 @@
             ></path>
           </svg>
         </div>
+        <div class="icon-jump" @click="jump_click">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="bi bi-skip-forward-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5z"
+            />
+          </svg>
+        </div>
         <div class="icon-down" @click="scroll_bottom">
           <svg
             aria-hidden="true"
@@ -280,6 +292,31 @@
           </b-button-group>
         </template>
       </b-modal>
+      <b-modal ref="jump_modal" id="jump_modal">
+        <template v-slot:modal-header>
+          <h5>跳楼机</h5>
+        </template>
+        <template v-slot:default>
+          <p>最大高度：{{ thread_posts_num - 1 }}楼</p>
+          <div class="my-1">
+            <b-input-group prepend="跳到：">
+              <b-form-input
+                v-model="jump_floor"
+                autofocus
+                @keyup.enter="jump_handle"
+              ></b-form-input>
+            </b-input-group>
+          </div>
+        </template>
+        <template v-slot:modal-footer="{ cancel }">
+          <b-button-group>
+            <b-button variant="success" @click="jump_handle">Jump！</b-button>
+            <b-button variant="outline-secondary" @click="cancel()">
+              取消
+            </b-button>
+          </b-button-group>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -326,6 +363,7 @@ export default {
       random_heads_data: Object,
       admin_button_show: false,
       post_with_admin: false,
+      jump_floor: "",
       jump_page_show: false,
       browse_current: {
         expire_time: Date.now() + 86400000,
@@ -368,6 +406,7 @@ export default {
         state.Threads.CurrentThreadData.random_heads_group,
       thread_anti_jingfen: (state) =>
         state.Threads.CurrentThreadData.anti_jingfen,
+      thread_posts_num: (state) => state.Threads.CurrentThreadData.posts_num,
       random_heads_group: (state) =>
         state.Threads.CurrentThreadData.random_heads_group,
       posts_data: (state) => state.Posts.PostsData.data, // 记得ThreadsData要比ForumsData多.data，因为多了分页数据
@@ -410,6 +449,8 @@ export default {
               });
             }
             this.$nextTick(() => {
+              //渲染完成后执行
+              //如果有设定上次阅读进度，则滚动到上次进度
               const page = isNaN(this.page) ? 1 : this.page;
               if (
                 this.browse_current.page == page &&
@@ -418,6 +459,13 @@ export default {
                 ] != "undefined"
               ) {
                 this.scroll_to_lasttime();
+              }
+              //如果地址有#hash，则滚动到对应hash
+              if (this.$route.hash) {
+                console.log(this.$route.hash);
+                document
+                  .querySelector(this.$route.hash)
+                  .scrollIntoView({ block: "start", behavior: "smooth" });
               }
             });
           } else {
@@ -520,7 +568,7 @@ export default {
       this.content_input = quote_content;
       document
         .querySelector("#content_input")
-        .scrollIntoView({ block: "end", behavior: "smooth" });
+        .scrollIntoView({ block: "start", behavior: "smooth" });
       this.$refs.content_input.focus();
     },
     scroll_bottom() {
@@ -531,6 +579,9 @@ export default {
     },
     roll_click() {
       this.$refs["roll_modal"].show();
+    },
+    jump_click() {
+      this.$refs["jump_modal"].show();
     },
     roll_handle() {
       this.roll_handling = true;
@@ -568,6 +619,16 @@ export default {
           alert(error);
           this.roll_handling = false;
         }); // Todo:写异常返回代码
+    },
+    jump_handle() {
+      if (this.jump_floor == "") {
+        alert("请输入目标楼");
+      }
+      const page = Math.ceil(this.jump_floor / 200);
+      const link =
+        "/thread/" + this.thread_id + "/" + page + "#f_" + this.jump_floor;
+      this.$router.push(link);
+      this.$refs["jump_modal"].hide();
     },
     thread_set_top() {
       var user_confirm = confirm("把这个主题置顶吗？");
@@ -614,15 +675,18 @@ export default {
       }
     },
     scroll_to_lasttime() {
-      //不同浏览器可能支持不同，所以都用用
-      document.body.scrollTop = this.browse_current.height;
-      document.documentElement.scrollTop = this.browse_current.height;
-      window.scrollTop = this.browse_current.height;
-      this.$bvToast.toast("已滚动到上次阅读进度", {
-        title: "Done.",
-        autoHideDelay: 1500,
-        appendToast: true,
-      });
+      if (!this.$route.hash) {
+        //如果有to_hash，则停止使用上次阅读进度的滚动
+        //不同浏览器可能支持不同，所以都用用
+        document.body.scrollTop = this.browse_current.height;
+        document.documentElement.scrollTop = this.browse_current.height;
+        window.scrollTop = this.browse_current.height;
+        this.$bvToast.toast("已滚动到上次阅读进度", {
+          title: "Done.",
+          autoHideDelay: 1500,
+          appendToast: true,
+        });
+      }
     },
     scroll_watch() {
       const page = isNaN(this.page) ? 1 : this.page;
@@ -703,6 +767,7 @@ export default {
 }
 .z-sidebar > .icon-top,
 .z-sidebar > .icon-down,
+.z-sidebar > .icon-jump,
 .z-sidebar .icon-reload {
   width: 30px;
   left: 4px;
