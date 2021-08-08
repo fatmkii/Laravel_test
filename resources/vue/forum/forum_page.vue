@@ -190,6 +190,7 @@ export default {
         url: "/api/forums/" + this.forum_id,
         params: {
           page: this.page,
+          binggan: this.$store.state.User.Binggan,
         },
       };
       axios(config)

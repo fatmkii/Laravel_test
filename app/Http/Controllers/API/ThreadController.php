@@ -220,17 +220,35 @@ class ThreadController extends Controller
         }
 
         $CurrentForum = $CurrentThread->forum;
+        $user = User::where('binggan', $request->query('binggan'))->first();
 
-        //判断帖子是否已经被日清
-        if ($CurrentForum->is_nissin && $CurrentThread->nissin_date < Carbon::now() && $CurrentThread->sub_id == 0) {
+
+        //判断是否可无饼干访问的板块
+        if ($CurrentForum->is_anonymous && !$user) {
             return response()->json([
-                'code' => ResponseCode::THREAD_WAS_NISSINED,
-                'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
+                'code' => ResponseCode::USER_NOT_FOUND,
+                'message' => '本小岛需要饼干才能查看喔',
             ]);
         }
 
+        //判断是否达到可以访问板块的最少奥利奥
+        if ($CurrentForum->accessible_coin > 0) {
+            if (!$user) {
+                return response()->json([
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => '本小岛需要饼干才能查看喔',
+                ]);
+            }
+            if ($user->coin < $CurrentForum->accessible_coin && $user->admin == 0) {
+                return response()->json([
+                    'code' => ResponseCode::THREAD_UNAUTHORIZED,
+                    'message' => sprintf("本小岛需要拥有大于%u奥利奥才能查看喔", $CurrentForum->accessible_coin),
+                ]);
+            }
+        }
+
+        //判断奥利奥锁定权限贴
         if ($CurrentThread->locked_by_coin > 0) {
-            $user = User::where('binggan', $request->query('binggan'))->first();
             if (!$user) {
                 return response()->json([
                     'code' => ResponseCode::USER_NOT_FOUND,
@@ -245,9 +263,37 @@ class ThreadController extends Controller
             }
         }
 
-        // $posts = Post::suffix(intval($Thread_id / 10000))->where('thread_id', $Thread_id)->orderBy('floor', 'asc')->paginate(200);
-        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);
-        // $posts = $CurrentThread->posts()->orderBy('floor', 'asc');
+        //各种日清模式
+        switch ($CurrentForum->is_nissin) {
+            case 0:
+                break;
+            case 1: //按照8点日清模式
+                $hour_now = Carbon::now()->hour;
+                if ($hour_now >= 8) { //根据时间确定8点日清的节点
+                    $nissin_breakpoint = Carbon::today()->addHours(8);
+                } else {
+                    $nissin_breakpoint = Carbon::yesterday()->addHours(8);
+                }
+                if (
+                    $CurrentThread->created_at < $nissin_breakpoint
+                    && $CurrentThread->sub_id == 0
+                ) {
+                    return response()->json([
+                        'code' => ResponseCode::THREAD_WAS_NISSINED,
+                        'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
+                    ]);
+                }
+                break;
+            case 2: //按照24小时日清模式
+                if ($CurrentForum->is_nissin && $CurrentThread->nissin_date < Carbon::now() && $CurrentThread->sub_id == 0) {
+                    return response()->json([
+                        'code' => ResponseCode::THREAD_WAS_NISSINED,
+                        'message' => ResponseCode::$codeMap[ResponseCode::THREAD_WAS_NISSINED],
+                    ]);
+                }
+                break;
+        }
+
         $page = $request->query('page') == 'NaN' ? 1 : $request->query('page');
         $posts = Cache::remember('threads_cache_' . $CurrentThread->id . '_' . $page, 3600, function () use ($CurrentThread) {
             return $CurrentThread->posts()->orderBy('floor', 'asc')->paginate(200);

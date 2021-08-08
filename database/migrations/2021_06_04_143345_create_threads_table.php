@@ -15,13 +15,13 @@ class CreateThreadsTable extends Migration
     {
         Schema::create('threads', function (Blueprint $table) {
             $table->id()->startingValue(10001);
-            $table->tinyInteger('sub_id')->unsigned()->default(0)->index(); //用来排序的
+            $table->tinyInteger('sub_id')->unsigned()->default(0)->index(); //用来排序的。10=本岛公告、99=全岛公告
             $table->integer('forum_id')->index();
             $table->string('nickname');
             $table->text('title');
             $table->string('sub_title')->default('[闲聊]');
             $table->tinyInteger('random_heads_group')->default(1);
-            $table->integer('posts_num')->default(1); //回帖数
+            $table->integer('posts_num')->default(0); //回帖数
             $table->string('title_color')->nullable(); //自定义标题颜色
             $table->string('created_IP')->nullable()->default(null);
             $table->string('created_binggan')->nullable()->default(null);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Forum;
 use App\Models\Thread;
+use App\Models\User;
 use App\Common\ResponseCode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -45,18 +46,60 @@ class ForumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($forum_id)
+    public function show(Request $request, $forum_id)
     {
         $CurrentForum = Forum::find($forum_id);
+        $user = User::where('binggan', $request->query('binggan'))->first();
+        //判断是否可无饼干访问的板块
+        if ($CurrentForum->is_anonymous && !$user) {
+            return response()->json([
+                'code' => ResponseCode::USER_NOT_FOUND,
+                'message' => '本小岛需要饼干才能查看喔',
+            ]);
+        }
+
+        //判断是否达到可以访问板块的最少奥利奥
+        if ($CurrentForum->accessible_coin > 0) {
+            if (!$user) {
+                return response()->json([
+                    'code' => ResponseCode::USER_NOT_FOUND,
+                    'message' => '本小岛需要饼干才能查看喔',
+                ]);
+            }
+            if ($user->coin < $CurrentForum->accessible_coin && $user->admin == 0) {
+                return response()->json([
+                    'code' => ResponseCode::THREAD_UNAUTHORIZED,
+                    'message' => sprintf("本小岛需要拥有大于%u奥利奥才能查看喔", $CurrentForum->accessible_coin),
+                ]);
+            }
+        }
+
         $threads = $CurrentForum->threads()->where('is_deleted', 0);
 
-        //如果是日清版，加入日清条件。
-        if ($CurrentForum->is_nissin == true) {
-            $threads->where('nissin_date', '>', Carbon::now())
-                ->orWhere(function ($query) use ($forum_id) {  //但要把本版公告加回来(sub_id=10)
-                    $query->where('forum_id', $forum_id)
-                        ->where('sub_id', 10);
-                });
+        //各种日清模式
+        switch ($CurrentForum->is_nissin) {
+            case 0:
+                break;
+            case 1: //按照8点日清模式
+                $hour_now = Carbon::now()->hour;
+                if ($hour_now >= 8) { //根据时间确定8点日清的节点
+                    $nissin_breakpoint = Carbon::today()->addHours(8);
+                } else {
+                    $nissin_breakpoint = Carbon::yesterday()->addHours(8);
+                }
+                $threads->where('created_at', '>', $nissin_breakpoint)
+                    ->orWhere(function ($query) use ($forum_id) {  //但要把本版公告加回来(sub_id=10)
+                        $query->where('forum_id', $forum_id)
+                            ->where('sub_id', 10);
+                    });
+                break;
+            case 2: //按照24小时日清模式
+                $threads->where('nissin_date', '>', Carbon::now())
+                    ->orWhere(function ($query) use ($forum_id) {  //但要把本版公告加回来(sub_id=10)
+                        $query->where('forum_id', $forum_id)
+                            ->where('sub_id', 10);
+                    });
+                break;
         }
 
         $threads
