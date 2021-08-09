@@ -40,6 +40,8 @@ class ResponseCode
 
     const POST_TOO_MANY = 24429;
 
+    const POST_UNAUTHORIZED = 23401;
+    
     const LOGIN_FAILED = 20001;
 
     const DATABASE_FAILED = 5001;

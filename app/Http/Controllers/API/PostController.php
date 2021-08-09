@@ -278,6 +278,82 @@ class PostController extends Controller
         );
     }
 
+    public function recover(Request $request, $id)
+    {
+        $request->validate([
+            'binggan' => 'required|string',
+            'thread_id' => 'required|integer',
+        ]);
+
+        $post = Post::suffix(intval($request->thread_id / 10000))->find($id);
+        //判断删帖操作者饼干和post饼干是否相同
+        if ($post->created_binggan != $request->binggan) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::USER_UNAUTHORIZED,
+                    'message' => '饼干错误',
+                    'data' => [
+                        'post_id' => $id,
+                        'created_binggan' => $post->created_binggan,
+                        '$request->binggan' => $request->binggan,
+                    ]
+                ],
+            );
+        }
+
+        //判断是否可以恢复
+        if ($post->is_delete != 1) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::POST_UNAUTHORIZED,
+                    'message' => '该帖子不能恢复！',
+                    'data' => [
+                        'post_id' => $id,
+                    ]
+                ],
+            );
+        }
+
+        //判断饼干是否足够
+        $user = User::where('binggan', $request->binggan)->first();
+        if ($user->coin < 300) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::COIN_NOT_ENOUGH,
+                    'message' => ResponseCode::$codeMap[ResponseCode::COIN_NOT_ENOUGH],
+                    'data' => [
+                        'post_id' => $id,
+                    ]
+                ],
+            );
+        }
+
+        $post->is_deleted = 0;
+        $post->save();
+        $user->coin -= 300; //删除帖子扣除300奥利奥
+        $user->save();
+
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '用户恢复了已删除的回帖',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+            ]
+        );
+        return response()->json(
+            [
+                'code' => ResponseCode::SUCCESS,
+                'message' => '恢复回帖成功！',
+                'data' => [
+                    'post_id' => $id,
+                    '$post' => $post
+                ]
+            ],
+        );
+    }
+
     public function create_roll(Request $request)
     {
         $request->validate([

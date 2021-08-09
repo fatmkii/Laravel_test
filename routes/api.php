@@ -37,6 +37,7 @@ Route::apiResource('threads', ThreadController::class);
 //Post系列
 Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts/create_roll', [PostController::class, 'create_roll']);
+Route::put('/posts/recover/{post_id}', [PostController::class, 'recover']);
 Route::apiResource('posts', PostController::class);
 
 //User系列
@@ -51,7 +52,8 @@ Route::post('/user/my_emoji_set', [UserController::class, 'my_emoji_set']);     
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/admin/logout', [AdminController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/admin/thread_delete', [AdminController::class, 'thread_delete'])->middleware('auth:sanctum'); //删主题
-Route::post('/admin/post_delete', [AdminController::class, 'post_delete'])->middleware('auth:sanctum'); //删帖
+Route::delete('/admin/post_delete/{post_id}', [AdminController::class, 'post_delete'])->middleware('auth:sanctum'); //删帖
+Route::put('/admin/post_recover/{post_id}', [AdminController::class, 'post_recover'])->middleware('auth:sanctum'); //恢复帖子
 Route::post('/admin/post_delete_all', [AdminController::class, 'post_delete_all'])->middleware('auth:sanctum'); //删主题内该作者全部回帖
 Route::post('/admin/user_ban', [AdminController::class, 'user_ban'])->middleware('auth:sanctum'); //碎饼
 Route::post('/admin/user_lock', [AdminController::class, 'user_lock'])->middleware('auth:sanctum'); //封id（临时）

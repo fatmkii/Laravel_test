@@ -31,11 +31,20 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id) &&post_data.is_deleted ==0"
         v-show="admin_button_show"
         @click="post_delete_click_admin"
       >
         删帖
+      </b-button>
+      <b-button
+        size="sm"
+        variant="warning"
+        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)&&post_data.is_deleted !=0"
+        v-show="admin_button_show"
+        @click="post_delete_recover_click_admin"
+      >
+        恢复
       </b-button>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +53,7 @@
         fill="currentColor"
         class="svg-light bi bi-trash"
         viewBox="0 0 16 16"
-        v-if="post_data.is_your_post"
+        v-if="post_data.is_your_post && post_data.is_deleted == 0"
         @click="post_delete_click"
       >
         <!-- 删除按钮 -->
@@ -61,8 +70,24 @@
         width="24"
         height="24"
         fill="currentColor"
+        class="svg-light bi bi-recycle"
+        viewBox="0 0 16 16"
+        v-if="post_data.is_your_post && post_data.is_deleted == 1"
+        @click="post_delete_recover_click"
+      >
+        <!-- 删除恢复按钮 -->
+        <path
+          d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242-2.532-4.431zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24l2.552-4.467zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.498.498 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244l-1.716-3.004z"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
         class="svg-success bi bi-chat-square-dots-fill"
         viewBox="0 0 16 16"
+        v-if="post_data.is_deleted == 0"
         @click="quote_click"
       >
         <!-- 回复按钮 -->
@@ -77,7 +102,7 @@
         fill="currentColor"
         class="svg-success bi bi-gift-fill"
         viewBox="0 0 16 16"
-        v-if="!post_data.is_your_post"
+        v-if="!post_data.is_your_post && post_data.is_deleted == 0"
         @click="reward_click"
       >
         <!-- 打赏按钮 -->
@@ -259,14 +284,59 @@ export default {
           .catch((error) => alert(error));
       }
     },
+    post_delete_recover_click() {
+      var confirmed = confirm("要恢复这个已删除的回复吗？（消费300奥利奥）");
+      if (confirmed == true) {
+        const config = {
+          method: "PUT",
+          url: "/api/posts/recover/" + this.post_data.id,
+          data: {
+            binggan: this.$store.state.User.Binggan,
+            thread_id: this.post_data.thread_id,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert("帖子恢复成功");
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
     post_delete_click_admin() {
       var content = prompt("要用管理员权限删除这个回复吗？请输入理由");
       if (content != null) {
         const config = {
-          method: "post",
-          url: "/api/admin/post_delete/",
+          method: "delete",
+          url: "/api/admin/post_delete/" + this.post_data.id,
           data: {
-            post_id: this.post_data.id,
+            thread_id: this.post_data.thread_id,
+            content: content,
+          },
+        };
+        axios(config)
+          .then((response) => {
+            if (response.data.code == 200) {
+              alert(response.data.message);
+              this.$emit("get_posts_data");
+            } else {
+              alert(response.data.message);
+            }
+          })
+          .catch((error) => alert(error));
+      }
+    },
+    post_delete_recover_click_admin() {
+      var content = prompt("要用管理员权限恢复这个回复吗？请输入理由");
+      if (content != null) {
+        const config = {
+          method: "put",
+          url: "/api/admin/post_recover/" + this.post_data.id,
+          data: {
             thread_id: this.post_data.thread_id,
             content: content,
           },

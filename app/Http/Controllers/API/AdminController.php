@@ -183,10 +183,9 @@ class AdminController extends Controller
         ]);
     }
 
-    public function post_delete(Request $request)
+    public function post_delete(Request $request,$post_id)
     {
         $request->validate([
-            'post_id' => 'required|Integer',
             'thread_id' => 'required|integer',
             'content' => 'required|string|max:255'
         ]);
@@ -199,7 +198,7 @@ class AdminController extends Controller
             ]);
         }
 
-        $post = Post::suffix(intval($request->thread_id / 10000))->find($request->post_id);
+        $post = Post::suffix(intval($request->thread_id / 10000))->find($post_id);
         if (!$post) {
             return response()->json([
                 'code' => ResponseCode::POST_NOT_FOUND,
@@ -221,11 +220,7 @@ class AdminController extends Controller
 
         $post->is_deleted = 2;
         $post->save();
-        //清除redis的posts缓存
-        // $thread = $post->thread;
-        // for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-        //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-        // }
+
         ProcessUserActive::dispatch(
             [
                 'binggan' => $user->binggan,
@@ -245,6 +240,65 @@ class AdminController extends Controller
             ],
         ]);
     }
+
+    public function post_recover(Request $request,$post_id)
+    {
+        $request->validate([
+            'thread_id' => 'required|integer',
+            'content' => 'required|string|max:255'
+        ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('admin')) {
+            return response()->json([
+                'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+            ]);
+        }
+
+        $post = Post::suffix(intval($request->thread_id / 10000))->find($post_id);
+        if (!$post) {
+            return response()->json([
+                'code' => ResponseCode::POST_NOT_FOUND,
+                'message' => ResponseCode::$codeMap[ResponseCode::POST_NOT_FOUND],
+            ]);
+        }
+
+        //确认是否拥有该版面的管理员权限
+        if (
+            !in_array($post->forum_id, json_decode($user->AdminPermissions->forums))
+        ) {
+            return response()->json(
+                [
+                    'code' => ResponseCode::ADMIN_UNAUTHORIZED,
+                    'message' => ResponseCode::$codeMap[ResponseCode::ADMIN_UNAUTHORIZED],
+                ],
+            );
+        }
+
+        $post->is_deleted = 0;
+        $post->save();
+
+        ProcessUserActive::dispatch(
+            [
+                'binggan' => $user->binggan,
+                'user_id' => $user->id,
+                'active' => '管理员恢复了已删除的帖子',
+                'thread_id' => $request->thread_id,
+                'post_id' => $post->id,
+                'content' => $request->content,
+            ]
+        );
+
+        return response()->json([
+            'code' => ResponseCode::SUCCESS,
+            'message' => '该帖子已回复。',
+            'data' => [
+                'post_id' => $post->id,
+            ],
+        ]);
+    }
+
 
     public function post_delete_all(Request $request)
     {
