@@ -224,7 +224,7 @@ class ThreadController extends Controller
 
 
         //判断是否可无饼干访问的板块
-        if ($CurrentForum->is_anonymous && !$user) {
+        if (!$CurrentForum->is_anonymous && !$user) {
             return response()->json([
                 'code' => ResponseCode::USER_NOT_FOUND,
                 'message' => '本小岛需要饼干才能查看喔',

@@ -35,30 +35,33 @@ Route::post('/threads/create', [ThreadController::class, 'create'])->name('threa
 Route::apiResource('threads', ThreadController::class);
 
 //Post系列
-Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
-Route::post('/posts/create_roll', [PostController::class, 'create_roll']);
-Route::put('/posts/recover/{post_id}', [PostController::class, 'recover']);
+Route::prefix('user')->group(function () {
+    Route::post('create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/create_roll', [PostController::class, 'create_roll']);
+    Route::put('/recover/{post_id}', [PostController::class, 'recover']);
+});
 Route::apiResource('posts', PostController::class);
 
 //User系列
-Route::post('/user/show', [UserController::class, 'show'])->middleware('auth:sanctum'); //获得用户信息
-Route::post('/user/register', [UserController::class, 'create']);   //新建饼干
-Route::post('/user/reward', [UserController::class, 'reward']);     //打赏
-Route::get('/user/check_reg_record', [UserController::class, 'check_reg_record']); //返回注册记录TTL
-Route::post('/user/pingbici_set', [UserController::class, 'pingbici_set']);     //设定屏蔽词
-Route::post('/user/my_emoji_set', [UserController::class, 'my_emoji_set']);     //设定表情包
-
+Route::prefix('user')->group(function () {
+    Route::post('/show', [UserController::class, 'show'])->middleware('auth:sanctum'); //获得用户信息
+    Route::post('/register', [UserController::class, 'create']);   //新建饼干
+    Route::post('/reward', [UserController::class, 'reward']);     //打赏
+    Route::get('/check_reg_record', [UserController::class, 'check_reg_record']); //返回注册记录TTL
+    Route::post('/pingbici_set', [UserController::class, 'pingbici_set']);     //设定屏蔽词
+    Route::post('/my_emoji_set', [UserController::class, 'my_emoji_set']);     //设定表情包
+});
 //Admin系列
-Route::post('/admin/login', [AdminController::class, 'login']);
-Route::post('/admin/logout', [AdminController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/admin/thread_delete', [AdminController::class, 'thread_delete'])->middleware('auth:sanctum'); //删主题
-Route::delete('/admin/post_delete/{post_id}', [AdminController::class, 'post_delete'])->middleware('auth:sanctum'); //删帖
-Route::put('/admin/post_recover/{post_id}', [AdminController::class, 'post_recover'])->middleware('auth:sanctum'); //恢复帖子
-Route::post('/admin/post_delete_all', [AdminController::class, 'post_delete_all'])->middleware('auth:sanctum'); //删主题内该作者全部回帖
-Route::post('/admin/user_ban', [AdminController::class, 'user_ban'])->middleware('auth:sanctum'); //碎饼
-Route::post('/admin/user_lock', [AdminController::class, 'user_lock'])->middleware('auth:sanctum'); //封id（临时）
-Route::post('/admin/thread_set_top', [AdminController::class, 'thread_set_top'])->middleware('auth:sanctum'); //设置置顶
-Route::post('/admin/thread_cancel_top', [AdminController::class, 'thread_cancel_top'])->middleware('auth:sanctum'); //取消置顶
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+    Route::post('/thread_delete', [AdminController::class, 'thread_delete']); //删主题
+    Route::delete('/post_delete/{post_id}', [AdminController::class, 'post_delete']); //删帖
+    Route::put('/post_recover/{post_id}', [AdminController::class, 'post_recover']); //恢复帖子
+    Route::post('/post_delete_all', [AdminController::class, 'post_delete_all']); //删主题内该作者全部回帖
+    Route::post('/user_ban', [AdminController::class, 'user_ban']); //碎饼
+    Route::post('/user_lock', [AdminController::class, 'user_lock']); //封id（临时）
+    Route::post('/thread_set_top', [AdminController::class, 'thread_set_top']); //设置置顶
+    Route::post('/thread_cancel_top', [AdminController::class, 'thread_cancel_top']); //取消置顶
+});
 
 
 //杂项

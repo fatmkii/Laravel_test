@@ -195,16 +195,23 @@ export default {
       };
       axios(config)
         .then((response) => {
-          this.$store.commit("ThreadsData_set", response.data.threads_data);
-          this.$store.commit("CurrentForumData_set", response.data.forum_data);
-          this.$store.commit("ThreadsLoadStatus_set", 1);
-          document.title = this.forum_name;
-          if (remind) {
-            this.$bvToast.toast("已刷新帖子", {
-              title: "Done.",
-              autoHideDelay: 1500,
-              appendToast: true,
-            });
+          if (response.data.code == 200) {
+            this.$store.commit("ThreadsData_set", response.data.threads_data);
+            this.$store.commit(
+              "CurrentForumData_set",
+              response.data.forum_data
+            );
+            this.$store.commit("ThreadsLoadStatus_set", 1);
+            document.title = this.forum_name;
+            if (remind) {
+              this.$bvToast.toast("已刷新帖子", {
+                title: "Done.",
+                autoHideDelay: 1500,
+                appendToast: true,
+              });
+            }
+          } else {
+            alert(response.data.message);
           }
         })
         .catch((error) => alert(error)); // Todo:写异常返回代码;
