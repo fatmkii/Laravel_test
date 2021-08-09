@@ -133,12 +133,21 @@
           </span>
           <span
             v-if="
-              this.$store.state.Forums.CurrentForumData.is_nissin == 1 &&
+              this.$store.state.Forums.CurrentForumData.is_nissin == 2 &&
               this.$store.state.Threads.CurrentThreadData.sub_id == 0
             "
             >本贴将于
             <span style="color: #dd0000">{{ nissin_TTL }}</span>
             后日清，请及时更换帖子喔
+          </span>
+          <span
+            v-if="
+              this.$store.state.Forums.CurrentForumData.is_nissin == 1 &&
+              this.$store.state.Threads.CurrentThreadData.sub_id == 0
+            "
+            >本小岛定期
+            <span style="color: #dd0000">每日早上8点</span>
+            日清，请及时更换帖子喔
           </span>
         </div>
       </div>
@@ -188,7 +197,7 @@
             ></path>
           </svg>
         </div>
-        <div class="icon-reload" @click="get_posts_data(true)">
+        <div class="icon-reload" @click="get_posts_data(true, false)">
           <svg
             aria-hidden="true"
             focusable="false"
@@ -338,7 +347,7 @@ export default {
     // 如果路由有变化，再次获得数据
     $route(to) {
       this.get_browse_current();
-      this.get_posts_data();
+      this.get_posts_data(false, true);
       this.$store.commit("PostsLoadStatus_set", 0);
     },
     post_with_admin: function () {
@@ -415,7 +424,7 @@ export default {
     }),
   },
   methods: {
-    get_posts_data(remind = false) {
+    get_posts_data(remind = false, scroll_enable = false) {
       const config = {
         method: "get",
         url: "/api/threads/" + this.thread_id,
@@ -456,13 +465,13 @@ export default {
                 this.browse_current.page == page &&
                 typeof this.$store.state.User.BrowseLogger[
                   this.thread_id.toString()
-                ] != "undefined"
+                ] != "undefined" &&
+                scroll_enable
               ) {
                 this.scroll_to_lasttime();
               }
               //如果地址有#hash，则滚动到对应hash
-              if (this.$route.hash) {
-                console.log(this.$route.hash);
+              if (this.$route.hash && scroll_enable) {
                 document
                   .querySelector(this.$route.hash)
                   .scrollIntoView({ block: "start", behavior: "smooth" });
@@ -710,7 +719,7 @@ export default {
     },
   },
   created() {
-    this.get_posts_data();
+    this.get_posts_data(false, true);
     this.$store.commit("PostsLoadStatus_set", 0); //避免显示上个ThreadsData
   },
   mounted() {

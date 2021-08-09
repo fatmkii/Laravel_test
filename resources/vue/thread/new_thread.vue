@@ -68,7 +68,8 @@
       <div class="col-4"><span class="h6 my-2">副标题</span></div>
       <div class="col-4">
         <span class="h6 my-2">日清时间</span>
-        <span v-if="!forum_nissin">（本版不日清）</span>
+        <span v-if="forum_nissin == 0">（本小岛不日清）</span>
+        <span v-if="forum_nissin == 1">（本小岛固定8点日清）</span>
       </div>
       <div class="col-4"><span class="h6 my-2">反精分</span></div>
     </div>
@@ -83,7 +84,7 @@
         <b-form-select
           v-model="nissin_time_selected"
           :options="nissin_time_options"
-          :disabled="!forum_nissin"
+          :disabled="!(forum_nissin == 2)"
         ></b-form-select>
       </div>
       <div class="col-4">

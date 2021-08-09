@@ -92,6 +92,7 @@ export default {
     },
     ...mapState({
       threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
+      forum_is_nissin: (state) => state.Forums.CurrentForumData.is_nissin,
     }),
   },
   methods: {},

@@ -84,6 +84,7 @@ export default {
     threads_data() {
       if (this.threads_load_status) {
         if (this.$store.state.User.UsePingbici) {
+          //处理屏蔽词
           const title_pingbici = JSON.parse(
             this.$store.state.User.TitlePingbici
           );
@@ -103,6 +104,7 @@ export default {
     },
     ...mapState({
       threads_load_status: (state) => state.Threads.ThreadsLoadStatus,
+      forum_is_nissin: (state) => state.Forums.CurrentForumData.is_nissin,
     }),
   },
   methods: {},

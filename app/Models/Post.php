@@ -46,9 +46,10 @@ class Post extends myModel
     {
         static::saving(function ($post) {
             $thread = $post->thread;
-            for ($i = 1; $i <= ceil($thread->posts_num / 200); $i++) {
-                Cache::forget('threads_cache_' . $thread->id . '_' . $i);
-            }
+            Cache::forget('threads_cache_' . $thread->id . '_' . ceil(($post->floor + 1) / 200));
+            // for ($i = 1; $i <= ceil($thread->posts_num + 1 / 200); $i++) {
+            //     Cache::forget('threads_cache_' . $thread->id . '_' . $i);
+            // }
         });
     }
 
