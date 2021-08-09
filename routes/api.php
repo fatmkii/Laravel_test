@@ -35,8 +35,8 @@ Route::post('/threads/create', [ThreadController::class, 'create'])->name('threa
 Route::apiResource('threads', ThreadController::class);
 
 //Post系列
-Route::prefix('user')->group(function () {
-    Route::post('create', [PostController::class, 'create'])->name('posts.create');
+Route::prefix('posts')->group(function () {
+    Route::post('/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/create_roll', [PostController::class, 'create_roll']);
     Route::put('/recover/{post_id}', [PostController::class, 'recover']);
 });

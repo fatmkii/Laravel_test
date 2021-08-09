@@ -48,5 +48,12 @@ class ForumSeeder extends Seeder
             'is_anonymous' => 1,
             'description' => '8点日清，禁sz禁sq禁挂素人',
         ]);
+        Forum::create([
+            'id' =>  2811,
+            'name' => '余生皆假期',
+            'is_nissin' => 0,
+            'is_anonymous' => 0,
+            'description' => '私人岛，请勿打扰',
+        ]);
     }
 }
