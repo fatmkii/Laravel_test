@@ -209,6 +209,14 @@ export default {
         return forum_data.is_nissin;
       }
     },
+    forum_default_heads() {
+      var forum_data = this.$store.getters.ForumData(this.forum_id);
+      if (forum_data) {
+        return forum_data.default_heads;
+      } else {
+        return 1;
+      }
+    },
     locked_TTL() {
       return this.$store.state.User.LockedTTL;
     },
@@ -295,6 +303,7 @@ export default {
       axios(config)
         .then((response) => {
           this.random_heads_group = response.data.data;
+          this.random_heads_group_selected = this.forum_default_heads;
         })
         .catch((error) => {
           alert(error);

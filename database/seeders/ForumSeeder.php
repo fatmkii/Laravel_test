@@ -33,6 +33,7 @@ class ForumSeeder extends Seeder
             'is_anonymous' => 0,
             'accessible_coin' => 10000,
             'description' => '发春大舞台，想发春你就来。24-72小时锁贴制，不带走一片云彩',
+            'default_heads' => 2,
             'banners' => json_encode(array(
                 'https://i.loli.net/2021/05/05/aJEPC2RMbWoYVpL.jpg',
                 'https://i.loli.net/2021/05/05/9mk3s2WOlMZxGYz.gif',

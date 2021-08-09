@@ -22,6 +22,7 @@ class CreateForumsTable extends Migration
             $table->Integer('accessible_coin')->default(0); //最低可进入的olo
             $table->tinyInteger('is_nissin')->default(0); //0=不日清；1=按8点日清；2=按24小时日清
             $table->json('banners')->nullable();
+            $table->tinyInteger('default_heads')->default(1); //默认的头像组
             $table->softDeletes();
         });
     }
