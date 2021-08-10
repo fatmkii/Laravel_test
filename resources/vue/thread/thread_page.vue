@@ -3,7 +3,13 @@
   <div>
     <div class="thread_body" v-show="posts_load_status">
       <div class="row align-items-center mt-3">
-        <div class="col-auto h6">
+        <div class="col-auto h5 d-none d-lg-block d-xl-block">
+          <b-badge variant="secondary" pill class="float-left">
+            {{ forum_id }}
+          </b-badge>
+          <span id="forum_name" @click="back_to_forum">{{ forum_name }}</span>
+        </div>
+        <div class="col-auto h6 d-block d-lg-none d-xl-none">
           <b-badge variant="secondary" pill class="float-left">
             {{ forum_id }}
           </b-badge>
@@ -28,7 +34,12 @@
             >喔~</span
           >
         </div>
-        <div class="post_title px-1 py-2 h6">
+        <div class="post_title px-1 py-2 h5 d-none d-lg-block d-xl-block">
+          <span style="word-wrap: break-word; white-space: normal"
+            >标题：{{ thread_title }}</span
+          >
+        </div>
+        <div class="post_title px-1 py-2 h6 d-block d-lg-none d-xl-none">
           <span style="word-wrap: break-word; white-space: normal"
             >标题：{{ thread_title }}</span
           >

@@ -21,7 +21,13 @@
       ></b-carousel-slide>
     </b-carousel>
     <div class="row align-items-center mt-3">
-      <div class="col-auto h5">
+      <div class="col-auto h5 d-none d-lg-block d-xl-block">
+        <b-badge variant="secondary" pill class="float-left">
+          {{ forum_id }}
+        </b-badge>
+        <span id="forum_name">{{ forum_name }}</span>
+      </div>
+      <div class="col-auto h6 d-block d-lg-none d-xl-none">
         <b-badge variant="secondary" pill class="float-left">
           {{ forum_id }}
         </b-badge>
