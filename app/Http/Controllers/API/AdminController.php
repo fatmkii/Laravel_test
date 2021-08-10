@@ -292,7 +292,7 @@ class AdminController extends Controller
 
         return response()->json([
             'code' => ResponseCode::SUCCESS,
-            'message' => '该帖子已回复。',
+            'message' => '该帖子已恢复。',
             'data' => [
                 'post_id' => $post->id,
             ],

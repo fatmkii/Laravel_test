@@ -21,7 +21,7 @@ class ForumController extends Controller
     public function index()
     {
         $forums = Cache::remember('forums_cache',  24 * 3600, function () {
-            return Forum::where('id', '<>', 0)->get(); //把0岛隐藏掉
+            return Forum::where('id', '<>', 0)->orderBy('sub_id', 'asc')->get(); //把0岛隐藏掉
         });
         return response()->json([
             'code' => ResponseCode::SUCCESS,

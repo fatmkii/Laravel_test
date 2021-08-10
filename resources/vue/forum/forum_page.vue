@@ -261,8 +261,8 @@ export default {
   color: #5fb878;
   width: 40px;
   div {
-    width: 40px;
-    height: 40px;
+    width: 32x;
+    height: 32px;
     position: relative;
   }
 }
@@ -273,7 +273,7 @@ export default {
 .z-sidebar > .icon-down,
 .z-sidebar > .icon-new-thread,
 .z-sidebar .icon-reload {
-  width: 30px;
+  width: 24px;
   left: 4px;
   cursor: pointer;
 }

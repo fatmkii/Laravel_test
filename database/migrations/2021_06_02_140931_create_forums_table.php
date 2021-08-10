@@ -15,6 +15,7 @@ class CreateForumsTable extends Migration
     {
         Schema::create('forums', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('sub_id')->unsigned()->default(0)->index(); //用来排序的。
             $table->string('name');
             $table->string('description');
             $table->tinyInteger('status')->default('1');
