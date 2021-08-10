@@ -90,7 +90,8 @@ class ForumController extends Controller
                 $threads->where('created_at', '>', $nissin_breakpoint)
                     ->orWhere(function ($query) use ($forum_id) {  //但要把本版公告加回来(sub_id=10)
                         $query->where('forum_id', $forum_id)
-                            ->where('sub_id', 10);
+                            ->where('sub_id', 10)
+                            ->where('is_deleted', 0);
                     });
                 break;
             case 2: //按照24小时日清模式
