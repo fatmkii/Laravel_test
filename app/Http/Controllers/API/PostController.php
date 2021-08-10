@@ -302,7 +302,7 @@ class PostController extends Controller
         }
 
         //判断是否可以恢复
-        if ($post->is_delete != 1) {
+        if ($post->is_deleted != 1) {
             return response()->json(
                 [
                     'code' => ResponseCode::POST_UNAUTHORIZED,

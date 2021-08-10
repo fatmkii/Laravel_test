@@ -31,7 +31,10 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminForums.includes(this.forum_id) &&post_data.is_deleted ==0"
+        v-if="
+          this.$store.state.User.AdminForums.includes(this.forum_id) &&
+          post_data.is_deleted == 0
+        "
         v-show="admin_button_show"
         @click="post_delete_click_admin"
       >
@@ -40,7 +43,10 @@
       <b-button
         size="sm"
         variant="warning"
-        v-if="this.$store.state.User.AdminForums.includes(this.forum_id)&&post_data.is_deleted !=0"
+        v-if="
+          this.$store.state.User.AdminForums.includes(this.forum_id) &&
+          post_data.is_deleted != 0
+        "
         v-show="admin_button_show"
         @click="post_delete_recover_click_admin"
       >
@@ -482,5 +488,8 @@ export default {
 .svg-light {
   color: #666;
   cursor: pointer;
+}
+.post_content img {
+  max-width: 100%;
 }
 </style>

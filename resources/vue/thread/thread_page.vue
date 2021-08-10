@@ -3,13 +3,13 @@
   <div>
     <div class="thread_body" v-show="posts_load_status">
       <div class="row align-items-center mt-3">
-        <div class="col-6 h5">
+        <div class="col-auto h6">
           <b-badge variant="secondary" pill class="float-left">
             {{ forum_id }}
           </b-badge>
           <span id="forum_name" @click="back_to_forum">{{ forum_name }}</span>
         </div>
-        <div class="col-6">
+        <div class="col-auto ml-auto">
           <ThreadPaginator
             :thread_id="thread_id"
             align="right"
@@ -28,7 +28,7 @@
             >喔~</span
           >
         </div>
-        <div class="post_title px-1 py-2 h5">
+        <div class="post_title px-1 py-2 h6">
           <span style="word-wrap: break-word; white-space: normal"
             >标题：{{ thread_title }}</span
           >
@@ -306,7 +306,7 @@
           <h5>跳楼机</h5>
         </template>
         <template v-slot:default>
-          <p>最大高度：{{ thread_posts_num - 1 }}楼</p>
+          <p>最大高度：{{ thread_posts_num }}楼</p>
           <div class="my-1">
             <b-input-group prepend="跳到：">
               <b-form-input
