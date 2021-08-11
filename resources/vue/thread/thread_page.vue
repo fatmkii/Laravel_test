@@ -395,8 +395,8 @@ export default {
   computed: {
     nissin_TTL() {
       const seconds =
-        (Date.parse(this.$store.state.Threads.CurrentThreadData.nissin_date) -
-          Date.parse(Date())) /
+        (Date.parse(this.$store.state.Threads.CurrentThreadData.nissin_date + " GMT+800") -
+          Date.now()) /
         1000;
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
